@@ -8,6 +8,11 @@
   <name>json</name>
   <dependencies>
     <dependency>
+      <groupId>org.antlr</groupId>
+      <artifactId>antlr4-runtime</artifactId>
+      <version>4.7.2</version>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.12</version>
@@ -44,6 +49,44 @@
             </configuration>
             <goals>
               <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.antlr</groupId>
+        <artifactId>antlr4-maven-plugin</artifactId>
+        <version>4.7.2</version>
+        <configuration>
+          <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>antlr4</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.pitest</groupId>
+        <artifactId>pitest-maven</artifactId>
+        <version>1.4.7</version>
+        <executions>
+          <execution>
+            <id>test</id>
+            <phase>test</phase>
+            <configuration>
+              <targetClasses>
+                <param>yirgacheffe.json.*</param>
+              </targetClasses>
+              <targetTests>
+                <param>yirgacheffe.json.*</param>
+              </targetTests>
+              <mutationThreshold>100</mutationThreshold>
+            </configuration>
+            <goals>
+              <goal>mutationCoverage</goal>
             </goals>
           </execution>
         </executions>
