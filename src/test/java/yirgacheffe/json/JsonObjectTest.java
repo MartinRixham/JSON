@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class JsonObjectTest
@@ -162,5 +163,25 @@ public class JsonObjectTest
 		assertTrue(Double.isNaN(json.getNumber("nul")));
 		assertEquals("null", json.getString("nul"));
 		assertEquals("{\"nul\":null}", json.toString());
+	}
+
+	@Test
+	public void testInvalidJson()
+	{
+		JsonException exception = null;
+
+		try
+		{
+			JsonObject json = new JsonObject("{ \"nul\": null");
+		}
+		catch (JsonException e)
+		{
+			exception = e;
+		}
+
+		assertNotNull(exception);
+		assertEquals(
+			"line 1:13 mismatched input '<EOF>' expecting {',', '}'}",
+			exception.getMessage());
 	}
 }

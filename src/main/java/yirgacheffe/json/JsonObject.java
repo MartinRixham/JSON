@@ -8,6 +8,7 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import yirgacheffe.parser.JSONParser;
 import yirgacheffe.parser.JSONLexer;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,8 +25,21 @@ public class JsonObject implements JsonData
 		CharStream charStream = CharStreams.fromString(data);
 		JSONLexer lexer = new JSONLexer(charStream);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
+		ParseErrorListener errorListener = new ParseErrorListener();
+
 		JSONParser parser = new JSONParser(tokens);
+		parser.removeErrorListeners();
+		parser.addErrorListener(errorListener);
+
 		ParseTree tree = parser.object();
+
+		if (errorListener.hasError())
+		{
+			String message = Arrays.toString(errorListener.getErrors());
+
+			throw new JsonException(message.substring(1, message.length() - 1));
+		}
+
 		ParseTreeWalker walker = new ParseTreeWalker();
 
 		walker.walk(new ObjectListener(this.properties), tree);
