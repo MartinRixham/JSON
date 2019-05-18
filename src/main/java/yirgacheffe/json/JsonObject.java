@@ -56,6 +56,10 @@ public class JsonObject implements JsonData
 		{
 			Object value = this.properties.get(property);
 
+			if (value instanceof JsonObject)
+			{
+				return true;
+			}
 			if (value instanceof String)
 			{
 				return ((String) value).length() > 0;
@@ -126,6 +130,27 @@ public class JsonObject implements JsonData
 		else
 		{
 			return "";
+		}
+	}
+
+	public JsonObject getObject(String property)
+	{
+		if (this.properties.containsKey(property))
+		{
+			Object value = this.properties.get(property);
+
+			if (value instanceof JsonObject)
+			{
+				return (JsonObject) value;
+			}
+			else
+			{
+				return new NullJsonObject();
+			}
+		}
+		else
+		{
+			return new NullJsonObject();
 		}
 	}
 

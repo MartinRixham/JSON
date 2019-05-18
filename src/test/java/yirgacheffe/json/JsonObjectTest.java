@@ -2,6 +2,10 @@ package yirgacheffe.json;
 
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -18,6 +22,7 @@ public class JsonObjectTest
 		assertFalse(json.getBoolean("thingy"));
 		assertTrue(Double.isNaN(json.getNumber("thingy")));
 		assertEquals("", json.getString("thingy"));
+		assertEquals("", json.getObject("thingy").toString());
 		assertEquals("{}", json.toString());
 	}
 
@@ -30,6 +35,7 @@ public class JsonObjectTest
 		assertFalse(json.getBoolean("thingy"));
 		assertTrue(Double.isNaN(json.getNumber("thingy")));
 		assertEquals("", json.getString("thingy"));
+		assertEquals("", json.getObject("thingy").toString());
 		assertEquals("{}", json.toString());
 	}
 
@@ -42,6 +48,7 @@ public class JsonObjectTest
 		assertTrue(json.getBoolean("thingy"));
 		assertTrue(Double.isNaN(json.getNumber("thingy")));
 		assertEquals("sumpt", json.getString("thingy"));
+		assertEquals("", json.getObject("thingy").toString());
 		assertEquals("{\"thingy\":\"sumpt\"}", json.toString());
 	}
 
@@ -54,6 +61,7 @@ public class JsonObjectTest
 		assertFalse(json.getBoolean("thingy"));
 		assertTrue(Double.isNaN(json.getNumber("thingy")));
 		assertEquals("", json.getString("thingy"));
+		assertEquals("", json.getObject("thingy").toString());
 		assertEquals("{\"thingy\":\"\"}", json.toString());
 	}
 
@@ -66,6 +74,7 @@ public class JsonObjectTest
 		assertFalse(json.getBoolean("zero"));
 		assertEquals(0, json.getNumber("zero"), 0);
 		assertEquals("0", json.getString("zero"));
+		assertEquals("", json.getObject("zero").toString());
 		assertEquals("{\"zero\":0}", json.toString());
 	}
 
@@ -78,6 +87,7 @@ public class JsonObjectTest
 		assertTrue(json.getBoolean("one"));
 		assertEquals(1, json.getNumber("one"), 0);
 		assertEquals("1", json.getString("one"));
+		assertEquals("", json.getObject("one").toString());
 		assertEquals("{\"one\":1}", json.toString());
 	}
 
@@ -90,6 +100,7 @@ public class JsonObjectTest
 		assertFalse(json.getBoolean("zero"));
 		assertEquals(0, json.getNumber("zero"), 0);
 		assertEquals("0.0", json.getString("zero"));
+		assertEquals("", json.getObject("zero").toString());
 		assertEquals("{\"zero\":0.0}", json.toString());
 	}
 
@@ -102,6 +113,7 @@ public class JsonObjectTest
 		assertTrue(json.getBoolean("one"));
 		assertEquals(1, json.getNumber("one"), 0);
 		assertEquals("1.0", json.getString("one"));
+		assertEquals("", json.getObject("one").toString());
 		assertEquals("{\"one\":1.0}", json.toString());
 	}
 
@@ -114,6 +126,7 @@ public class JsonObjectTest
 		assertFalse(json.getBoolean("zero"));
 		assertEquals(0, json.getNumber("zero"), 0);
 		assertEquals("0.0", json.getString("zero"));
+		assertEquals("", json.getObject("zero").toString());
 		assertEquals("{\"zero\":0.0}", json.toString());
 	}
 
@@ -126,6 +139,7 @@ public class JsonObjectTest
 		assertTrue(json.getBoolean("one"));
 		assertEquals(100, json.getNumber("one"), 0);
 		assertEquals("100.0", json.getString("one"));
+		assertEquals("", json.getObject("one").toString());
 		assertEquals("{\"one\":100.0}", json.toString());
 	}
 
@@ -138,6 +152,7 @@ public class JsonObjectTest
 		assertTrue(json.getBoolean("tru"));
 		assertTrue(Double.isNaN(json.getNumber("tru")));
 		assertEquals("true", json.getString("tru"));
+		assertEquals("", json.getObject("tru").toString());
 		assertEquals("{\"tru\":true}", json.toString());
 	}
 
@@ -150,6 +165,7 @@ public class JsonObjectTest
 		assertFalse(json.getBoolean("fals"));
 		assertTrue(Double.isNaN(json.getNumber("fals")));
 		assertEquals("false", json.getString("fals"));
+		assertEquals("", json.getObject("fals").toString());
 		assertEquals("{\"fals\":false}", json.toString());
 	}
 
@@ -162,12 +178,20 @@ public class JsonObjectTest
 		assertFalse(json.getBoolean("nul"));
 		assertTrue(Double.isNaN(json.getNumber("nul")));
 		assertEquals("null", json.getString("nul"));
+		assertEquals("", json.getObject("nul").toString());
 		assertEquals("{\"nul\":null}", json.toString());
 	}
 
 	@Test
 	public void testInvalidJson()
 	{
+		PrintStream originalError = System.err;
+
+		OutputStream spyError = new ByteArrayOutputStream();
+		PrintStream printStream = new PrintStream(spyError);
+
+		System.setErr(printStream);
+
 		JsonException exception = null;
 
 		try
@@ -183,5 +207,21 @@ public class JsonObjectTest
 		assertEquals(
 			"line 1:13 mismatched input '<EOF>' expecting {',', '}'}",
 			exception.getMessage());
+		assertEquals("", spyError.toString());
+
+		System.setErr(originalError);
+	}
+
+	@Test
+	public void testObjectWithChildObject()
+	{
+		JsonObject json = new JsonObject("{ \"obj\": {} }");
+
+		assertTrue(json.has("obj"));
+		assertTrue(json.getBoolean("obj"));
+		assertTrue(Double.isNaN(json.getNumber("obj")));
+		assertEquals("{}", json.getString("obj"));
+		assertEquals("{}", json.getObject("obj").toString());
+		assertEquals("{\"obj\":{}}", json.toString());
 	}
 }

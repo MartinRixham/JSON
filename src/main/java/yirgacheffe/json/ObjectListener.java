@@ -24,6 +24,10 @@ class ObjectListener extends JSONBaseListener
 
 		Object value = null;
 
+		if (valueContext.object() != null)
+		{
+			value = new JsonObject(valueString);
+		}
 		if (valueContext.STRING() != null)
 		{
 			value = valueString.substring(1, valueString.length() - 1);

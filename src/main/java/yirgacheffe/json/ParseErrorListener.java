@@ -7,9 +7,9 @@ import org.antlr.v4.runtime.Recognizer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParseErrorListener extends BaseErrorListener
+class ParseErrorListener extends BaseErrorListener
 {
-	List<String> errors = new ArrayList<>();
+	private List<String> errors = new ArrayList<>();
 
 	@Override
 	public void syntaxError(
