@@ -103,4 +103,28 @@ public class JsonObjectTest
 		assertEquals("1.0", json.getString("one"));
 		assertEquals("{\"one\":1.0}", json.toString());
 	}
+
+	@Test
+	public void testParseZeroExponential()
+	{
+		JsonObject json = new JsonObject("{ \"zero\": 0E2 }");
+
+		assertTrue(json.has("zero"));
+		assertFalse(json.getBoolean("zero"));
+		assertEquals(0, json.getNumber("zero"), 0);
+		assertEquals("0.0", json.getString("zero"));
+		assertEquals("{\"zero\":0.0}", json.toString());
+	}
+
+	@Test
+	public void testParseOneHundredExponential()
+	{
+		JsonObject json = new JsonObject("{ \"one\": 1e2 }");
+
+		assertTrue(json.has("one"));
+		assertTrue(json.getBoolean("one"));
+		assertEquals(100, json.getNumber("one"), 0);
+		assertEquals("100.0", json.getString("one"));
+		assertEquals("{\"one\":100.0}", json.toString());
+	}
 }

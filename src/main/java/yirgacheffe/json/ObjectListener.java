@@ -30,7 +30,9 @@ class ObjectListener extends JSONBaseListener
 		}
 		else if (valueContext.NUMBER() != null)
 		{
-			if (valueString.contains("."))
+			if (valueString.contains(".") ||
+				valueString.contains("e") ||
+				valueString.contains("E"))
 			{
 				value = Double.valueOf(valueString);
 			}
