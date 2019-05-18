@@ -127,4 +127,28 @@ public class JsonObjectTest
 		assertEquals("100.0", json.getString("one"));
 		assertEquals("{\"one\":100.0}", json.toString());
 	}
+
+	@Test
+	public void testParseTrue()
+	{
+		JsonObject json = new JsonObject("{ \"tru\": true }");
+
+		assertTrue(json.has("tru"));
+		assertTrue(json.getBoolean("tru"));
+		assertTrue(Double.isNaN(json.getNumber("tru")));
+		assertEquals("true", json.getString("tru"));
+		assertEquals("{\"tru\":true}", json.toString());
+	}
+
+	@Test
+	public void testParseFalse()
+	{
+		JsonObject json = new JsonObject("{ \"fals\": false }");
+
+		assertTrue(json.has("fals"));
+		assertFalse(json.getBoolean("fals"));
+		assertTrue(Double.isNaN(json.getNumber("fals")));
+		assertEquals("false", json.getString("fals"));
+		assertEquals("{\"fals\":false}", json.toString());
+	}
 }

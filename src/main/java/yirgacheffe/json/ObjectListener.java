@@ -41,6 +41,14 @@ class ObjectListener extends JSONBaseListener
 				value = Long.valueOf(valueString);
 			}
 		}
+		else if (valueContext.TRUE() != null)
+		{
+			value = true;
+		}
+		else if (valueContext.FALSE() != null)
+		{
+			value = false;
+		}
 		else
 		{
 			throw new RuntimeException("Unsupported JSON value type.");

@@ -6,7 +6,13 @@ property: STRING ':' value;
 
 array: '[' value (',' value)* ']' | '[' ']';
 
-value: STRING | NUMBER | object | array | 'true' | 'false' | 'null';
+value: STRING | NUMBER | object | array | TRUE | FALSE | NULL;
+
+TRUE: 'true';
+
+FALSE: 'false';
+
+NULL: 'null';
 
 STRING: '"' (ESC | SAFECODEPOINT)* '"';
 

@@ -54,6 +54,10 @@ public class JsonObject implements JsonData
 			{
 				return ((double) value) != 0;
 			}
+			else if (value instanceof Boolean)
+			{
+				return value.equals(true);
+			}
 			else
 			{
 				throw new RuntimeException("Unsupported JSON value type.");
@@ -83,6 +87,10 @@ public class JsonObject implements JsonData
 			{
 				return (double) value;
 			}
+			else if (value instanceof Boolean)
+			{
+				return Double.NaN;
+			}
 			else
 			{
 				throw new RuntimeException("Unsupported JSON value type.");
@@ -98,20 +106,7 @@ public class JsonObject implements JsonData
 	{
 		if (this.properties.containsKey(property))
 		{
-			Object value = this.properties.get(property);
-
-			if (value instanceof String)
-			{
-				return (String) value;
-			}
-			else if (value instanceof Long || value instanceof Double)
-			{
-				return value.toString();
-			}
-			else
-			{
-				throw new RuntimeException("Unsupported JSON value type.");
-			}
+			return this.properties.get(property).toString();
 		}
 		else
 		{
