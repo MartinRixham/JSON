@@ -22,6 +22,7 @@ public class JsonArrayTest
 		assertTrue(Double.isNaN(json.getNumber(1.0)));
 		assertEquals("", json.getString(1.0));
 		assertEquals("", json.getObject(1.0).toString());
+		assertEquals("", json.getArray(0.0).toString());
 		assertEquals("[]", json.toString());
 		assertEquals(0, json.length());
 	}
@@ -35,6 +36,7 @@ public class JsonArrayTest
 		assertTrue(Double.isNaN(json.getNumber(0.0)));
 		assertEquals("", json.getString(0.0));
 		assertEquals("", json.getObject(0.0).toString());
+		assertEquals("", json.getArray(0.0).toString());
 		assertEquals("[]", json.toString());
 		assertEquals(0, json.length());
 	}
@@ -48,6 +50,7 @@ public class JsonArrayTest
 		assertTrue(Double.isNaN(json.getNumber(0.0)));
 		assertEquals("sumpt", json.getString(0.0));
 		assertEquals("", json.getObject(0.0).toString());
+		assertEquals("", json.getArray(0.0).toString());
 		assertEquals("[\"sumpt\"]", json.toString());
 		assertEquals(1, json.length());
 	}
@@ -61,6 +64,7 @@ public class JsonArrayTest
 		assertTrue(Double.isNaN(json.getNumber(0.0)));
 		assertEquals("", json.getString(0.0));
 		assertEquals("", json.getObject(0.0).toString());
+		assertEquals("", json.getArray(0.0).toString());
 		assertEquals("[\"\"]", json.toString());
 		assertEquals(1, json.length());
 	}
@@ -74,6 +78,7 @@ public class JsonArrayTest
 		assertEquals(0, json.getNumber(0.0), 0);
 		assertEquals("0", json.getString(0.0));
 		assertEquals("", json.getObject(0.0).toString());
+		assertEquals("", json.getArray(0.0).toString());
 		assertEquals("[0]", json.toString());
 		assertEquals(1, json.length());
 	}
@@ -87,6 +92,7 @@ public class JsonArrayTest
 		assertTrue(Double.isNaN(json.getNumber(0.0)));
 		assertEquals("true", json.getString(0.0));
 		assertEquals("", json.getObject(0.0).toString());
+		assertEquals("", json.getArray(0.0).toString());
 		assertEquals("[true]", json.toString());
 		assertEquals(1, json.length());
 	}
@@ -100,6 +106,7 @@ public class JsonArrayTest
 		assertTrue(Double.isNaN(json.getNumber(0.0)));
 		assertEquals("null", json.getString(0.0));
 		assertEquals("", json.getObject(0.0).toString());
+		assertEquals("", json.getArray(0.0).toString());
 		assertEquals("[null]", json.toString());
 		assertEquals(1, json.length());
 	}
@@ -143,7 +150,22 @@ public class JsonArrayTest
 		assertTrue(Double.isNaN(json.getNumber(0.0)));
 		assertEquals("{}", json.getString(0.0));
 		assertEquals("{}", json.getObject(0.0).toString());
+		assertEquals("", json.getArray(0.0).toString());
 		assertEquals("[{}]", json.toString());
+		assertEquals(1, json.length());
+	}
+
+	@Test
+	public void testObjectWithChildArray()
+	{
+		JsonArray json = new JsonArray("[[]]");
+
+		assertTrue(json.getBoolean(0.0));
+		assertTrue(Double.isNaN(json.getNumber(0.0)));
+		assertEquals("[]", json.getString(0.0));
+		assertEquals("", json.getObject(0.0).toString());
+		assertEquals("[]", json.getArray(0.0).toString());
+		assertEquals("[[]]", json.toString());
 		assertEquals(1, json.length());
 	}
 
@@ -153,6 +175,7 @@ public class JsonArrayTest
 		JsonArray json = new JsonArray();
 
 		json.put(new JsonObject());
+		json.put(new JsonArray());
 		json.put("sumpt");
 		json.put(1);
 		json.put(1.0);
@@ -160,7 +183,7 @@ public class JsonArrayTest
 		json.put(true);
 
 		assertEquals(
-			"[{},\"sumpt\",1,1.0,100.0,true]",
+			"[{},[],\"sumpt\",1,1.0,100.0,true]",
 			json.toString());
 	}
 
@@ -173,6 +196,7 @@ public class JsonArrayTest
 		assertEquals(2.0, json.getNumber(1.0), 0);
 		assertEquals("2", json.getString(1.0));
 		assertEquals("", json.getObject(1.0).toString());
+		assertEquals("", json.getArray(1.0).toString());
 		assertEquals("[1,2]", json.toString());
 		assertEquals(2, json.length());
 	}
@@ -186,6 +210,7 @@ public class JsonArrayTest
 		assertTrue(Double.isNaN(json.getNumber(1.0)));
 		assertEquals("", json.getString(1.0));
 		assertEquals("", json.getObject(1.0).toString());
+		assertEquals("", json.getArray(1.0).toString());
 		assertEquals("[1]", json.toString());
 		assertEquals(1, json.length());
 	}
@@ -213,6 +238,21 @@ public class JsonArrayTest
 
 		json.put(new JsonObject());
 		json.put(new JsonObject());
+
+		assertEquals(33, json.length());
+	}
+
+	@Test
+	public void testPutThirtyThirdArrayOnArray()
+	{
+		JsonArray json = new JsonArray(
+			"[0,1,2,3,4,5,6,7,8,9," +
+				"10,11,12,13,14,15,16,17,18,19," +
+				"20,21,22,23,24,25,26,27,28,29," +
+				"30]");
+
+		json.put(new JsonArray());
+		json.put(new JsonArray());
 
 		assertEquals(33, json.length());
 	}

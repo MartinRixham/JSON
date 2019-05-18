@@ -3,8 +3,6 @@ package yirgacheffe.json;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import yirgacheffe.parser.JSONParser;
 import yirgacheffe.parser.JSONLexer;
 
@@ -31,7 +29,9 @@ public class JsonObject implements JsonData
 		parser.removeErrorListeners();
 		parser.addErrorListener(errorListener);
 
-		ParseTree tree = parser.object();
+		JSONParser.ObjectContext context = parser.object();
+
+		this.parse(context);
 
 		if (errorListener.hasError())
 		{
@@ -39,10 +39,26 @@ public class JsonObject implements JsonData
 
 			throw new JsonException(message.substring(1, message.length() - 1));
 		}
+	}
 
-		ParseTreeWalker walker = new ParseTreeWalker();
+	void parse(JSONParser.ObjectContext	context)
+	{
+		for (JSONParser.PropertyContext propertyContext: context.property())
+		{
+			this.parseProperty(propertyContext);
+		}
+	}
 
-		walker.walk(new ObjectListener(this.properties), tree);
+	void parseProperty(JSONParser.PropertyContext context)
+	{
+		String key = context.STRING().getText();
+		String keyString = key.substring(1, key.length() - 1);
+		JSONParser.ValueContext valueContext = context.value();
+		String valueString = valueContext.getText();
+
+		Object value = new JsonValue(valueContext, valueString).getValue();
+
+		this.properties.put(keyString, value);
 	}
 
 	public boolean has(String property)
@@ -111,6 +127,32 @@ public class JsonObject implements JsonData
 		{
 			return new NullJsonObject();
 		}
+	}
+
+	public JsonArray getArray(String property)
+	{
+		if (this.properties.containsKey(property))
+		{
+			Object value = this.properties.get(property);
+
+			if (value instanceof JsonArray)
+			{
+				return (JsonArray) value;
+			}
+			else
+			{
+				return new NullJsonArray();
+			}
+		}
+		else
+		{
+			return new NullJsonArray();
+		}
+	}
+
+	public void put(String property, JsonArray value)
+	{
+		this.properties.put(property, value);
 	}
 
 	public void put(String property, JsonObject value)

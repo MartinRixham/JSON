@@ -2,13 +2,13 @@ package yirgacheffe.json;
 
 import yirgacheffe.parser.JSONParser;
 
-public class JsonValue
+class JsonValue
 {
 	private JSONParser.ValueContext context;
 
 	private String valueString;
 
-	public JsonValue(JSONParser.ValueContext context, String valueString)
+	JsonValue(JSONParser.ValueContext context, String valueString)
 	{
 		this.context = context;
 		this.valueString = valueString;
@@ -20,9 +20,19 @@ public class JsonValue
 		JSONParser.ValueContext context = this.context;
 		Object value = null;
 
+		if (context.array() != null)
+		{
+			JsonArray array = new JsonArray();
+			array.parse(context.array());
+
+			value = array;
+		}
 		if (context.object() != null)
 		{
-			value = new JsonObject(valueString);
+			JsonObject object = new JsonObject();
+			object.parse(context.object());
+
+			value = object;
 		}
 		if (context.STRING() != null)
 		{

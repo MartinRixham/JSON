@@ -3,8 +3,6 @@ package yirgacheffe.json;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import yirgacheffe.parser.JSONLexer;
 import yirgacheffe.parser.JSONParser;
 
@@ -34,15 +32,22 @@ public class JsonArray implements JsonData
 		parser.removeErrorListeners();
 		parser.addErrorListener(errorListener);
 
-		ParseTree tree = parser.array();
+		JSONParser.ArrayContext context = parser.array();
 
-		ParseTreeWalker walker = new ParseTreeWalker();
-		ArrayLengthListener lengthListener = new ArrayLengthListener();
+		this.parse(context);
 
-		walker.walk(lengthListener, tree);
+		if (errorListener.hasError())
+		{
+			String message = Arrays.toString(errorListener.getErrors());
 
+			throw new JsonException(message.substring(1, message.length() - 1));
+		}
+	}
+
+	void parse(JSONParser.ArrayContext context)
+	{
 		int power = LOG_THIRTY_TWO;
-		int length = lengthListener.getLength() >> LOG_THIRTY_TWO;
+		int length = context.value().size() >> LOG_THIRTY_TWO;
 
 		while (length > 0)
 		{
@@ -51,16 +56,21 @@ public class JsonArray implements JsonData
 		}
 
 		this.array = new Object[1 << power];
-		this.length = lengthListener.getLength();
+		this.length = context.value().size();
 
-		if (errorListener.hasError())
+		for (int i = 0; i < context.value().size(); i++)
 		{
-			String message = Arrays.toString(errorListener.getErrors());
-
-			throw new JsonException(message.substring(1, message.length() - 1));
+			this.parseValue(context.value(i), i);
 		}
+	}
 
-		walker.walk(new ArrayListener(this.array), tree);
+	void parseValue(JSONParser.ValueContext context, int index)
+	{
+		String valueString = context.getText();
+
+		Object value = new JsonValue(context, valueString).getValue();
+
+		this.array[index] = value;
 	}
 
 	public boolean getBoolean(double index)
@@ -144,6 +154,38 @@ public class JsonArray implements JsonData
 		{
 			return new NullJsonObject();
 		}
+	}
+
+	public JsonArray getArray(double index)
+	{
+		return this.getArray((int) index);
+	}
+
+	public JsonArray getArray(int index)
+	{
+		if (this.length > index)
+		{
+			Object value = this.array[index];
+
+			if (value instanceof JsonArray)
+			{
+				return (JsonArray) value;
+			}
+			else
+			{
+				return new NullJsonArray();
+			}
+		}
+		else
+		{
+			return new NullJsonArray();
+		}
+	}
+
+	public void put(JsonArray value)
+	{
+		this.grow();
+		this.array[this.length++] = value;
 	}
 
 	public void put(JsonObject value)

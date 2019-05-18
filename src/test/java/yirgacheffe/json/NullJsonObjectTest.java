@@ -18,6 +18,7 @@ public class NullJsonObjectTest
 		assertTrue(Double.isNaN(json.getNumber("thingy")));
 		assertEquals("", json.getString("thingy"));
 		assertEquals("", json.getObject("thingy").toString());
+		assertEquals("", json.getArray("thingy").toString());
 		assertEquals("", json.toString());
 	}
 }

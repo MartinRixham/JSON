@@ -11,25 +11,27 @@ class BooleanValue
 
 	boolean getBoolean()
 	{
-		if (this.value instanceof JsonObject)
+		Object value = this.value;
+
+		if (value instanceof JsonArray || value instanceof JsonObject)
 		{
 			return true;
 		}
-		if (this.value instanceof String)
+		if (value instanceof String)
 		{
-			return ((String) this.value).length() > 0;
+			return ((String) value).length() > 0;
 		}
-		else if (this.value instanceof Long)
+		else if (value instanceof Long)
 		{
-			return ((long) this.value) != 0;
+			return ((long) value) != 0;
 		}
-		else if (this.value instanceof Double)
+		else if (value instanceof Double)
 		{
-			return ((double) this.value) != 0;
+			return ((double) value) != 0;
 		}
-		else if (this.value instanceof Boolean)
+		else if (value instanceof Boolean)
 		{
-			return this.value.equals(true);
+			return value.equals(true);
 		}
 		else
 		{

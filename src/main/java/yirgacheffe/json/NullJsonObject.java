@@ -33,6 +33,12 @@ class NullJsonObject extends JsonObject
 	}
 
 	@Override
+	public JsonArray getArray(String property)
+	{
+		return new NullJsonArray();
+	}
+
+	@Override
 	public String toString()
 	{
 		return "";

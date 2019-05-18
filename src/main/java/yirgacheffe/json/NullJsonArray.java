@@ -45,6 +45,18 @@ class NullJsonArray extends JsonArray
 	}
 
 	@Override
+	public JsonArray getArray(double property)
+	{
+		return new NullJsonArray();
+	}
+
+	@Override
+	public JsonArray getArray(int property)
+	{
+		return new NullJsonArray();
+	}
+
+	@Override
 	public String toString()
 	{
 		return "";

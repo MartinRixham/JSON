@@ -21,6 +21,8 @@ public class NullJsonArrayTest
 		assertEquals("", json.getString(1));
 		assertEquals("", json.getObject(1.0).toString());
 		assertEquals("", json.getObject(1).toString());
+		assertEquals("", json.getArray(1.0).toString());
+		assertEquals("", json.getArray(1).toString());
 		assertEquals("", json.toString());
 	}
 }
