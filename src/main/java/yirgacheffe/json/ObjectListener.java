@@ -22,37 +22,7 @@ class ObjectListener extends JSONBaseListener
 		JSONParser.ValueContext valueContext = context.value();
 		String valueString = valueContext.getText();
 
-		Object value = null;
-
-		if (valueContext.object() != null)
-		{
-			value = new JsonObject(valueString);
-		}
-		if (valueContext.STRING() != null)
-		{
-			value = valueString.substring(1, valueString.length() - 1);
-		}
-		else if (valueContext.NUMBER() != null)
-		{
-			if (valueString.contains(".") ||
-				valueString.contains("e") ||
-				valueString.contains("E"))
-			{
-				value = Double.valueOf(valueString);
-			}
-			else
-			{
-				value = Long.valueOf(valueString);
-			}
-		}
-		else if (valueContext.TRUE() != null)
-		{
-			value = true;
-		}
-		else if (valueContext.FALSE() != null)
-		{
-			value = false;
-		}
+		Object value = new JsonValue(valueContext, valueString).getValue();
 
 		this.properties.put(keyString, value);
 	}
