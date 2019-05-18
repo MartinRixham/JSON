@@ -224,4 +224,28 @@ public class JsonObjectTest
 		assertEquals("{}", json.getObject("obj").toString());
 		assertEquals("{\"obj\":{}}", json.toString());
 	}
+
+	@Test
+	public void testPutProperties()
+	{
+		JsonObject json = new JsonObject();
+
+		json.put("obj", new JsonObject());
+		json.put("thingy", "sumpt");
+		json.put("int", 1);
+		json.put("float", 1.0);
+		json.put("exp", 1e2);
+		json.put("tru", true);
+
+		assertEquals(
+			"{" +
+				"\"obj\":{}," +
+				"\"thingy\":\"sumpt\"," +
+				"\"tru\":true," +
+				"\"float\":1.0," +
+				"\"exp\":100.0," +
+				"\"int\":1" +
+			"}",
+			json.toString());
+	}
 }

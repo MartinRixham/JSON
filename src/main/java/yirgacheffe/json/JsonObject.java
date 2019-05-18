@@ -154,18 +154,49 @@ public class JsonObject implements JsonData
 		}
 	}
 
+	public void put(String property, JsonObject value)
+	{
+		this.properties.put(property, value);
+	}
+
+	public void put(String property, String value)
+	{
+		this.properties.put(property, value);
+	}
+
+	public void put(String property, double value)
+	{
+		this.properties.put(property, value);
+	}
+
+	public void put(String property, long value)
+	{
+		this.properties.put(property, value);
+	}
+
+	public void put(String property, boolean value)
+	{
+		this.properties.put(property, value);
+	}
+
 	@Override
 	public String toString()
 	{
 		StringBuilder builder = new StringBuilder("{");
+		Object[] keys = this.properties.keySet().toArray();
 
-		for (String key: this.properties.keySet())
+		for (int i = 0; i < keys.length; i++)
 		{
 			builder.append('"');
-			builder.append(key);
+			builder.append(keys[i]);
 			builder.append("\":");
 
-			this.appendValueString(builder, this.properties.get(key));
+			this.appendValueString(builder, this.properties.get(keys[i]));
+
+			if (i < keys.length - 1)
+			{
+				builder.append(',');
+			}
 		}
 
 		builder.append('}');
