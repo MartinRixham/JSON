@@ -60,7 +60,7 @@ public class JsonObject implements JsonData
 			}
 			else
 			{
-				throw new RuntimeException("Unsupported JSON value type.");
+				return false;
 			}
 		}
 		else
@@ -75,11 +75,7 @@ public class JsonObject implements JsonData
 		{
 			Object value = this.properties.get(property);
 
-			if (value instanceof String)
-			{
-				return Double.NaN;
-			}
-			else if (value instanceof Long)
+			if (value instanceof Long)
 			{
 				return (long) value;
 			}
@@ -87,13 +83,9 @@ public class JsonObject implements JsonData
 			{
 				return (double) value;
 			}
-			else if (value instanceof Boolean)
-			{
-				return Double.NaN;
-			}
 			else
 			{
-				throw new RuntimeException("Unsupported JSON value type.");
+				return Double.NaN;
 			}
 		}
 		else
@@ -106,7 +98,16 @@ public class JsonObject implements JsonData
 	{
 		if (this.properties.containsKey(property))
 		{
-			return this.properties.get(property).toString();
+			Object value = this.properties.get(property);
+
+			if (value == null)
+			{
+				return "null";
+			}
+			else
+			{
+				return value.toString();
+			}
 		}
 		else
 		{
@@ -140,6 +141,10 @@ public class JsonObject implements JsonData
 			builder.append('"');
 			builder.append(value.toString());
 			builder.append('"');
+		}
+		else if (value == null)
+		{
+			builder.append("null");
 		}
 		else
 		{

@@ -22,7 +22,7 @@ class ObjectListener extends JSONBaseListener
 		JSONParser.ValueContext valueContext = context.value();
 		String valueString = valueContext.getText();
 
-		Object value;
+		Object value = null;
 
 		if (valueContext.STRING() != null)
 		{
@@ -48,10 +48,6 @@ class ObjectListener extends JSONBaseListener
 		else if (valueContext.FALSE() != null)
 		{
 			value = false;
-		}
-		else
-		{
-			throw new RuntimeException("Unsupported JSON value type.");
 		}
 
 		this.properties.put(keyString, value);

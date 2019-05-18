@@ -151,4 +151,16 @@ public class JsonObjectTest
 		assertEquals("false", json.getString("fals"));
 		assertEquals("{\"fals\":false}", json.toString());
 	}
+
+	@Test
+	public void testParseNull()
+	{
+		JsonObject json = new JsonObject("{ \"nul\": null }");
+
+		assertTrue(json.has("nul"));
+		assertFalse(json.getBoolean("nul"));
+		assertTrue(Double.isNaN(json.getNumber("nul")));
+		assertEquals("null", json.getString("nul"));
+		assertEquals("{\"nul\":null}", json.toString());
+	}
 }
