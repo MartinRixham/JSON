@@ -18,10 +18,32 @@ class ObjectListener extends JSONBaseListener
 	public void exitProperty(JSONParser.PropertyContext context)
 	{
 		String key = context.STRING().getText();
-		String value = context.value().getText();
 		String keyString = key.substring(1, key.length() - 1);
-		String valueString = value.substring(1, value.length() - 1);
+		JSONParser.ValueContext valueContext = context.value();
+		String valueString = valueContext.getText();
 
-		this.properties.put(keyString, valueString);
+		Object value;
+
+		if (valueContext.STRING() != null)
+		{
+			value = valueString.substring(1, valueString.length() - 1);
+		}
+		else if (valueContext.NUMBER() != null)
+		{
+			if (valueString.contains("."))
+			{
+				value = Double.valueOf(valueString);
+			}
+			else
+			{
+				value = Long.valueOf(valueString);
+			}
+		}
+		else
+		{
+			throw new RuntimeException("Unsupported JSON value type.");
+		}
+
+		this.properties.put(keyString, value);
 	}
 }

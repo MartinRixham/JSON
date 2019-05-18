@@ -36,9 +36,87 @@ public class JsonObject implements JsonData
 		return this.properties.containsKey(property);
 	}
 
+	public boolean getBoolean(String property)
+	{
+		if (this.properties.containsKey(property))
+		{
+			Object value = this.properties.get(property);
+
+			if (value instanceof String)
+			{
+				return ((String) value).length() > 0;
+			}
+			else if (value instanceof Long)
+			{
+				return ((long) value) != 0;
+			}
+			else if (value instanceof Double)
+			{
+				return ((double) value) != 0;
+			}
+			else
+			{
+				throw new RuntimeException("Unsupported JSON value type.");
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	public double getNumber(String property)
+	{
+		if (this.properties.containsKey(property))
+		{
+			Object value = this.properties.get(property);
+
+			if (value instanceof String)
+			{
+				return Double.NaN;
+			}
+			else if (value instanceof Long)
+			{
+				return (long) value;
+			}
+			else if (value instanceof Double)
+			{
+				return (double) value;
+			}
+			else
+			{
+				throw new RuntimeException("Unsupported JSON value type.");
+			}
+		}
+		else
+		{
+			return Double.NaN;
+		}
+	}
+
 	public String getString(String property)
 	{
-		return (String) this.properties.getOrDefault(property, "");
+		if (this.properties.containsKey(property))
+		{
+			Object value = this.properties.get(property);
+
+			if (value instanceof String)
+			{
+				return (String) value;
+			}
+			else if (value instanceof Long || value instanceof Double)
+			{
+				return value.toString();
+			}
+			else
+			{
+				throw new RuntimeException("Unsupported JSON value type.");
+			}
+		}
+		else
+		{
+			return "";
+		}
 	}
 
 	@Override
@@ -50,13 +128,27 @@ public class JsonObject implements JsonData
 		{
 			builder.append('"');
 			builder.append(key);
-			builder.append("\":\"");
-			builder.append(this.properties.get(key).toString());
-			builder.append('"');
+			builder.append("\":");
+
+			this.appendValueString(builder, this.properties.get(key));
 		}
 
 		builder.append('}');
 
 		return builder.toString();
+	}
+
+	private void appendValueString(StringBuilder builder, Object value)
+	{
+		if (value instanceof String)
+		{
+			builder.append('"');
+			builder.append(value.toString());
+			builder.append('"');
+		}
+		else
+		{
+			builder.append(value.toString());
+		}
 	}
 }
