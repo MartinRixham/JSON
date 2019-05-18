@@ -1,5 +1,7 @@
 grammar JSON;
 
+json: object | array;
+
 object: '{' property (',' property)* '}' | '{' '}';
 
 property: STRING ':' value;
