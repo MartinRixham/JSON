@@ -45,3 +45,4 @@ public final class PerformanceTest
 
 // previous runs:
 // ---------- parsing took 56 seconds ----------
+// ---------- parsing took 47 seconds ----------
