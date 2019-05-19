@@ -1,6 +1,6 @@
 package yirgacheffe.json;
 
-class NullJsonObject extends JsonObject
+class NullJSONObject extends JSONObject
 {
 	@Override
 	public boolean has(String property)
@@ -27,15 +27,15 @@ class NullJsonObject extends JsonObject
 	}
 
 	@Override
-	public JsonObject getObject(String property)
+	public JSONObject getObject(String property)
 	{
-		return new NullJsonObject();
+		return new NullJSONObject();
 	}
 
 	@Override
-	public JsonArray getArray(String property)
+	public JSONArray getArray(String property)
 	{
-		return new NullJsonArray();
+		return new NullJSONArray();
 	}
 
 	@Override

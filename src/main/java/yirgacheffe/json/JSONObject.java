@@ -10,15 +10,15 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JsonObject implements JsonData
+public class JSONObject implements JsonData
 {
 	private Map<String, Object> properties = new HashMap<>();
 
-	public JsonObject()
+	public JSONObject()
 	{
 	}
 
-	public JsonObject(String data)
+	public JSONObject(String data)
 	{
 		CharStream charStream = CharStreams.fromString(data);
 		JSONLexer lexer = new JSONLexer(charStream);
@@ -37,7 +37,7 @@ public class JsonObject implements JsonData
 		{
 			String message = Arrays.toString(errorListener.getErrors());
 
-			throw new JsonException(message.substring(1, message.length() - 1));
+			throw new JSONException(message.substring(1, message.length() - 1));
 		}
 	}
 
@@ -56,7 +56,7 @@ public class JsonObject implements JsonData
 		JSONParser.ValueContext valueContext = context.value();
 		String valueString = valueContext.getText();
 
-		Object value = new JsonValue(valueContext, valueString).getValue();
+		Object value = new JSONValue(valueContext, valueString).getValue();
 
 		this.properties.put(keyString, value);
 	}
@@ -108,54 +108,54 @@ public class JsonObject implements JsonData
 		}
 	}
 
-	public JsonObject getObject(String property)
+	public JSONObject getObject(String property)
 	{
 		if (this.properties.containsKey(property))
 		{
 			Object value = this.properties.get(property);
 
-			if (value instanceof JsonObject)
+			if (value instanceof JSONObject)
 			{
-				return (JsonObject) value;
+				return (JSONObject) value;
 			}
 			else
 			{
-				return new NullJsonObject();
+				return new NullJSONObject();
 			}
 		}
 		else
 		{
-			return new NullJsonObject();
+			return new NullJSONObject();
 		}
 	}
 
-	public JsonArray getArray(String property)
+	public JSONArray getArray(String property)
 	{
 		if (this.properties.containsKey(property))
 		{
 			Object value = this.properties.get(property);
 
-			if (value instanceof JsonArray)
+			if (value instanceof JSONArray)
 			{
-				return (JsonArray) value;
+				return (JSONArray) value;
 			}
 			else
 			{
-				return new NullJsonArray();
+				return new NullJSONArray();
 			}
 		}
 		else
 		{
-			return new NullJsonArray();
+			return new NullJSONArray();
 		}
 	}
 
-	public void put(String property, JsonArray value)
+	public void put(String property, JSONArray value)
 	{
 		this.properties.put(property, value);
 	}
 
-	public void put(String property, JsonObject value)
+	public void put(String property, JSONObject value)
 	{
 		this.properties.put(property, value);
 	}

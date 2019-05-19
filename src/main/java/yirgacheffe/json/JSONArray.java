@@ -8,7 +8,7 @@ import yirgacheffe.parser.JSONParser;
 
 import java.util.Arrays;
 
-public class JsonArray implements JsonData
+public class JSONArray implements JsonData
 {
 	private static final int LOG_THIRTY_TWO = 5;
 
@@ -16,12 +16,12 @@ public class JsonArray implements JsonData
 
 	private Object[] array;
 
-	public JsonArray()
+	public JSONArray()
 	{
 		this.array = new Object[1 << LOG_THIRTY_TWO];
 	}
 
-	public JsonArray(String data)
+	public JSONArray(String data)
 	{
 		CharStream charStream = CharStreams.fromString(data);
 		JSONLexer lexer = new JSONLexer(charStream);
@@ -40,7 +40,7 @@ public class JsonArray implements JsonData
 		{
 			String message = Arrays.toString(errorListener.getErrors());
 
-			throw new JsonException(message.substring(1, message.length() - 1));
+			throw new JSONException(message.substring(1, message.length() - 1));
 		}
 	}
 
@@ -68,7 +68,7 @@ public class JsonArray implements JsonData
 	{
 		String valueString = context.getText();
 
-		Object value = new JsonValue(context, valueString).getValue();
+		Object value = new JSONValue(context, valueString).getValue();
 
 		this.array[index] = value;
 	}
@@ -130,65 +130,65 @@ public class JsonArray implements JsonData
 		}
 	}
 
-	public JsonObject getObject(double index)
+	public JSONObject getObject(double index)
 	{
 		return this.getObject((int) index);
 	}
 
-	public JsonObject getObject(int index)
+	public JSONObject getObject(int index)
 	{
 		if (this.length > index)
 		{
 			Object value = this.array[index];
 
-			if (value instanceof JsonObject)
+			if (value instanceof JSONObject)
 			{
-				return (JsonObject) value;
+				return (JSONObject) value;
 			}
 			else
 			{
-				return new NullJsonObject();
+				return new NullJSONObject();
 			}
 		}
 		else
 		{
-			return new NullJsonObject();
+			return new NullJSONObject();
 		}
 	}
 
-	public JsonArray getArray(double index)
+	public JSONArray getArray(double index)
 	{
 		return this.getArray((int) index);
 	}
 
-	public JsonArray getArray(int index)
+	public JSONArray getArray(int index)
 	{
 		if (this.length > index)
 		{
 			Object value = this.array[index];
 
-			if (value instanceof JsonArray)
+			if (value instanceof JSONArray)
 			{
-				return (JsonArray) value;
+				return (JSONArray) value;
 			}
 			else
 			{
-				return new NullJsonArray();
+				return new NullJSONArray();
 			}
 		}
 		else
 		{
-			return new NullJsonArray();
+			return new NullJSONArray();
 		}
 	}
 
-	public void put(JsonArray value)
+	public void put(JSONArray value)
 	{
 		this.grow();
 		this.array[this.length++] = value;
 	}
 
-	public void put(JsonObject value)
+	public void put(JSONObject value)
 	{
 		this.grow();
 		this.array[this.length++] = value;

@@ -10,7 +10,7 @@ import yirgacheffe.parser.JSONParser;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JsonSpec
+public class JSONSpec
 {
 	private Map<Integer, String[]> cache = new HashMap<>();
 

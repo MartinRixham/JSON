@@ -11,12 +11,12 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 
-public class JsonSpecTest
+public class JSONSpecTest
 {
 	@Test
 	public void testValidJson()
 	{
-		JsonSpec spec = new JsonSpec();
+		JSONSpec spec = new JSONSpec();
 
 		assertTrue(spec.isValid("{}"));
 		assertEquals(0, spec.getErrors("{}").length);
@@ -25,7 +25,7 @@ public class JsonSpecTest
 	@Test
 	public void testValidationCache()
 	{
-		JsonSpec spec = new JsonSpec();
+		JSONSpec spec = new JSONSpec();
 
 		assertEquals(0, spec.getErrors("{}").length);
 		assertTrue(spec.isValid("{}"));
@@ -34,7 +34,7 @@ public class JsonSpecTest
 	@Test
 	public void testEmptyString()
 	{
-		JsonSpec spec = new JsonSpec();
+		JSONSpec spec = new JSONSpec();
 
 		assertFalse(spec.isValid(""));
 		assertEquals(1, spec.getErrors("").length);
@@ -43,7 +43,7 @@ public class JsonSpecTest
 	@Test
 	public void testNull()
 	{
-		JsonSpec spec = new JsonSpec();
+		JSONSpec spec = new JSONSpec();
 
 		assertEquals(0, spec.getErrors(null).length);
 		assertFalse(spec.isValid(null));
@@ -59,7 +59,7 @@ public class JsonSpecTest
 
 		System.setErr(printStream);
 
-		JsonSpec spec = new JsonSpec();
+		JSONSpec spec = new JSONSpec();
 
 		assertFalse(spec.isValid("{"));
 		assertEquals(1, spec.getErrors("{").length);
@@ -71,7 +71,7 @@ public class JsonSpecTest
 	@Test
 	public void testInvalidRetrievedFromCache()
 	{
-		JsonSpec spec = new JsonSpec();
+		JSONSpec spec = new JSONSpec();
 
 		assertEquals(1, spec.getErrors("{").length);
 		assertFalse(spec.isValid("{"));

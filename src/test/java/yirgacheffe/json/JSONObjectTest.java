@@ -11,12 +11,12 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class JsonObjectTest
+public class JSONObjectTest
 {
 	@Test
 	public void testEmptyObject()
 	{
-		JsonObject json = new JsonObject();
+		JSONObject json = new JSONObject();
 
 		assertFalse(json.has("thingy"));
 		assertFalse(json.getBoolean("thingy"));
@@ -30,7 +30,7 @@ public class JsonObjectTest
 	@Test
 	public void testParseEmptyObject()
 	{
-		JsonObject json = new JsonObject("{}");
+		JSONObject json = new JSONObject("{}");
 
 		assertFalse(json.has("thingy"));
 		assertFalse(json.getBoolean("thingy"));
@@ -44,7 +44,7 @@ public class JsonObjectTest
 	@Test
 	public void testParseString()
 	{
-		JsonObject json = new JsonObject("{ \"thingy\": \"sumpt\" }");
+		JSONObject json = new JSONObject("{ \"thingy\": \"sumpt\" }");
 
 		assertTrue(json.has("thingy"));
 		assertTrue(json.getBoolean("thingy"));
@@ -58,7 +58,7 @@ public class JsonObjectTest
 	@Test
 	public void testParseEmptyString()
 	{
-		JsonObject json = new JsonObject("{ \"thingy\": \"\" }");
+		JSONObject json = new JSONObject("{ \"thingy\": \"\" }");
 
 		assertTrue(json.has("thingy"));
 		assertFalse(json.getBoolean("thingy"));
@@ -72,7 +72,7 @@ public class JsonObjectTest
 	@Test
 	public void testParseZeroInteger()
 	{
-		JsonObject json = new JsonObject("{ \"zero\": 0 }");
+		JSONObject json = new JSONObject("{ \"zero\": 0 }");
 
 		assertTrue(json.has("zero"));
 		assertFalse(json.getBoolean("zero"));
@@ -86,7 +86,7 @@ public class JsonObjectTest
 	@Test
 	public void testParseOneInteger()
 	{
-		JsonObject json = new JsonObject("{ \"one\": 1 }");
+		JSONObject json = new JSONObject("{ \"one\": 1 }");
 
 		assertTrue(json.has("one"));
 		assertTrue(json.getBoolean("one"));
@@ -100,7 +100,7 @@ public class JsonObjectTest
 	@Test
 	public void testParseZeroFloat()
 	{
-		JsonObject json = new JsonObject("{ \"zero\": 0.0 }");
+		JSONObject json = new JSONObject("{ \"zero\": 0.0 }");
 
 		assertTrue(json.has("zero"));
 		assertFalse(json.getBoolean("zero"));
@@ -114,7 +114,7 @@ public class JsonObjectTest
 	@Test
 	public void testParseOneFloat()
 	{
-		JsonObject json = new JsonObject("{ \"one\": 1.0 }");
+		JSONObject json = new JSONObject("{ \"one\": 1.0 }");
 
 		assertTrue(json.has("one"));
 		assertTrue(json.getBoolean("one"));
@@ -128,7 +128,7 @@ public class JsonObjectTest
 	@Test
 	public void testParseZeroExponential()
 	{
-		JsonObject json = new JsonObject("{ \"zero\": 0E2 }");
+		JSONObject json = new JSONObject("{ \"zero\": 0E2 }");
 
 		assertTrue(json.has("zero"));
 		assertFalse(json.getBoolean("zero"));
@@ -142,7 +142,7 @@ public class JsonObjectTest
 	@Test
 	public void testParseOneHundredExponential()
 	{
-		JsonObject json = new JsonObject("{ \"one\": 1e2 }");
+		JSONObject json = new JSONObject("{ \"one\": 1e2 }");
 
 		assertTrue(json.has("one"));
 		assertTrue(json.getBoolean("one"));
@@ -156,7 +156,7 @@ public class JsonObjectTest
 	@Test
 	public void testParseTrue()
 	{
-		JsonObject json = new JsonObject("{ \"tru\": true }");
+		JSONObject json = new JSONObject("{ \"tru\": true }");
 
 		assertTrue(json.has("tru"));
 		assertTrue(json.getBoolean("tru"));
@@ -170,7 +170,7 @@ public class JsonObjectTest
 	@Test
 	public void testParseFalse()
 	{
-		JsonObject json = new JsonObject("{ \"fals\": false }");
+		JSONObject json = new JSONObject("{ \"fals\": false }");
 
 		assertTrue(json.has("fals"));
 		assertFalse(json.getBoolean("fals"));
@@ -184,7 +184,7 @@ public class JsonObjectTest
 	@Test
 	public void testParseNull()
 	{
-		JsonObject json = new JsonObject("{ \"nul\": null }");
+		JSONObject json = new JSONObject("{ \"nul\": null }");
 
 		assertTrue(json.has("nul"));
 		assertFalse(json.getBoolean("nul"));
@@ -205,13 +205,13 @@ public class JsonObjectTest
 
 		System.setErr(printStream);
 
-		JsonException exception = null;
+		JSONException exception = null;
 
 		try
 		{
-			JsonObject json = new JsonObject("{ \"nul\": null");
+			JSONObject json = new JSONObject("{ \"nul\": null");
 		}
-		catch (JsonException e)
+		catch (JSONException e)
 		{
 			exception = e;
 		}
@@ -228,7 +228,7 @@ public class JsonObjectTest
 	@Test
 	public void testObjectWithChildObject()
 	{
-		JsonObject json = new JsonObject("{ \"obj\": {} }");
+		JSONObject json = new JSONObject("{ \"obj\": {} }");
 
 		assertTrue(json.has("obj"));
 		assertTrue(json.getBoolean("obj"));
@@ -242,7 +242,7 @@ public class JsonObjectTest
 	@Test
 	public void testObjectWithChildArray()
 	{
-		JsonObject json = new JsonObject("{ \"arr\": [] }");
+		JSONObject json = new JSONObject("{ \"arr\": [] }");
 
 		assertTrue(json.has("arr"));
 		assertTrue(json.getBoolean("arr"));
@@ -256,10 +256,10 @@ public class JsonObjectTest
 	@Test
 	public void testPutProperties()
 	{
-		JsonObject json = new JsonObject();
+		JSONObject json = new JSONObject();
 
-		json.put("obj", new JsonObject());
-		json.put("arr", new JsonArray());
+		json.put("obj", new JSONObject());
+		json.put("arr", new JSONArray());
 		json.put("thingy", "sumpt");
 		json.put("int", 1);
 		json.put("float", 1.0);
@@ -282,8 +282,8 @@ public class JsonObjectTest
 	@Test
 	public void testGetDeepObjectProperty()
 	{
-		JsonObject json =
-			new JsonObject(
+		JSONObject json =
+			new JSONObject(
 				"{ \"arr\": [1,2,{\"wibble\":{\"thingy\":[[8,8,8,\"sumpt\"]]}}] }");
 
 		assertEquals("sumpt",

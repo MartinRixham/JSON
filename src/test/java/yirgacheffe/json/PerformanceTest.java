@@ -17,12 +17,13 @@ public final class PerformanceTest
 		System.out.println("---------- downloading data ----------");
 		URL url = new URL(
 			"https://raw.githubusercontent.com/prust/" +
-				"wikipedia-movie-data/b8e3c086f4828520447a0d21835a509376a88099/movies.json");
-		String data = new Scanner(url.openStream(), "UTF-8").useDelimiter("\\A").next();
+			"wikipedia-movie-data/b8e3c086f4828520447a0d21835a509376a88099/movies.json");
+		String data =
+			new Scanner(url.openStream(), "UTF-8").useDelimiter("\\A").next();
 
 		System.out.println("---------- parsing JSON ----------");
 		long startTime = getCPUTime();
-		JsonArray json = new JsonArray(data);
+		JSONArray json = new JSONArray(data);
 		long endTime = getCPUTime();
 
 		System.out.println(

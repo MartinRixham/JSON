@@ -6,12 +6,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class NullJsonObjectTest
+public class NullJSONObjectTest
 {
 	@Test
 	public void testNullJsonObject()
 	{
-		JsonObject json = new NullJsonObject();
+		JSONObject json = new NullJSONObject();
 
 		assertFalse(json.has("thingy"));
 		assertFalse(json.getBoolean("thingy"));

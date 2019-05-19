@@ -11,12 +11,12 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class JsonArrayTest
+public class JSONArrayTest
 {
 	@Test
 	public void testEmptyArray()
 	{
-		JsonArray json = new JsonArray();
+		JSONArray json = new JSONArray();
 
 		assertFalse(json.getBoolean(1.0));
 		assertTrue(Double.isNaN(json.getNumber(1.0)));
@@ -30,7 +30,7 @@ public class JsonArrayTest
 	@Test
 	public void testParseEmptyObject()
 	{
-		JsonArray json = new JsonArray("[]");
+		JSONArray json = new JSONArray("[]");
 
 		assertFalse(json.getBoolean(0.0));
 		assertTrue(Double.isNaN(json.getNumber(0.0)));
@@ -44,7 +44,7 @@ public class JsonArrayTest
 	@Test
 	public void testParseString()
 	{
-		JsonArray json = new JsonArray("[\"sumpt\"]");
+		JSONArray json = new JSONArray("[\"sumpt\"]");
 
 		assertTrue(json.getBoolean(0.0));
 		assertTrue(Double.isNaN(json.getNumber(0.0)));
@@ -58,7 +58,7 @@ public class JsonArrayTest
 	@Test
 	public void testParseEmptyString()
 	{
-		JsonArray json = new JsonArray("[\"\"]");
+		JSONArray json = new JSONArray("[\"\"]");
 
 		assertFalse(json.getBoolean(0.0));
 		assertTrue(Double.isNaN(json.getNumber(0.0)));
@@ -72,7 +72,7 @@ public class JsonArrayTest
 	@Test
 	public void testParseZeroInteger()
 	{
-		JsonArray json = new JsonArray("[0]");
+		JSONArray json = new JSONArray("[0]");
 
 		assertFalse(json.getBoolean(0.0));
 		assertEquals(0, json.getNumber(0.0), 0);
@@ -86,7 +86,7 @@ public class JsonArrayTest
 	@Test
 	public void testParseTrue()
 	{
-		JsonArray json = new JsonArray("[true]");
+		JSONArray json = new JSONArray("[true]");
 
 		assertTrue(json.getBoolean(0.0));
 		assertTrue(Double.isNaN(json.getNumber(0.0)));
@@ -100,7 +100,7 @@ public class JsonArrayTest
 	@Test
 	public void testParseNull()
 	{
-		JsonArray json = new JsonArray("[null]");
+		JSONArray json = new JSONArray("[null]");
 
 		assertFalse(json.getBoolean(0.0));
 		assertTrue(Double.isNaN(json.getNumber(0.0)));
@@ -121,13 +121,13 @@ public class JsonArrayTest
 
 		System.setErr(printStream);
 
-		JsonException exception = null;
+		JSONException exception = null;
 
 		try
 		{
-			JsonArray json = new JsonArray("[null");
+			JSONArray json = new JSONArray("[null");
 		}
-		catch (JsonException e)
+		catch (JSONException e)
 		{
 			exception = e;
 		}
@@ -144,7 +144,7 @@ public class JsonArrayTest
 	@Test
 	public void testObjectWithChildObject()
 	{
-		JsonArray json = new JsonArray("[{}]");
+		JSONArray json = new JSONArray("[{}]");
 
 		assertTrue(json.getBoolean(0.0));
 		assertTrue(Double.isNaN(json.getNumber(0.0)));
@@ -158,7 +158,7 @@ public class JsonArrayTest
 	@Test
 	public void testObjectWithChildArray()
 	{
-		JsonArray json = new JsonArray("[[]]");
+		JSONArray json = new JSONArray("[[]]");
 
 		assertTrue(json.getBoolean(0.0));
 		assertTrue(Double.isNaN(json.getNumber(0.0)));
@@ -172,10 +172,10 @@ public class JsonArrayTest
 	@Test
 	public void testPutProperties()
 	{
-		JsonArray json = new JsonArray();
+		JSONArray json = new JSONArray();
 
-		json.put(new JsonObject());
-		json.put(new JsonArray());
+		json.put(new JSONObject());
+		json.put(new JSONArray());
 		json.put("sumpt");
 		json.put(1);
 		json.put(1.0);
@@ -190,7 +190,7 @@ public class JsonArrayTest
 	@Test
 	public void testArrayWithTwoElements()
 	{
-		JsonArray json = new JsonArray("[1,2]");
+		JSONArray json = new JSONArray("[1,2]");
 
 		assertTrue(json.getBoolean(1.0));
 		assertEquals(2.0, json.getNumber(1.0), 0);
@@ -204,7 +204,7 @@ public class JsonArrayTest
 	@Test
 	public void testGetElementPastEndOfArray()
 	{
-		JsonArray json = new JsonArray("[1]");
+		JSONArray json = new JSONArray("[1]");
 
 		assertFalse(json.getBoolean(1.0));
 		assertTrue(Double.isNaN(json.getNumber(1.0)));
@@ -218,7 +218,7 @@ public class JsonArrayTest
 	@Test
 	public void testArrayWithThirtyThreeElements()
 	{
-		JsonArray json = new JsonArray(
+		JSONArray json = new JSONArray(
 			"[0,1,2,3,4,5,6,7,8,9," +
 				"10,11,12,13,14,15,16,17,18,19," +
 				"20,21,22,23,24,25,26,27,28,29," +
@@ -230,14 +230,14 @@ public class JsonArrayTest
 	@Test
 	public void testPutThirtyThirdObjectOnArray()
 	{
-		JsonArray json = new JsonArray(
+		JSONArray json = new JSONArray(
 			"[0,1,2,3,4,5,6,7,8,9," +
 				"10,11,12,13,14,15,16,17,18,19," +
 				"20,21,22,23,24,25,26,27,28,29," +
 				"30]");
 
-		json.put(new JsonObject());
-		json.put(new JsonObject());
+		json.put(new JSONObject());
+		json.put(new JSONObject());
 
 		assertEquals(33, json.length());
 	}
@@ -245,14 +245,14 @@ public class JsonArrayTest
 	@Test
 	public void testPutThirtyThirdArrayOnArray()
 	{
-		JsonArray json = new JsonArray(
+		JSONArray json = new JSONArray(
 			"[0,1,2,3,4,5,6,7,8,9," +
 				"10,11,12,13,14,15,16,17,18,19," +
 				"20,21,22,23,24,25,26,27,28,29," +
 				"30]");
 
-		json.put(new JsonArray());
-		json.put(new JsonArray());
+		json.put(new JSONArray());
+		json.put(new JSONArray());
 
 		assertEquals(33, json.length());
 	}
@@ -260,7 +260,7 @@ public class JsonArrayTest
 	@Test
 	public void testPutThirtyThirdStringOnArray()
 	{
-		JsonArray json = new JsonArray(
+		JSONArray json = new JSONArray(
 			"[0,1,2,3,4,5,6,7,8,9," +
 				"10,11,12,13,14,15,16,17,18,19," +
 				"20,21,22,23,24,25,26,27,28,29," +
@@ -275,7 +275,7 @@ public class JsonArrayTest
 	@Test
 	public void testPutThirtyThirdIntegerOnArray()
 	{
-		JsonArray json = new JsonArray(
+		JSONArray json = new JSONArray(
 			"[0,1,2,3,4,5,6,7,8,9," +
 				"10,11,12,13,14,15,16,17,18,19," +
 				"20,21,22,23,24,25,26,27,28,29," +
@@ -290,7 +290,7 @@ public class JsonArrayTest
 	@Test
 	public void testPutThirtyThirdFloatOnArray()
 	{
-		JsonArray json = new JsonArray(
+		JSONArray json = new JSONArray(
 			"[0,1,2,3,4,5,6,7,8,9," +
 				"10,11,12,13,14,15,16,17,18,19," +
 				"20,21,22,23,24,25,26,27,28,29," +
@@ -305,7 +305,7 @@ public class JsonArrayTest
 	@Test
 	public void testPutThirtyThirdBooleanOnArray()
 	{
-		JsonArray json = new JsonArray(
+		JSONArray json = new JSONArray(
 			"[0,1,2,3,4,5,6,7,8,9," +
 				"10,11,12,13,14,15,16,17,18,19," +
 				"20,21,22,23,24,25,26,27,28,29," +

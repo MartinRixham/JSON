@@ -13,7 +13,7 @@ class BooleanValue
 	{
 		Object value = this.value;
 
-		if (value instanceof JsonArray || value instanceof JsonObject)
+		if (value instanceof JSONArray || value instanceof JSONObject)
 		{
 			return true;
 		}
