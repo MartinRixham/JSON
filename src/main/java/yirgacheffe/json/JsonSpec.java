@@ -7,8 +7,13 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import yirgacheffe.parser.JSONLexer;
 import yirgacheffe.parser.JSONParser;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class JsonSpec
 {
+	private Map<Integer, String[]> cache = new HashMap<>();
+
 	public boolean isValid(String data)
 	{
 		if (data == null)
@@ -16,7 +21,16 @@ public class JsonSpec
 			return false;
 		}
 
+		int key = data.hashCode();
+
+		if (this.cache.containsKey(key))
+		{
+			return this.cache.get(key).length == 0;
+		}
+
 		ParseErrorListener errorListener = this.parseJson(data);
+
+		this.cache.put(key, errorListener.getErrors());
 
 		return !errorListener.hasError();
 	}
@@ -28,7 +42,16 @@ public class JsonSpec
 			return new String[0];
 		}
 
+		int key = data.hashCode();
+
+		if (this.cache.containsKey(key))
+		{
+			return this.cache.get(key);
+		}
+
 		ParseErrorListener errorListener = this.parseJson(data);
+
+		this.cache.put(key, errorListener.getErrors());
 
 		return errorListener.getErrors();
 	}
