@@ -23,6 +23,15 @@ public class JsonSpecTest
 	}
 
 	@Test
+	public void testValidationCache()
+	{
+		JsonSpec spec = new JsonSpec();
+
+		assertEquals(0, spec.getErrors("{}").length);
+		assertTrue(spec.isValid("{}"));
+	}
+
+	@Test
 	public void testEmptyString()
 	{
 		JsonSpec spec = new JsonSpec();
@@ -36,8 +45,8 @@ public class JsonSpecTest
 	{
 		JsonSpec spec = new JsonSpec();
 
-		assertFalse(spec.isValid(null));
 		assertEquals(0, spec.getErrors(null).length);
+		assertFalse(spec.isValid(null));
 	}
 
 	@Test
@@ -57,5 +66,14 @@ public class JsonSpecTest
 		Assert.assertEquals("", spyError.toString());
 
 		System.setErr(originalError);
+	}
+
+	@Test
+	public void testInvalidRetrievedFromCache()
+	{
+		JsonSpec spec = new JsonSpec();
+
+		assertEquals(1, spec.getErrors("{").length);
+		assertFalse(spec.isValid("{"));
 	}
 }

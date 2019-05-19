@@ -64,7 +64,7 @@ public class JsonArray implements JsonData
 		}
 	}
 
-	void parseValue(JSONParser.ValueContext context, int index)
+	private void parseValue(JSONParser.ValueContext context, int index)
 	{
 		String valueString = context.getText();
 

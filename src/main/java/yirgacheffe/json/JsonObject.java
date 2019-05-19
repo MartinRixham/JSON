@@ -49,7 +49,7 @@ public class JsonObject implements JsonData
 		}
 	}
 
-	void parseProperty(JSONParser.PropertyContext context)
+	private void parseProperty(JSONParser.PropertyContext context)
 	{
 		String key = context.STRING().getText();
 		String keyString = key.substring(1, key.length() - 1);
