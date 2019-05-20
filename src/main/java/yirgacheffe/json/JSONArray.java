@@ -73,11 +73,6 @@ public class JSONArray implements JsonData
 		this.array[index] = value;
 	}
 
-	public boolean getBoolean(double index)
-	{
-		return this.getBoolean((int) index);
-	}
-
 	public boolean getBoolean(int index)
 	{
 		if (this.length > index)
@@ -90,11 +85,6 @@ public class JSONArray implements JsonData
 		{
 			return false;
 		}
-	}
-
-	public double getNumber(double index)
-	{
-		return this.getNumber((int) index);
 	}
 
 	public double getNumber(int index)
@@ -111,11 +101,6 @@ public class JSONArray implements JsonData
 		}
 	}
 
-	public String getString(double index)
-	{
-		return this.getString((int) index);
-	}
-
 	public String getString(int index)
 	{
 		if (this.length > index)
@@ -128,11 +113,6 @@ public class JSONArray implements JsonData
 		{
 			return "";
 		}
-	}
-
-	public JSONObject getObject(double index)
-	{
-		return this.getObject((int) index);
 	}
 
 	public JSONObject getObject(int index)
@@ -154,11 +134,6 @@ public class JSONArray implements JsonData
 		{
 			return new NullJSONObject();
 		}
-	}
-
-	public JSONArray getArray(double index)
-	{
-		return this.getArray((int) index);
 	}
 
 	public JSONArray getArray(int index)

@@ -18,11 +18,11 @@ public class JSONArrayTest
 	{
 		JSONArray json = new JSONArray();
 
-		assertFalse(json.getBoolean(1.0));
-		assertTrue(Double.isNaN(json.getNumber(1.0)));
-		assertEquals("", json.getString(1.0));
-		assertEquals("", json.getObject(1.0).toString());
-		assertEquals("", json.getArray(0.0).toString());
+		assertFalse(json.getBoolean(1));
+		assertTrue(Double.isNaN(json.getNumber(1)));
+		assertEquals("", json.getString(1));
+		assertEquals("", json.getObject(1).toString());
+		assertEquals("", json.getArray(0).toString());
 		assertEquals("[]", json.toString());
 		assertEquals(0, json.length());
 	}
@@ -32,11 +32,11 @@ public class JSONArrayTest
 	{
 		JSONArray json = new JSONArray("[]");
 
-		assertFalse(json.getBoolean(0.0));
-		assertTrue(Double.isNaN(json.getNumber(0.0)));
-		assertEquals("", json.getString(0.0));
-		assertEquals("", json.getObject(0.0).toString());
-		assertEquals("", json.getArray(0.0).toString());
+		assertFalse(json.getBoolean(0));
+		assertTrue(Double.isNaN(json.getNumber(0)));
+		assertEquals("", json.getString(0));
+		assertEquals("", json.getObject(0).toString());
+		assertEquals("", json.getArray(0).toString());
 		assertEquals("[]", json.toString());
 		assertEquals(0, json.length());
 	}
@@ -46,11 +46,11 @@ public class JSONArrayTest
 	{
 		JSONArray json = new JSONArray("[\"sumpt\"]");
 
-		assertTrue(json.getBoolean(0.0));
-		assertTrue(Double.isNaN(json.getNumber(0.0)));
-		assertEquals("sumpt", json.getString(0.0));
-		assertEquals("", json.getObject(0.0).toString());
-		assertEquals("", json.getArray(0.0).toString());
+		assertTrue(json.getBoolean(0));
+		assertTrue(Double.isNaN(json.getNumber(0)));
+		assertEquals("sumpt", json.getString(0));
+		assertEquals("", json.getObject(0).toString());
+		assertEquals("", json.getArray(0).toString());
 		assertEquals("[\"sumpt\"]", json.toString());
 		assertEquals(1, json.length());
 	}
@@ -60,11 +60,11 @@ public class JSONArrayTest
 	{
 		JSONArray json = new JSONArray("[\"\"]");
 
-		assertFalse(json.getBoolean(0.0));
-		assertTrue(Double.isNaN(json.getNumber(0.0)));
-		assertEquals("", json.getString(0.0));
-		assertEquals("", json.getObject(0.0).toString());
-		assertEquals("", json.getArray(0.0).toString());
+		assertFalse(json.getBoolean(0));
+		assertTrue(Double.isNaN(json.getNumber(0)));
+		assertEquals("", json.getString(0));
+		assertEquals("", json.getObject(0).toString());
+		assertEquals("", json.getArray(0).toString());
 		assertEquals("[\"\"]", json.toString());
 		assertEquals(1, json.length());
 	}
@@ -74,11 +74,11 @@ public class JSONArrayTest
 	{
 		JSONArray json = new JSONArray("[0]");
 
-		assertFalse(json.getBoolean(0.0));
-		assertEquals(0, json.getNumber(0.0), 0);
-		assertEquals("0", json.getString(0.0));
-		assertEquals("", json.getObject(0.0).toString());
-		assertEquals("", json.getArray(0.0).toString());
+		assertFalse(json.getBoolean(0));
+		assertEquals(0, json.getNumber(0), 0);
+		assertEquals("0", json.getString(0));
+		assertEquals("", json.getObject(0).toString());
+		assertEquals("", json.getArray(0).toString());
 		assertEquals("[0]", json.toString());
 		assertEquals(1, json.length());
 	}
@@ -88,11 +88,11 @@ public class JSONArrayTest
 	{
 		JSONArray json = new JSONArray("[true]");
 
-		assertTrue(json.getBoolean(0.0));
-		assertTrue(Double.isNaN(json.getNumber(0.0)));
-		assertEquals("true", json.getString(0.0));
-		assertEquals("", json.getObject(0.0).toString());
-		assertEquals("", json.getArray(0.0).toString());
+		assertTrue(json.getBoolean(0));
+		assertTrue(Double.isNaN(json.getNumber(0)));
+		assertEquals("true", json.getString(0));
+		assertEquals("", json.getObject(0).toString());
+		assertEquals("", json.getArray(0).toString());
 		assertEquals("[true]", json.toString());
 		assertEquals(1, json.length());
 	}
@@ -102,11 +102,11 @@ public class JSONArrayTest
 	{
 		JSONArray json = new JSONArray("[null]");
 
-		assertFalse(json.getBoolean(0.0));
-		assertTrue(Double.isNaN(json.getNumber(0.0)));
-		assertEquals("null", json.getString(0.0));
-		assertEquals("", json.getObject(0.0).toString());
-		assertEquals("", json.getArray(0.0).toString());
+		assertFalse(json.getBoolean(0));
+		assertTrue(Double.isNaN(json.getNumber(0)));
+		assertEquals("null", json.getString(0));
+		assertEquals("", json.getObject(0).toString());
+		assertEquals("", json.getArray(0).toString());
 		assertEquals("[null]", json.toString());
 		assertEquals(1, json.length());
 	}
@@ -146,11 +146,11 @@ public class JSONArrayTest
 	{
 		JSONArray json = new JSONArray("[{}]");
 
-		assertTrue(json.getBoolean(0.0));
-		assertTrue(Double.isNaN(json.getNumber(0.0)));
-		assertEquals("{}", json.getString(0.0));
-		assertEquals("{}", json.getObject(0.0).toString());
-		assertEquals("", json.getArray(0.0).toString());
+		assertTrue(json.getBoolean(0));
+		assertTrue(Double.isNaN(json.getNumber(0)));
+		assertEquals("{}", json.getString(0));
+		assertEquals("{}", json.getObject(0).toString());
+		assertEquals("", json.getArray(0).toString());
 		assertEquals("[{}]", json.toString());
 		assertEquals(1, json.length());
 	}
@@ -160,11 +160,11 @@ public class JSONArrayTest
 	{
 		JSONArray json = new JSONArray("[[]]");
 
-		assertTrue(json.getBoolean(0.0));
-		assertTrue(Double.isNaN(json.getNumber(0.0)));
-		assertEquals("[]", json.getString(0.0));
-		assertEquals("", json.getObject(0.0).toString());
-		assertEquals("[]", json.getArray(0.0).toString());
+		assertTrue(json.getBoolean(0));
+		assertTrue(Double.isNaN(json.getNumber(0)));
+		assertEquals("[]", json.getString(0));
+		assertEquals("", json.getObject(0).toString());
+		assertEquals("[]", json.getArray(0).toString());
 		assertEquals("[[]]", json.toString());
 		assertEquals(1, json.length());
 	}
@@ -192,11 +192,11 @@ public class JSONArrayTest
 	{
 		JSONArray json = new JSONArray("[1,2]");
 
-		assertTrue(json.getBoolean(1.0));
-		assertEquals(2.0, json.getNumber(1.0), 0);
-		assertEquals("2", json.getString(1.0));
-		assertEquals("", json.getObject(1.0).toString());
-		assertEquals("", json.getArray(1.0).toString());
+		assertTrue(json.getBoolean(1));
+		assertEquals(2.0, json.getNumber(1), 0);
+		assertEquals("2", json.getString(1));
+		assertEquals("", json.getObject(1).toString());
+		assertEquals("", json.getArray(1).toString());
 		assertEquals("[1,2]", json.toString());
 		assertEquals(2, json.length());
 	}
@@ -206,11 +206,11 @@ public class JSONArrayTest
 	{
 		JSONArray json = new JSONArray("[1]");
 
-		assertFalse(json.getBoolean(1.0));
-		assertTrue(Double.isNaN(json.getNumber(1.0)));
-		assertEquals("", json.getString(1.0));
-		assertEquals("", json.getObject(1.0).toString());
-		assertEquals("", json.getArray(1.0).toString());
+		assertFalse(json.getBoolean(1));
+		assertTrue(Double.isNaN(json.getNumber(1)));
+		assertEquals("", json.getString(1));
+		assertEquals("", json.getObject(1).toString());
+		assertEquals("", json.getArray(1).toString());
 		assertEquals("[1]", json.toString());
 		assertEquals(1, json.length());
 	}

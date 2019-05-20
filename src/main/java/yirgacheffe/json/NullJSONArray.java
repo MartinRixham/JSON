@@ -3,21 +3,9 @@ package yirgacheffe.json;
 class NullJSONArray extends JSONArray
 {
 	@Override
-	public boolean getBoolean(double property)
-	{
-		return false;
-	}
-
-	@Override
 	public boolean getBoolean(int property)
 	{
 		return false;
-	}
-
-	@Override
-	public double getNumber(double property)
-	{
-		return Double.NaN;
 	}
 
 	@Override
@@ -27,27 +15,15 @@ class NullJSONArray extends JSONArray
 	}
 
 	@Override
-	public String getString(double property)
+	public String getString(int property)
 	{
 		return "";
-	}
-
-	@Override
-	public JSONObject getObject(double property)
-	{
-		return new NullJSONObject();
 	}
 
 	@Override
 	public JSONObject getObject(int property)
 	{
 		return new NullJSONObject();
-	}
-
-	@Override
-	public JSONArray getArray(double property)
-	{
-		return new NullJSONArray();
 	}
 
 	@Override
