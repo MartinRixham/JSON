@@ -1,18 +1,13 @@
 package yirgacheffe.json;
 
-class BooleanValue
+final class PropertyValue
 {
-	private Object value;
-
-	BooleanValue(Object value)
+	private PropertyValue()
 	{
-		this.value = value;
 	}
 
-	boolean getBoolean()
+	public static boolean getBoolean(Object value)
 	{
-		Object value = this.value;
-
 		if (value instanceof JSONArray || value instanceof JSONObject)
 		{
 			return true;
@@ -36,6 +31,34 @@ class BooleanValue
 		else
 		{
 			return false;
+		}
+	}
+
+	public static double getNumber(Object value)
+	{
+		if (value instanceof Long)
+		{
+			return (long) value;
+		}
+		else if (value instanceof Double)
+		{
+			return (double) value;
+		}
+		else
+		{
+			return Double.NaN;
+		}
+	}
+
+	public static String getString(Object value)
+	{
+		if (value == null)
+		{
+			return "null";
+		}
+		else
+		{
+			return value.toString();
 		}
 	}
 }

@@ -56,7 +56,7 @@ public class JSONObject implements JsonData
 		JSONParser.ValueContext valueContext = context.value();
 		String valueString = valueContext.getText();
 
-		Object value = new JSONValue(valueContext, valueString).getValue();
+		Object value = JSONValue.getValue(valueContext, valueString);
 
 		this.properties.put(keyString, value);
 	}
@@ -72,7 +72,7 @@ public class JSONObject implements JsonData
 		{
 			Object value = this.properties.get(property);
 
-			return new BooleanValue(value).getBoolean();
+			return PropertyValue.getBoolean(value);
 		}
 		else
 		{
@@ -86,7 +86,7 @@ public class JSONObject implements JsonData
 		{
 			Object value = this.properties.get(property);
 
-			return new NumberValue(value).getNumber();
+			return PropertyValue.getNumber(value);
 		}
 		else
 		{
@@ -100,7 +100,7 @@ public class JSONObject implements JsonData
 		{
 			Object value = this.properties.get(property);
 
-			return new StringValue(value).getString();
+			return PropertyValue.getString(value);
 		}
 		else
 		{

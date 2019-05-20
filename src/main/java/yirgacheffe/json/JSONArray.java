@@ -59,7 +59,7 @@ public class JSONArray implements JsonData
 	{
 		String valueString = context.getText();
 
-		Object value = new JSONValue(context, valueString).getValue();
+		Object value = JSONValue.getValue(context, valueString);
 
 		this.array[index] = value;
 	}
@@ -70,7 +70,7 @@ public class JSONArray implements JsonData
 		{
 			Object value = this.array[index];
 
-			return new BooleanValue(value).getBoolean();
+			return PropertyValue.getBoolean(value);
 		}
 		else
 		{
@@ -84,7 +84,7 @@ public class JSONArray implements JsonData
 		{
 			Object value = this.array[index];
 
-			return new NumberValue(value).getNumber();
+			return PropertyValue.getNumber(value);
 		}
 		else
 		{
@@ -98,7 +98,7 @@ public class JSONArray implements JsonData
 		{
 			Object value = this.array[index];
 
-			return new StringValue(value).getString();
+			return PropertyValue.getString(value);
 		}
 		else
 		{
