@@ -10,7 +10,7 @@ import java.util.Arrays;
 
 public class JSONArray implements JsonData
 {
-	private static final int LOG_THIRTY_TWO = 5;
+	private static final int INITIAL_SIZE = 32;
 
 	private int length = 0;
 
@@ -18,7 +18,7 @@ public class JSONArray implements JsonData
 
 	public JSONArray()
 	{
-		this.array = new Object[1 << LOG_THIRTY_TWO];
+		this.array = new Object[INITIAL_SIZE];
 	}
 
 	public JSONArray(String data)
@@ -46,17 +46,8 @@ public class JSONArray implements JsonData
 
 	void parse(JSONParser.ArrayContext context)
 	{
-		int power = LOG_THIRTY_TWO;
-		int length = context.value().size() >> LOG_THIRTY_TWO;
-
-		while (length > 0)
-		{
-			power++;
-			length = length >> 1;
-		}
-
-		this.array = new Object[1 << power];
 		this.length = context.value().size();
+		this.array = new Object[this.length];
 
 		for (int i = 0; i < context.value().size(); i++)
 		{
