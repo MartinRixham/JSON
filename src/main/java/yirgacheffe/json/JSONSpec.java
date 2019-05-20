@@ -28,11 +28,11 @@ public class JSONSpec
 			return this.cache.get(key).length == 0;
 		}
 
-		ParseErrorListener errorListener = this.parseJson(data);
+		String[] errors = this.parseJson(data);
 
-		this.cache.put(key, errorListener.getErrors());
+		this.cache.put(key, errors);
 
-		return !errorListener.hasError();
+		return errors.length == 0;
 	}
 
 	public String[] getErrors(String data)
@@ -49,14 +49,14 @@ public class JSONSpec
 			return this.cache.get(key);
 		}
 
-		ParseErrorListener errorListener = this.parseJson(data);
+		String[] errors = this.parseJson(data);
 
-		this.cache.put(key, errorListener.getErrors());
+		this.cache.put(key, errors);
 
-		return errorListener.getErrors();
+		return errors;
 	}
 
-	private ParseErrorListener parseJson(String data)
+	private String[] parseJson(String data)
 	{
 		CharStream charStream = CharStreams.fromString(data);
 		JSONLexer lexer = new JSONLexer(charStream);
@@ -69,6 +69,6 @@ public class JSONSpec
 
 		ParseTree tree = parser.object();
 
-		return errorListener;
+		return errorListener.getErrors();
 	}
 }
