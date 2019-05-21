@@ -16,30 +16,14 @@ public class JSONSpec
 
 	public boolean isValid(String data)
 	{
-		if (data == null)
-		{
-			return false;
-		}
-
-		int key = data.hashCode();
-
-		if (this.cache.containsKey(key))
-		{
-			return this.cache.get(key).length == 0;
-		}
-
-		String[] errors = this.parseJson(data);
-
-		this.cache.put(key, errors);
-
-		return errors.length == 0;
+		return this.getErrors(data).length == 0;
 	}
 
 	public String[] getErrors(String data)
 	{
 		if (data == null)
 		{
-			return new String[0];
+			data = "";
 		}
 
 		int key = data.hashCode();

@@ -45,7 +45,7 @@ public class JSONSpecTest
 	{
 		JSONSpec spec = new JSONSpec();
 
-		assertEquals(0, spec.getErrors(null).length);
+		assertEquals(1, spec.getErrors(null).length);
 		assertFalse(spec.isValid(null));
 	}
 
