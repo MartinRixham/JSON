@@ -71,8 +71,7 @@ public class JSONObject implements JsonData
 	{
 		if (this.properties.containsKey(property))
 		{
-			return JSONValue.getBoolean(
-				(JSONParser.ValueContext) this.properties.get(property));
+			return JSONValue.getBoolean(this.properties.get(property));
 		}
 		else
 		{
@@ -84,8 +83,7 @@ public class JSONObject implements JsonData
 	{
 		if (this.properties.containsKey(property))
 		{
-			return JSONValue.getNumber(
-				(JSONParser.ValueContext) this.properties.get(property));
+			return JSONValue.getNumber(this.properties.get(property));
 		}
 		else
 		{
@@ -97,8 +95,7 @@ public class JSONObject implements JsonData
 	{
 		if (this.properties.containsKey(property))
 		{
-			return JSONValue.getString(
-				(JSONParser.ValueContext) this.properties.get(property));
+			return JSONValue.getString(this.properties.get(property));
 		}
 		else
 		{
@@ -110,8 +107,7 @@ public class JSONObject implements JsonData
 	{
 		if (this.properties.containsKey(property))
 		{
-			return JSONValue.getObject(
-				(JSONParser.ValueContext) this.properties.get(property));
+			return JSONValue.getObject(this.properties.get(property));
 		}
 		else
 		{
@@ -123,8 +119,7 @@ public class JSONObject implements JsonData
 	{
 		if (this.properties.containsKey(property))
 		{
-			return JSONValue.getArray(
-				(JSONParser.ValueContext) this.properties.get(property));
+			return JSONValue.getArray(this.properties.get(property));
 		}
 		else
 		{

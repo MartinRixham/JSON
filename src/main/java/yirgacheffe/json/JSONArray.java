@@ -56,8 +56,7 @@ public class JSONArray implements JsonData
 	{
 		if (this.array.length > index)
 		{
-			return JSONValue.getBoolean(
-				(JSONParser.ValueContext) this.array[index]);
+			return JSONValue.getBoolean(this.array[index]);
 		}
 		else
 		{
@@ -69,8 +68,7 @@ public class JSONArray implements JsonData
 	{
 		if (this.length > index)
 		{
-			return JSONValue.getNumber(
-				(JSONParser.ValueContext) this.array[index]);
+			return JSONValue.getNumber(this.array[index]);
 		}
 		else
 		{
@@ -95,8 +93,7 @@ public class JSONArray implements JsonData
 	{
 		if (this.length > index)
 		{
-			return JSONValue.getObject(
-				(JSONParser.ValueContext) this.array[index]);
+			return JSONValue.getObject(this.array[index]);
 		}
 		else
 		{
@@ -108,8 +105,7 @@ public class JSONArray implements JsonData
 	{
 		if (this.length > index)
 		{
-			return JSONValue.getArray(
-				(JSONParser.ValueContext) this.array[index]);
+			return JSONValue.getArray(this.array[index]);
 		}
 		else
 		{

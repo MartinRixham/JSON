@@ -8,9 +8,12 @@ final class JSONValue
 	{
 	}
 
-	public static boolean getBoolean(JSONParser.ValueContext context)
+	public static boolean getBoolean(Object value)
 	{
-		Object value = getValue(context);
+		if (value instanceof JSONParser.ValueContext)
+		{
+			value = getValue(value);
+		}
 
 		if (value instanceof JSONArray || value instanceof JSONObject)
 		{
@@ -38,9 +41,12 @@ final class JSONValue
 		}
 	}
 
-	public static double getNumber(JSONParser.ValueContext context)
+	public static double getNumber(Object value)
 	{
-		Object value = getValue(context);
+		if (value instanceof JSONParser.ValueContext)
+		{
+			value = getValue(value);
+		}
 
 		if (value instanceof Long)
 		{
@@ -56,9 +62,12 @@ final class JSONValue
 		}
 	}
 
-	public static String getString(JSONParser.ValueContext context)
+	public static String getString(Object value)
 	{
-		Object value = getValue(context);
+		if (value instanceof JSONParser.ValueContext)
+		{
+			value = getValue(value);
+		}
 
 		if (value == null)
 		{
@@ -70,9 +79,12 @@ final class JSONValue
 		}
 	}
 
-	public static JSONObject getObject(JSONParser.ValueContext context)
+	public static JSONObject getObject(Object value)
 	{
-		Object value = getValue(context);
+		if (value instanceof JSONParser.ValueContext)
+		{
+			value = getValue(value);
+		}
 
 		if (value instanceof JSONObject)
 		{
@@ -84,9 +96,12 @@ final class JSONValue
 		}
 	}
 
-	public static JSONArray getArray(JSONParser.ValueContext context)
+	public static JSONArray getArray(Object value)
 	{
-		Object value = getValue(context);
+		if (value instanceof JSONParser.ValueContext)
+		{
+			value = getValue(value);
+		}
 
 		if (value instanceof JSONArray)
 		{
@@ -98,46 +113,51 @@ final class JSONValue
 		}
 	}
 
-	private static Object getValue(JSONParser.ValueContext context)
+	private static Object getValue(Object value)
 	{
-		String valueString = context.getText();
-		Object value = null;
+		JSONParser.ValueContext context = (JSONParser.ValueContext) value;
 
 		if (context.array() != null)
 		{
-			value = new JSONArray(context.array().value().toArray());
+			return new JSONArray(context.array().value().toArray());
 		}
 		if (context.object() != null)
 		{
-			value = new JSONObject(context.object().property().toArray());
+			return new JSONObject(context.object().property().toArray());
 		}
 		if (context.STRING() != null)
 		{
-			value = valueString.substring(1, valueString.length() - 1);
+			String valueString = context.getText();
+
+			return valueString.substring(1, valueString.length() - 1);
 		}
 		else if (context.NUMBER() != null)
 		{
+			String valueString = context.getText();
+
 			if (valueString.contains(".") ||
 				valueString.contains("e") ||
 				valueString.contains("E"))
 			{
-				value = Double.valueOf(valueString);
+				return Double.valueOf(valueString);
 			}
 			else
 			{
-				value = Long.valueOf(valueString);
+				return Long.valueOf(valueString);
 			}
 		}
 		else if (context.TRUE() != null)
 		{
-			value = true;
+			return true;
 		}
 		else if (context.FALSE() != null)
 		{
-			value = false;
+			return false;
 		}
-
-		return value;
+		else
+		{
+			return null;
+		}
 	}
 
 	static void appendValueString(StringBuilder builder, Object value)
