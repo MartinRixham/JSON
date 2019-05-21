@@ -31,14 +31,14 @@ public class JSONObject implements JsonData
 
 		JSONParser.ObjectContext context = parser.object();
 
-		this.parse(context);
-
 		if (errorListener.hasError())
 		{
 			String message = Arrays.toString(errorListener.getErrors());
 
 			throw new JSONException(message.substring(1, message.length() - 1));
 		}
+
+		this.parse(context);
 	}
 
 	void parse(JSONParser.ObjectContext	context)

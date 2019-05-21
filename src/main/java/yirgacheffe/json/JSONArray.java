@@ -34,14 +34,14 @@ public class JSONArray implements JsonData
 
 		JSONParser.ArrayContext context = parser.array();
 
-		this.parse(context);
-
 		if (errorListener.hasError())
 		{
 			String message = Arrays.toString(errorListener.getErrors());
 
 			throw new JSONException(message.substring(1, message.length() - 1));
 		}
+
+		this.parse(context);
 	}
 
 	void parse(JSONParser.ArrayContext context)
@@ -49,7 +49,7 @@ public class JSONArray implements JsonData
 		this.length = context.value().size();
 		this.array = new Object[this.length];
 
-		for (int i = 0; i < context.value().size(); i++)
+		for (int i = 0; i < this.length; i++)
 		{
 			this.parseValue(context.value(i), i);
 		}

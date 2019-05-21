@@ -47,3 +47,4 @@ public final class PerformanceTest
 // ---------- parsing took 56 seconds ----------
 // ---------- parsing took 47 seconds ----------
 // ---------- parsing took 45 seconds ----------
+// ---------- parsing took 9 seconds ----------
