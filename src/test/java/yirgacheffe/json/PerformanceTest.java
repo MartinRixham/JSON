@@ -16,20 +16,20 @@ public final class PerformanceTest
 	{
 		System.out.println("---------- downloading data ----------");
 		URL url = new URL(
-			"https://raw.githubusercontent.com/prust/" +
-			"wikipedia-movie-data/b8e3c086f4828520447a0d21835a509376a88099/movies.json");
+			"https://raw.githubusercontent.com" +
+				"/zemirco/sf-city-lots-json/master/citylots.json");
 		String data =
 			new Scanner(url.openStream(), "UTF-8").useDelimiter("\\A").next();
 
 		System.out.println("---------- parsing JSON ----------");
 		long startTime = getCPUTime();
-		JSONArray json = new JSONArray(data);
+		JSONObject json = new JSONObject(data);
 		long endTime = getCPUTime();
 
 		System.out.println(
 			"---------- parsing took " +
-			Duration.ofNanos(endTime - startTime).getSeconds() +
-			" seconds ----------");
+				Duration.ofNanos(endTime - startTime).getSeconds() +
+				" seconds ----------");
 
 		//System.out.println("---------- printing ----------");
 		//System.out.println(json.toString());
@@ -49,3 +49,6 @@ public final class PerformanceTest
 // ---------- parsing took 45 seconds ----------
 // ---------- parsing took 9 seconds ----------
 // ---------- parsing took 1 seconds ----------
+
+// bigger example JSON file
+// ---------- parsing took 37 seconds ----------
