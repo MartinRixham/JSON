@@ -16,8 +16,8 @@ public final class PerformanceTest
 	{
 		System.out.println("---------- downloading data ----------");
 		URL url = new URL(
-			"https://raw.githubusercontent.com" +
-				"/zemirco/sf-city-lots-json/master/citylots.json");
+			"https://raw.githubusercontent.com/zemirco/sf-city-lots-json/" +
+				"33c27c137784a96d0fbd7f329dceda6cc7f49fa3/citylots.json");
 		String data =
 			new Scanner(url.openStream(), "UTF-8").useDelimiter("\\A").next();
 

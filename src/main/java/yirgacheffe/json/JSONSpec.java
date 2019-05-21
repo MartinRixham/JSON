@@ -67,7 +67,7 @@ public class JSONSpec
 		parser.removeErrorListeners();
 		parser.addErrorListener(errorListener);
 
-		ParseTree tree = parser.object();
+		ParseTree tree = parser.json();
 
 		return errorListener.getErrors();
 	}

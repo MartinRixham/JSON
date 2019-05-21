@@ -71,11 +71,8 @@ public class JSONObject implements JsonData
 	{
 		if (this.properties.containsKey(property))
 		{
-			Object value =
-				JSONValue.getValue(
-					(JSONParser.ValueContext) this.properties.get(property));
-
-			return PropertyValue.getBoolean(value);
+			return JSONValue.getBoolean(
+				(JSONParser.ValueContext) this.properties.get(property));
 		}
 		else
 		{
@@ -87,11 +84,8 @@ public class JSONObject implements JsonData
 	{
 		if (this.properties.containsKey(property))
 		{
-			Object value =
-				JSONValue.getValue(
-					(JSONParser.ValueContext) this.properties.get(property));
-
-			return PropertyValue.getNumber(value);
+			return JSONValue.getNumber(
+				(JSONParser.ValueContext) this.properties.get(property));
 		}
 		else
 		{
@@ -103,11 +97,8 @@ public class JSONObject implements JsonData
 	{
 		if (this.properties.containsKey(property))
 		{
-			Object value =
-				JSONValue.getValue(
-					(JSONParser.ValueContext) this.properties.get(property));
-
-			return PropertyValue.getString(value);
+			return JSONValue.getString(
+				(JSONParser.ValueContext) this.properties.get(property));
 		}
 		else
 		{
@@ -119,18 +110,8 @@ public class JSONObject implements JsonData
 	{
 		if (this.properties.containsKey(property))
 		{
-			Object value =
-				JSONValue.getValue(
-					(JSONParser.ValueContext) this.properties.get(property));
-
-			if (value instanceof JSONObject)
-			{
-				return (JSONObject) value;
-			}
-			else
-			{
-				return new NullJSONObject();
-			}
+			return JSONValue.getObject(
+				(JSONParser.ValueContext) this.properties.get(property));
 		}
 		else
 		{
@@ -142,18 +123,8 @@ public class JSONObject implements JsonData
 	{
 		if (this.properties.containsKey(property))
 		{
-			Object value =
-				JSONValue.getValue(
-					(JSONParser.ValueContext) this.properties.get(property));
-
-			if (value instanceof JSONArray)
-			{
-				return (JSONArray) value;
-			}
-			else
-			{
-				return new NullJSONArray();
-			}
+			return JSONValue.getArray(
+				(JSONParser.ValueContext) this.properties.get(property));
 		}
 		else
 		{
@@ -203,7 +174,7 @@ public class JSONObject implements JsonData
 			builder.append(keys[i]);
 			builder.append("\":");
 
-			this.appendValueString(builder, this.properties.get(keys[i]));
+			JSONValue.appendValueString(builder, this.properties.get(keys[i]));
 
 			if (i < keys.length - 1)
 			{
@@ -214,27 +185,5 @@ public class JSONObject implements JsonData
 		builder.append('}');
 
 		return builder.toString();
-	}
-
-	private void appendValueString(StringBuilder builder, Object value)
-	{
-		if (value instanceof JSONParser.ValueContext)
-		{
-			builder.append(((JSONParser.ValueContext) value).getText());
-		}
-		else if (value instanceof String)
-		{
-			builder.append('"');
-			builder.append(value.toString());
-			builder.append('"');
-		}
-		else if (value == null)
-		{
-			builder.append("null");
-		}
-		else
-		{
-			builder.append(value.toString());
-		}
 	}
 }
