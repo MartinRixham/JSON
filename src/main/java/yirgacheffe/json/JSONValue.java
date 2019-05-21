@@ -8,20 +8,18 @@ final class JSONValue
 	{
 	}
 
-	public static Object getValue(JSONParser.ValueContext context, String valueString)
+	public static Object getValue(JSONParser.ValueContext context)
 	{
+		String valueString = context.getText();
 		Object value = null;
 
 		if (context.array() != null)
 		{
-			value = new JSONArray(context.array().value().toArray());;
+			value = new JSONArray(context.array().value().toArray());
 		}
 		if (context.object() != null)
 		{
-			JSONObject object = new JSONObject();
-			object.parse(context.object());
-
-			value = object;
+			value = new JSONObject(context.object().property().toArray());
 		}
 		if (context.STRING() != null)
 		{

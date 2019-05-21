@@ -38,13 +38,16 @@ public class JSONObject implements JsonData
 			throw new JSONException(message.substring(1, message.length() - 1));
 		}
 
-		this.parse(context);
-	}
-
-	void parse(JSONParser.ObjectContext	context)
-	{
 		Object[] properties = context.property().toArray();
 
+		for (Object propertyContext: properties)
+		{
+			this.parseProperty((JSONParser.PropertyContext) propertyContext);
+		}
+	}
+
+	JSONObject(Object[] properties)
+	{
 		for (Object propertyContext: properties)
 		{
 			this.parseProperty((JSONParser.PropertyContext) propertyContext);
@@ -55,12 +58,8 @@ public class JSONObject implements JsonData
 	{
 		String key = context.STRING().getText();
 		String keyString = key.substring(1, key.length() - 1);
-		JSONParser.ValueContext valueContext = context.value();
-		String valueString = valueContext.getText();
 
-		Object value = JSONValue.getValue(valueContext, valueString);
-
-		this.properties.put(keyString, value);
+		this.properties.put(keyString, context.value());
 	}
 
 	public boolean has(String property)
@@ -72,7 +71,9 @@ public class JSONObject implements JsonData
 	{
 		if (this.properties.containsKey(property))
 		{
-			Object value = this.properties.get(property);
+			Object value =
+				JSONValue.getValue(
+					(JSONParser.ValueContext) this.properties.get(property));
 
 			return PropertyValue.getBoolean(value);
 		}
@@ -86,7 +87,9 @@ public class JSONObject implements JsonData
 	{
 		if (this.properties.containsKey(property))
 		{
-			Object value = this.properties.get(property);
+			Object value =
+				JSONValue.getValue(
+					(JSONParser.ValueContext) this.properties.get(property));
 
 			return PropertyValue.getNumber(value);
 		}
@@ -100,7 +103,9 @@ public class JSONObject implements JsonData
 	{
 		if (this.properties.containsKey(property))
 		{
-			Object value = this.properties.get(property);
+			Object value =
+				JSONValue.getValue(
+					(JSONParser.ValueContext) this.properties.get(property));
 
 			return PropertyValue.getString(value);
 		}
@@ -114,7 +119,9 @@ public class JSONObject implements JsonData
 	{
 		if (this.properties.containsKey(property))
 		{
-			Object value = this.properties.get(property);
+			Object value =
+				JSONValue.getValue(
+					(JSONParser.ValueContext) this.properties.get(property));
 
 			if (value instanceof JSONObject)
 			{
@@ -135,7 +142,9 @@ public class JSONObject implements JsonData
 	{
 		if (this.properties.containsKey(property))
 		{
-			Object value = this.properties.get(property);
+			Object value =
+				JSONValue.getValue(
+					(JSONParser.ValueContext) this.properties.get(property));
 
 			if (value instanceof JSONArray)
 			{
@@ -209,7 +218,11 @@ public class JSONObject implements JsonData
 
 	private void appendValueString(StringBuilder builder, Object value)
 	{
-		if (value instanceof String)
+		if (value instanceof JSONParser.ValueContext)
+		{
+			builder.append(((JSONParser.ValueContext) value).getText());
+		}
+		else if (value instanceof String)
 		{
 			builder.append('"');
 			builder.append(value.toString());

@@ -137,9 +137,7 @@ public class JSONArray implements JsonData
 
 	private Object parseValue(JSONParser.ValueContext context)
 	{
-		String valueString = context.getText();
-
-		return JSONValue.getValue(context, valueString);
+		return JSONValue.getValue(context);
 	}
 
 	public void put(JSONArray value)

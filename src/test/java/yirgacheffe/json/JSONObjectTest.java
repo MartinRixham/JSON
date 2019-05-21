@@ -136,7 +136,7 @@ public class JSONObjectTest
 		assertEquals("0.0", json.getString("zero"));
 		assertEquals("", json.getObject("zero").toString());
 		assertEquals("", json.getArray("zero").toString());
-		assertEquals("{\"zero\":0.0}", json.toString());
+		assertEquals("{\"zero\":0E2}", json.toString());
 	}
 
 	@Test
@@ -150,7 +150,7 @@ public class JSONObjectTest
 		assertEquals("100.0", json.getString("one"));
 		assertEquals("", json.getObject("one").toString());
 		assertEquals("", json.getArray("one").toString());
-		assertEquals("{\"one\":100.0}", json.toString());
+		assertEquals("{\"one\":1e2}", json.toString());
 	}
 
 	@Test
