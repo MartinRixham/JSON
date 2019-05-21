@@ -14,20 +14,6 @@ import static org.junit.Assert.assertTrue;
 public class JSONArrayTest
 {
 	@Test
-	public void testEmptyArray()
-	{
-		JSONArray json = new JSONArray();
-
-		assertFalse(json.getBoolean(1));
-		assertTrue(Double.isNaN(json.getNumber(1)));
-		assertEquals("", json.getString(1));
-		assertEquals("", json.getObject(1).toString());
-		assertEquals("", json.getArray(0).toString());
-		assertEquals("[]", json.toString());
-		assertEquals(0, json.length());
-	}
-
-	@Test
 	public void testParseEmptyObject()
 	{
 		JSONArray json = new JSONArray("[]");

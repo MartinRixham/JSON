@@ -41,35 +41,21 @@ public class JSONArray implements JsonData
 			throw new JSONException(message.substring(1, message.length() - 1));
 		}
 
-		this.parse(context);
+		this.array = context.value().toArray();
+		this.length = this.array.length;
 	}
 
-	void parse(JSONParser.ArrayContext context)
+	JSONArray(Object[] values)
 	{
-		Object[] values = context.value().toArray();
+		this.array = values;
 		this.length = values.length;
-		this.array = new Object[this.length];
-
-		for (int i = 0; i < this.length; i++)
-		{
-			this.parseValue((JSONParser.ValueContext) values[i], i);
-		}
-	}
-
-	private void parseValue(JSONParser.ValueContext context, int index)
-	{
-		String valueString = context.getText();
-
-		Object value = JSONValue.getValue(context, valueString);
-
-		this.array[index] = value;
 	}
 
 	public boolean getBoolean(int index)
 	{
-		if (this.length > index)
+		if (this.array.length > index)
 		{
-			Object value = this.array[index];
+			Object value = this.parseValue((JSONParser.ValueContext) this.array[index]);
 
 			return PropertyValue.getBoolean(value);
 		}
@@ -83,7 +69,7 @@ public class JSONArray implements JsonData
 	{
 		if (this.length > index)
 		{
-			Object value = this.array[index];
+			Object value = this.parseValue((JSONParser.ValueContext) this.array[index]);
 
 			return PropertyValue.getNumber(value);
 		}
@@ -97,7 +83,7 @@ public class JSONArray implements JsonData
 	{
 		if (this.length > index)
 		{
-			Object value = this.array[index];
+			Object value = this.parseValue((JSONParser.ValueContext) this.array[index]);
 
 			return PropertyValue.getString(value);
 		}
@@ -111,7 +97,7 @@ public class JSONArray implements JsonData
 	{
 		if (this.length > index)
 		{
-			Object value = this.array[index];
+			Object value = this.parseValue((JSONParser.ValueContext) this.array[index]);
 
 			if (value instanceof JSONObject)
 			{
@@ -132,7 +118,7 @@ public class JSONArray implements JsonData
 	{
 		if (this.length > index)
 		{
-			Object value = this.array[index];
+			Object value = this.parseValue((JSONParser.ValueContext) this.array[index]);
 
 			if (value instanceof JSONArray)
 			{
@@ -147,6 +133,13 @@ public class JSONArray implements JsonData
 		{
 			return new NullJSONArray();
 		}
+	}
+
+	private Object parseValue(JSONParser.ValueContext context)
+	{
+		String valueString = context.getText();
+
+		return JSONValue.getValue(context, valueString);
 	}
 
 	public void put(JSONArray value)
@@ -217,7 +210,11 @@ public class JSONArray implements JsonData
 
 	private void appendValueString(StringBuilder builder, Object value)
 	{
-		if (value instanceof String)
+		if (value instanceof JSONParser.ValueContext)
+		{
+			builder.append(((JSONParser.ValueContext) value).getText());
+		}
+		else if (value instanceof String)
 		{
 			builder.append('"');
 			builder.append(value.toString());

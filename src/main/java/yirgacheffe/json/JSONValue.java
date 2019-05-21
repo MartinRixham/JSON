@@ -14,10 +14,7 @@ final class JSONValue
 
 		if (context.array() != null)
 		{
-			JSONArray array = new JSONArray();
-			array.parse(context.array());
-
-			value = array;
+			value = new JSONArray(context.array().value().toArray());;
 		}
 		if (context.object() != null)
 		{

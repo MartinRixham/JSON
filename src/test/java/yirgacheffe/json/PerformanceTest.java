@@ -52,3 +52,4 @@ public final class PerformanceTest
 
 // bigger example JSON file
 // ---------- parsing took 37 seconds ----------
+// ---------- parsing took 13 seconds ----------
