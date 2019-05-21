@@ -46,12 +46,13 @@ public class JSONArray implements JsonData
 
 	void parse(JSONParser.ArrayContext context)
 	{
-		this.length = context.value().size();
+		Object[] values = context.value().toArray();
+		this.length = values.length;
 		this.array = new Object[this.length];
 
 		for (int i = 0; i < this.length; i++)
 		{
-			this.parseValue(context.value(i), i);
+			this.parseValue((JSONParser.ValueContext) values[i], i);
 		}
 	}
 

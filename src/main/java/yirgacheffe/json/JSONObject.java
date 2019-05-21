@@ -43,9 +43,11 @@ public class JSONObject implements JsonData
 
 	void parse(JSONParser.ObjectContext	context)
 	{
-		for (JSONParser.PropertyContext propertyContext: context.property())
+		Object[] properties = context.property().toArray();
+
+		for (Object propertyContext: properties)
 		{
-			this.parseProperty(propertyContext);
+			this.parseProperty((JSONParser.PropertyContext) propertyContext);
 		}
 	}
 
