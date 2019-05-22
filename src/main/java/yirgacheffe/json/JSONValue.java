@@ -46,10 +46,6 @@ final class JSONValue
 
 	public static String getString(JsonValue value)
 	{
-		if (value == null)
-		{
-			return "null";
-		}
 		if (value instanceof JsonString)
 		{
 			return ((JsonString) value).getString();

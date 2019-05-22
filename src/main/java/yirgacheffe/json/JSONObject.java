@@ -161,12 +161,32 @@ public class JSONObject implements JsonData
 
 	public void put(String property, double value)
 	{
-		this.builder.add(property, value);
+		if (this.builder == null)
+		{
+			JsonObjectBuilder builder = Json.createObjectBuilder(this.json);
+			builder.add(property, value);
+
+			this.json = builder.build();
+		}
+		else
+		{
+			this.builder.add(property, value);
+		}
 	}
 
 	public void put(String property, long value)
 	{
-		this.builder.add(property, value);
+		if (this.builder == null)
+		{
+			JsonObjectBuilder builder = Json.createObjectBuilder(this.json);
+			builder.add(property, value);
+
+			this.json = builder.build();
+		}
+		else
+		{
+			this.builder.add(property, value);
+		}
 	}
 
 	public void put(String property, boolean value)
