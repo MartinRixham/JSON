@@ -1,77 +1,56 @@
 package yirgacheffe.json;
 
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import yirgacheffe.parser.JSONParser;
-import yirgacheffe.parser.JSONLexer;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonReader;
+import javax.json.JsonStructure;
+import java.io.StringReader;
 
 public class JSONObject implements JsonData
 {
-	private Map<String, Object> properties = new HashMap<>();
+	private JsonObject json;
+
+	private JsonObjectBuilder builder;
 
 	public JSONObject()
 	{
+		this.builder = Json.createObjectBuilder();
 	}
 
 	public JSONObject(String data)
 	{
-		CharStream charStream = CharStreams.fromString(data);
-		JSONLexer lexer = new JSONLexer(charStream);
-		CommonTokenStream tokens = new CommonTokenStream(lexer);
-		ParseErrorListener errorListener = new ParseErrorListener();
+		JsonReader reader = Json.createReader(new StringReader(data));
 
-		JSONParser parser = new JSONParser(tokens);
-		parser.removeErrorListeners();
-		parser.addErrorListener(errorListener);
-
-		JSONParser.ObjectContext context = parser.object();
-
-		if (errorListener.hasError())
-		{
-			String message = Arrays.toString(errorListener.getErrors());
-
-			throw new JSONException(message.substring(1, message.length() - 1));
-		}
-
-		Object[] properties = context.property().toArray();
-
-		for (Object propertyContext: properties)
-		{
-			this.parseProperty((JSONParser.PropertyContext) propertyContext);
-		}
+		this.json = reader.readObject();
 	}
 
-	JSONObject(Object[] properties)
+	JSONObject(JsonObject json)
 	{
-		for (Object propertyContext: properties)
-		{
-			this.parseProperty((JSONParser.PropertyContext) propertyContext);
-		}
-	}
-
-	private void parseProperty(JSONParser.PropertyContext context)
-	{
-		String key = context.STRING().getText();
-		String keyString = key.substring(1, key.length() - 1);
-
-		this.properties.put(keyString, context.value());
+		this.json = json;
 	}
 
 	public boolean has(String property)
 	{
-		return this.properties.containsKey(property);
+		if (this.json == null)
+		{
+			JsonObject json = this.builder.build();
+
+			return json.containsKey(property);
+		}
+		else
+		{
+			return this.json.containsKey(property);
+		}
 	}
 
 	public boolean getBoolean(String property)
 	{
-		if (this.properties.containsKey(property))
+		JsonObject json = this.json == null ? this.builder.build() : this.json;
+
+		if (json.containsKey(property))
 		{
-			return JSONValue.getBoolean(this.properties.get(property));
+			return JSONValue.getBoolean(json.get(property));
 		}
 		else
 		{
@@ -81,9 +60,11 @@ public class JSONObject implements JsonData
 
 	public double getNumber(String property)
 	{
-		if (this.properties.containsKey(property))
+		JsonObject json = this.json == null ? this.builder.build() : this.json;
+
+		if (json.containsKey(property))
 		{
-			return JSONValue.getNumber(this.properties.get(property));
+			return JSONValue.getNumber(json.get(property));
 		}
 		else
 		{
@@ -93,9 +74,11 @@ public class JSONObject implements JsonData
 
 	public String getString(String property)
 	{
-		if (this.properties.containsKey(property))
+		JsonObject json = this.json == null ? this.builder.build() : this.json;
+
+		if (json.containsKey(property))
 		{
-			return JSONValue.getString(this.properties.get(property));
+			return JSONValue.getString(json.get(property));
 		}
 		else
 		{
@@ -105,9 +88,11 @@ public class JSONObject implements JsonData
 
 	public JSONObject getObject(String property)
 	{
-		if (this.properties.containsKey(property))
+		JsonObject json = this.json == null ? this.builder.build() : this.json;
+
+		if (json.containsKey(property))
 		{
-			return JSONValue.getObject(this.properties.get(property));
+			return JSONValue.getObject(json.get(property));
 		}
 		else
 		{
@@ -117,9 +102,11 @@ public class JSONObject implements JsonData
 
 	public JSONArray getArray(String property)
 	{
-		if (this.properties.containsKey(property))
+		JsonObject json = this.json == null ? this.builder.build() : this.json;
+
+		if (json.containsKey(property))
 		{
-			return JSONValue.getArray(this.properties.get(property));
+			return JSONValue.getArray(json.get(property));
 		}
 		else
 		{
@@ -129,56 +116,96 @@ public class JSONObject implements JsonData
 
 	public void put(String property, JSONArray value)
 	{
-		this.properties.put(property, value);
+		if (this.builder == null)
+		{
+			JsonObjectBuilder builder = Json.createObjectBuilder(this.json);
+			builder.add(property, value.toJson());
+
+			this.json = builder.build();
+		}
+		else
+		{
+			this.builder.add(property, value.toJson());
+		}
 	}
 
 	public void put(String property, JSONObject value)
 	{
-		this.properties.put(property, value);
+		if (this.builder == null)
+		{
+			JsonObjectBuilder builder = Json.createObjectBuilder(this.json);
+			builder.add(property, value.toJson());
+
+			this.json = builder.build();
+		}
+		else
+		{
+			this.builder.add(property, value.toJson());
+		}
 	}
 
 	public void put(String property, String value)
 	{
-		this.properties.put(property, value);
+		if (this.builder == null)
+		{
+			JsonObjectBuilder builder = Json.createObjectBuilder(this.json);
+			builder.add(property, value);
+
+			this.json = builder.build();
+		}
+		else
+		{
+			this.builder.add(property, value);
+		}
 	}
 
 	public void put(String property, double value)
 	{
-		this.properties.put(property, value);
+		this.builder.add(property, value);
 	}
 
 	public void put(String property, long value)
 	{
-		this.properties.put(property, value);
+		this.builder.add(property, value);
 	}
 
 	public void put(String property, boolean value)
 	{
-		this.properties.put(property, value);
+		if (this.builder == null)
+		{
+			JsonObjectBuilder builder = Json.createObjectBuilder(this.json);
+			builder.add(property, value);
+
+			this.json = builder.build();
+		}
+		else
+		{
+			this.builder.add(property, value);
+		}
+	}
+
+	JsonStructure toJson()
+	{
+		if (this.json == null)
+		{
+			return this.builder.build();
+		}
+		else
+		{
+			return this.json;
+		}
 	}
 
 	@Override
 	public String toString()
 	{
-		StringBuilder builder = new StringBuilder("{");
-		Object[] keys = this.properties.keySet().toArray();
-
-		for (int i = 0; i < keys.length; i++)
+		if (this.builder == null)
 		{
-			builder.append('"');
-			builder.append(keys[i]);
-			builder.append("\":");
-
-			JSONValue.appendValueString(builder, this.properties.get(keys[i]));
-
-			if (i < keys.length - 1)
-			{
-				builder.append(',');
-			}
+			return this.json.toString();
 		}
-
-		builder.append('}');
-
-		return builder.toString();
+		else
+		{
+			return this.builder.build().toString();
+		}
 	}
 }

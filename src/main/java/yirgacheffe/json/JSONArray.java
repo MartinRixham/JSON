@@ -1,62 +1,42 @@
 package yirgacheffe.json;
 
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import yirgacheffe.parser.JSONLexer;
-import yirgacheffe.parser.JSONParser;
-
-import java.util.Arrays;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonReader;
+import javax.json.JsonStructure;
+import java.io.StringReader;
 
 public class JSONArray implements JsonData
 {
-	private static final int INITIAL_SIZE = 32;
+	private JsonArray json;
 
-	private int length;
-
-	private Object[] array;
+	private JsonArrayBuilder builder;
 
 	public JSONArray()
 	{
-		this.array = new Object[INITIAL_SIZE];
-		this.length = 0;
+		this.builder = Json.createArrayBuilder();
 	}
 
 	public JSONArray(String data)
 	{
-		CharStream charStream = CharStreams.fromString(data);
-		JSONLexer lexer = new JSONLexer(charStream);
-		CommonTokenStream tokens = new CommonTokenStream(lexer);
-		ParseErrorListener errorListener = new ParseErrorListener();
+		JsonReader reader = Json.createReader(new StringReader(data));
 
-		JSONParser parser = new JSONParser(tokens);
-		parser.removeErrorListeners();
-		parser.addErrorListener(errorListener);
-
-		JSONParser.ArrayContext context = parser.array();
-
-		if (errorListener.hasError())
-		{
-			String message = Arrays.toString(errorListener.getErrors());
-
-			throw new JSONException(message.substring(1, message.length() - 1));
-		}
-
-		this.array = context.value().toArray();
-		this.length = this.array.length;
+		this.json = reader.readArray();
 	}
 
-	JSONArray(Object[] values)
+	JSONArray(JsonArray json)
 	{
-		this.array = values;
-		this.length = values.length;
+		this.json = json;
 	}
 
 	public boolean getBoolean(int index)
 	{
-		if (this.array.length > index)
+		JsonArray json = this.json == null ? this.builder.build() : this.json;
+
+		if (json.size() > index)
 		{
-			return JSONValue.getBoolean(this.array[index]);
+			return JSONValue.getBoolean(json.get(index));
 		}
 		else
 		{
@@ -66,9 +46,11 @@ public class JSONArray implements JsonData
 
 	public double getNumber(int index)
 	{
-		if (this.length > index)
+		JsonArray json = this.json == null ? this.builder.build() : this.json;
+
+		if (json.size() > index)
 		{
-			return JSONValue.getNumber(this.array[index]);
+			return JSONValue.getNumber(json.get(index));
 		}
 		else
 		{
@@ -78,10 +60,11 @@ public class JSONArray implements JsonData
 
 	public String getString(int index)
 	{
-		if (this.length > index)
+		JsonArray json = this.json == null ? this.builder.build() : this.json;
+
+		if (json.size() > index)
 		{
-			return JSONValue.getString(
-				(JSONParser.ValueContext) this.array[index]);
+			return JSONValue.getString(json.get(index));
 		}
 		else
 		{
@@ -91,9 +74,11 @@ public class JSONArray implements JsonData
 
 	public JSONObject getObject(int index)
 	{
-		if (this.length > index)
+		JsonArray json = this.json == null ? this.builder.build() : this.json;
+
+		if (json.size() > index)
 		{
-			return JSONValue.getObject(this.array[index]);
+			return JSONValue.getObject(json.get(index));
 		}
 		else
 		{
@@ -103,9 +88,11 @@ public class JSONArray implements JsonData
 
 	public JSONArray getArray(int index)
 	{
-		if (this.length > index)
+		JsonArray json = this.json == null ? this.builder.build() : this.json;
+
+		if (json.size() > index)
 		{
-			return JSONValue.getArray(this.array[index]);
+			return JSONValue.getArray(json.get(index));
 		}
 		else
 		{
@@ -115,72 +102,128 @@ public class JSONArray implements JsonData
 
 	public void put(JSONArray value)
 	{
-		this.grow();
-		this.array[this.length++] = value;
+		if (this.builder == null)
+		{
+			JsonArrayBuilder builder = Json.createArrayBuilder(this.json);
+			builder.add(value.toJson());
+
+			this.json = builder.build();
+		}
+		else
+		{
+			this.builder.add(value.toJson());
+		}
 	}
 
 	public void put(JSONObject value)
 	{
-		this.grow();
-		this.array[this.length++] = value;
+		if (this.builder == null)
+		{
+			JsonArrayBuilder builder = Json.createArrayBuilder(this.json);
+			builder.add(value.toJson());
+
+			this.json = builder.build();
+		}
+		else
+		{
+			this.builder.add(value.toJson());
+		}
 	}
 
 	public void put(String value)
 	{
-		this.grow();
-		this.array[this.length++] = value;
+		if (this.builder == null)
+		{
+			JsonArrayBuilder builder = Json.createArrayBuilder(this.json);
+			builder.add(value);
+
+			this.json = builder.build();
+		}
+		else
+		{
+			this.builder.add(value);
+		}
 	}
 
 	public void put(double value)
 	{
-		this.grow();
-		this.array[this.length++] = value;
+		if (this.builder == null)
+		{
+			JsonArrayBuilder builder = Json.createArrayBuilder(this.json);
+			builder.add(value);
+
+			this.json = builder.build();
+		}
+		else
+		{
+			this.builder.add(value);
+		}
 	}
 
 	public void put(long value)
 	{
-		this.grow();
-		this.array[this.length++] = value;
+		if (this.builder == null)
+		{
+			JsonArrayBuilder builder = Json.createArrayBuilder(this.json);
+			builder.add(value);
+
+			this.json = builder.build();
+		}
+		else
+		{
+			this.builder.add(value);
+		}
 	}
 
 	public void put(boolean value)
 	{
-		this.grow();
-		this.array[this.length++] = value;
+		if (this.builder == null)
+		{
+			JsonArrayBuilder builder = Json.createArrayBuilder(this.json);
+			builder.add(value);
+
+			this.json = builder.build();
+		}
+		else
+		{
+			this.builder.add(value);
+		}
 	}
 
-	private void grow()
+	public int length()
 	{
-		if (this.length == this.array.length)
+		if (this.json == null)
 		{
-			int newLength = this.length << 1;
+			return this.builder.build().size();
+		}
+		else
+		{
+			return this.json.size();
+		}
+	}
 
-			this.array = Arrays.copyOf(this.array, newLength);
+	JsonStructure toJson()
+	{
+		if (this.json == null)
+		{
+			return this.builder.build();
+		}
+		else
+		{
+			return this.json;
 		}
 	}
 
 	@Override
 	public String toString()
 	{
-		StringBuilder builder = new StringBuilder("[");
-
-		for (int i = 0; i < this.length; i++)
+		if (this.builder == null)
 		{
-			JSONValue.appendValueString(builder, this.array[i]);
-
-			if (i < this.length - 1)
-			{
-				builder.append(',');
-			}
+			return this.json.toString();
 		}
-
-		builder.append(']');
-
-		return builder.toString();
-	}
-
-	public int length()
-	{
-		return this.length;
+		else
+		{
+			return this.builder.build().toString();
+		}
 	}
 }

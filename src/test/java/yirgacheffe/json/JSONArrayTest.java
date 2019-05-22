@@ -2,6 +2,7 @@ package yirgacheffe.json;
 
 import org.junit.Test;
 
+import javax.json.JsonException;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -14,7 +15,21 @@ import static org.junit.Assert.assertTrue;
 public class JSONArrayTest
 {
 	@Test
-	public void testParseEmptyObject()
+	public void testEmptyArray()
+	{
+		JSONArray json = new JSONArray();
+
+		assertFalse(json.getBoolean(0));
+		assertTrue(Double.isNaN(json.getNumber(0)));
+		assertEquals("", json.getString(0));
+		assertEquals("", json.getObject(0).toString());
+		assertEquals("", json.getArray(0).toString());
+		assertEquals("[]", json.toString());
+		assertEquals(0, json.length());
+	}
+
+	@Test
+	public void testParseEmptyArray()
 	{
 		JSONArray json = new JSONArray("[]");
 
@@ -107,21 +122,24 @@ public class JSONArrayTest
 
 		System.setErr(printStream);
 
-		JSONException exception = null;
+		JsonException exception = null;
 
 		try
 		{
 			JSONArray json = new JSONArray("[null");
 		}
-		catch (JSONException e)
+		catch (JsonException e)
 		{
 			exception = e;
 		}
 
 		assertNotNull(exception);
+
 		assertEquals(
-			"line 1:5 mismatched input '<EOF>' expecting {',', ']'}",
+			"Invalid token=EOF at (line no=1, column no=15, offset=14)." +
+				" Expected tokens are: [COMMA, CURLYCLOSE]",
 			exception.getMessage());
+
 		assertEquals("", spyError.toString());
 
 		System.setErr(originalError);

@@ -2,6 +2,7 @@ package yirgacheffe.json;
 
 import org.junit.Test;
 
+import javax.json.JsonException;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -133,10 +134,10 @@ public class JSONObjectTest
 		assertTrue(json.has("zero"));
 		assertFalse(json.getBoolean("zero"));
 		assertEquals(0, json.getNumber("zero"), 0);
-		assertEquals("0.0", json.getString("zero"));
+		assertEquals("0E+2", json.getString("zero"));
 		assertEquals("", json.getObject("zero").toString());
 		assertEquals("", json.getArray("zero").toString());
-		assertEquals("{\"zero\":0E2}", json.toString());
+		assertEquals("{\"zero\":0E+2}", json.toString());
 	}
 
 	@Test
@@ -147,10 +148,10 @@ public class JSONObjectTest
 		assertTrue(json.has("one"));
 		assertTrue(json.getBoolean("one"));
 		assertEquals(100, json.getNumber("one"), 0);
-		assertEquals("100.0", json.getString("one"));
+		assertEquals("1E+2", json.getString("one"));
 		assertEquals("", json.getObject("one").toString());
 		assertEquals("", json.getArray("one").toString());
-		assertEquals("{\"one\":1e2}", json.toString());
+		assertEquals("{\"one\":1E+2}", json.toString());
 	}
 
 	@Test
@@ -205,21 +206,24 @@ public class JSONObjectTest
 
 		System.setErr(printStream);
 
-		JSONException exception = null;
+		JsonException exception = null;
 
 		try
 		{
 			JSONObject json = new JSONObject("{ \"nul\": null");
 		}
-		catch (JSONException e)
+		catch (JsonException e)
 		{
 			exception = e;
 		}
 
 		assertNotNull(exception);
+
 		assertEquals(
-			"line 1:13 mismatched input '<EOF>' expecting {',', '}'}",
+			"Invalid token=EOF at (line no=1, column no=39, offset=38)." +
+				" Expected tokens are: [COMMA, CURLYCLOSE]",
 			exception.getMessage());
+
 		assertEquals("", spyError.toString());
 
 		System.setErr(originalError);
@@ -268,13 +272,13 @@ public class JSONObjectTest
 
 		assertEquals(
 			"{" +
-				"\"arr\":[]," +
 				"\"obj\":{}," +
+				"\"arr\":[]," +
 				"\"thingy\":\"sumpt\"," +
-				"\"tru\":true," +
+				"\"int\":1," +
 				"\"float\":1.0," +
 				"\"exp\":100.0," +
-				"\"int\":1" +
+				"\"tru\":true" +
 			"}",
 			json.toString());
 	}

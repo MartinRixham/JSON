@@ -39,7 +39,8 @@ public class JSONSpecTest
 		assertFalse(spec.isValid(""));
 
 		assertEquals("Invalid token=EOF at (line no=1, column no=0, offset=-1). " +
-				"Expected tokens are: [CURLYOPEN, SQUAREOPEN, STRING, NUMBER, TRUE, FALSE, NULL]",
+			"Expected tokens are: " +
+			"[CURLYOPEN, SQUAREOPEN, STRING, NUMBER, TRUE, FALSE, NULL]",
 			spec.getError(""));
 	}
 
@@ -49,7 +50,8 @@ public class JSONSpecTest
 		JSONSpec spec = new JSONSpec();
 
 		assertEquals("Invalid token=EOF at (line no=1, column no=0, offset=-1). " +
-			"Expected tokens are: [CURLYOPEN, SQUAREOPEN, STRING, NUMBER, TRUE, FALSE, NULL]",
+			"Expected tokens are: " +
+			"[CURLYOPEN, SQUAREOPEN, STRING, NUMBER, TRUE, FALSE, NULL]",
 			spec.getError(null));
 
 		assertFalse(spec.isValid(null));
