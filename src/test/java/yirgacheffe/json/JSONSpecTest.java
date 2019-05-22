@@ -19,7 +19,7 @@ public class JSONSpecTest
 		JSONSpec spec = new JSONSpec();
 
 		assertTrue(spec.isValid("{}"));
-		assertEquals(0, spec.getErrors("{}").length);
+		assertEquals(0, spec.getError("{}").length());
 	}
 
 	@Test
@@ -27,7 +27,7 @@ public class JSONSpecTest
 	{
 		JSONSpec spec = new JSONSpec();
 
-		assertEquals(0, spec.getErrors("{}").length);
+		assertEquals(0, spec.getError("{}").length());
 		assertTrue(spec.isValid("{}"));
 	}
 
@@ -37,7 +37,10 @@ public class JSONSpecTest
 		JSONSpec spec = new JSONSpec();
 
 		assertFalse(spec.isValid(""));
-		assertEquals(1, spec.getErrors("").length);
+
+		assertEquals("Invalid token=EOF at (line no=1, column no=0, offset=-1). " +
+				"Expected tokens are: [CURLYOPEN, SQUAREOPEN, STRING, NUMBER, TRUE, FALSE, NULL]",
+			spec.getError(""));
 	}
 
 	@Test
@@ -45,7 +48,10 @@ public class JSONSpecTest
 	{
 		JSONSpec spec = new JSONSpec();
 
-		assertEquals(1, spec.getErrors(null).length);
+		assertEquals("Invalid token=EOF at (line no=1, column no=0, offset=-1). " +
+			"Expected tokens are: [CURLYOPEN, SQUAREOPEN, STRING, NUMBER, TRUE, FALSE, NULL]",
+			spec.getError(null));
+
 		assertFalse(spec.isValid(null));
 	}
 
@@ -62,7 +68,12 @@ public class JSONSpecTest
 		JSONSpec spec = new JSONSpec();
 
 		assertFalse(spec.isValid("{"));
-		assertEquals(1, spec.getErrors("{").length);
+
+		assertEquals(
+			"Invalid token=EOF at (line no=1, column no=3, offset=2). " +
+				"Expected tokens are: [STRING, CURLYCLOSE]",
+			spec.getError("{"));
+
 		Assert.assertEquals("", spyError.toString());
 
 		System.setErr(originalError);
@@ -73,7 +84,10 @@ public class JSONSpecTest
 	{
 		JSONSpec spec = new JSONSpec();
 
-		assertEquals(1, spec.getErrors("{").length);
+		assertEquals("Invalid token=EOF at (line no=1, column no=3, offset=2)." +
+			" Expected tokens are: [STRING, CURLYCLOSE]",
+			spec.getError("{"));
+
 		assertFalse(spec.isValid("{"));
 	}
 }
