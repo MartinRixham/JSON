@@ -187,6 +187,8 @@ public class JSONArrayTest
 
 		json.put(new JSONObject());
 		json.put(new JSONArray());
+		json.put(new JSONObject("{}"));
+		json.put(new JSONArray("[]"));
 		json.put("sumpt");
 		json.put(1);
 		json.put(1.0);
@@ -194,7 +196,7 @@ public class JSONArrayTest
 		json.put(true);
 
 		assertEquals(
-			"[{},[],\"sumpt\",1,1.0,100.0,true]",
+			"[{},[],{},[],\"sumpt\",1,1.0,100.0,true]",
 			json.toString());
 	}
 

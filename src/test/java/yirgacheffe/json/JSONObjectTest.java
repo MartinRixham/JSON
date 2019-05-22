@@ -264,6 +264,8 @@ public class JSONObjectTest
 
 		json.put("obj", new JSONObject());
 		json.put("arr", new JSONArray());
+		json.put("notherObj", new JSONObject("{}"));
+		json.put("notherArr", new JSONArray("[]"));
 		json.put("thingy", "sumpt");
 		json.put("int", 1);
 		json.put("float", 1.0);
@@ -274,12 +276,13 @@ public class JSONObjectTest
 			"{" +
 				"\"obj\":{}," +
 				"\"arr\":[]," +
+				"\"notherObj\":{}," +
+				"\"notherArr\":[]," +
 				"\"thingy\":\"sumpt\"," +
 				"\"int\":1," +
 				"\"float\":1.0," +
 				"\"exp\":100.0," +
-				"\"tru\":true" +
-			"}",
+			"\"tru\":true}",
 			json.toString());
 	}
 

@@ -4,7 +4,6 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
-import javax.json.JsonStructure;
 import java.io.StringReader;
 
 public class JSONObject implements JsonData
@@ -204,15 +203,15 @@ public class JSONObject implements JsonData
 		}
 	}
 
-	JsonStructure toJson()
+	JsonObjectBuilder toJson()
 	{
-		if (this.json == null)
+		if (this.builder == null)
 		{
-			return this.builder.build();
+			return Json.createObjectBuilder(this.json);
 		}
 		else
 		{
-			return this.json;
+			return this.builder;
 		}
 	}
 

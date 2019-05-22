@@ -73,7 +73,7 @@
               <targetTests>
                 <param>yirgacheffe.json.*</param>
               </targetTests>
-              <mutationThreshold>95</mutationThreshold>
+              <mutationThreshold>100</mutationThreshold>
             </configuration>
             <goals>
               <goal>mutationCoverage</goal>
