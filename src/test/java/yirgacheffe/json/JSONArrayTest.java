@@ -38,6 +38,13 @@ public class JSONArrayTest
 		assertEquals("", json.getString(0));
 		assertEquals("", json.getObject(0).toString());
 		assertEquals("", json.getArray(0).toString());
+
+		assertFalse(json.getBoolean(-1));
+		assertTrue(Double.isNaN(json.getNumber(-1)));
+		assertEquals("", json.getString(-1));
+		assertEquals("", json.getObject(-1).toString());
+		assertEquals("", json.getArray(-1).toString());
+
 		assertEquals("[]", json.toString());
 		assertEquals(0, json.length());
 	}

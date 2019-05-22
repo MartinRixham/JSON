@@ -34,7 +34,7 @@ public class JSONArray implements JsonData
 	{
 		JsonArray json = this.json == null ? this.builder.build() : this.json;
 
-		if (json.size() > index)
+		if (0 <= index &&  index < json.size())
 		{
 			return JSONValue.getBoolean(json.get(index));
 		}
@@ -48,7 +48,7 @@ public class JSONArray implements JsonData
 	{
 		JsonArray json = this.json == null ? this.builder.build() : this.json;
 
-		if (json.size() > index)
+		if (0 <= index &&  index < json.size())
 		{
 			return JSONValue.getNumber(json.get(index));
 		}
@@ -62,7 +62,7 @@ public class JSONArray implements JsonData
 	{
 		JsonArray json = this.json == null ? this.builder.build() : this.json;
 
-		if (json.size() > index)
+		if (0 <= index &&  index < json.size())
 		{
 			return JSONValue.getString(json.get(index));
 		}
@@ -76,7 +76,7 @@ public class JSONArray implements JsonData
 	{
 		JsonArray json = this.json == null ? this.builder.build() : this.json;
 
-		if (json.size() > index)
+		if (0 <= index &&  index < json.size())
 		{
 			return JSONValue.getObject(json.get(index));
 		}
@@ -90,7 +90,7 @@ public class JSONArray implements JsonData
 	{
 		JsonArray json = this.json == null ? this.builder.build() : this.json;
 
-		if (json.size() > index)
+		if (0 <= index &&  index < json.size())
 		{
 			return JSONValue.getArray(json.get(index));
 		}
