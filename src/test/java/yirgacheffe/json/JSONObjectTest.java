@@ -282,7 +282,38 @@ public class JSONObjectTest
 				"\"int\":1," +
 				"\"float\":1.0," +
 				"\"exp\":100.0," +
-			"\"tru\":true}",
+				"\"tru\":true" +
+			"}",
+			json.toString());
+	}
+
+	@Test
+	public void testPutPropertiesOnEmptyObject()
+	{
+		JSONObject json = new JSONObject("{}");
+
+		json.put("obj", new JSONObject());
+		json.put("arr", new JSONArray());
+		json.put("notherObj", new JSONObject("{}"));
+		json.put("notherArr", new JSONArray("[]"));
+		json.put("thingy", "sumpt");
+		json.put("int", 1);
+		json.put("float", 1.0);
+		json.put("exp", 1e2);
+		json.put("tru", true);
+
+		assertEquals(
+			"{" +
+				"\"obj\":{}," +
+				"\"arr\":[]," +
+				"\"notherObj\":{}," +
+				"\"notherArr\":[]," +
+				"\"thingy\":\"sumpt\"," +
+				"\"int\":1," +
+				"\"float\":1.0," +
+				"\"exp\":100.0," +
+				"\"tru\":true" +
+			"}",
 			json.toString());
 	}
 

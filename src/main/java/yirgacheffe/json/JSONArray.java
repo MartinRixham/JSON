@@ -31,7 +31,12 @@ public class JSONArray implements JsonData
 
 	public boolean getBoolean(int index)
 	{
-		JsonArray json = this.json == null ? this.builder.build() : this.json;
+		JsonArray json = this.json;
+
+		if (json == null)
+		{
+			json = this.toReadMode();
+		}
 
 		if (0 <= index &&  index < json.size())
 		{
@@ -45,7 +50,12 @@ public class JSONArray implements JsonData
 
 	public double getNumber(int index)
 	{
-		JsonArray json = this.json == null ? this.builder.build() : this.json;
+		JsonArray json = this.json;
+
+		if (json == null)
+		{
+			json = this.toReadMode();
+		}
 
 		if (0 <= index &&  index < json.size())
 		{
@@ -59,7 +69,12 @@ public class JSONArray implements JsonData
 
 	public String getString(int index)
 	{
-		JsonArray json = this.json == null ? this.builder.build() : this.json;
+		JsonArray json = this.json;
+
+		if (json == null)
+		{
+			json = this.toReadMode();
+		}
 
 		if (0 <= index &&  index < json.size())
 		{
@@ -73,7 +88,12 @@ public class JSONArray implements JsonData
 
 	public JSONObject getObject(int index)
 	{
-		JsonArray json = this.json == null ? this.builder.build() : this.json;
+		JsonArray json = this.json;
+
+		if (json == null)
+		{
+			json = this.toReadMode();
+		}
 
 		if (0 <= index &&  index < json.size())
 		{
@@ -87,7 +107,12 @@ public class JSONArray implements JsonData
 
 	public JSONArray getArray(int index)
 	{
-		JsonArray json = this.json == null ? this.builder.build() : this.json;
+		JsonArray json = this.json;
+
+		if (json == null)
+		{
+			json = this.toReadMode();
+		}
 
 		if (0 <= index &&  index < json.size())
 		{
@@ -99,94 +124,94 @@ public class JSONArray implements JsonData
 		}
 	}
 
+	private JsonArray toReadMode()
+	{
+		JsonArray json = this.builder.build();
+		this.json = json;
+		this.builder = null;
+
+		return json;
+	}
+
 	public void put(JSONArray value)
 	{
-		if (this.builder == null)
-		{
-			JsonArrayBuilder builder = Json.createArrayBuilder(this.json);
-			builder.add(value.toJson());
+		JsonArrayBuilder builder = this.builder;
 
-			this.json = builder.build();
-		}
-		else
+		if (builder == null)
 		{
-			this.builder.add(value.toJson());
+			builder = this.toWriteMode();
 		}
+
+		builder.add(value.toJson());
 	}
 
 	public void put(JSONObject value)
 	{
-		if (this.builder == null)
-		{
-			JsonArrayBuilder builder = Json.createArrayBuilder(this.json);
-			builder.add(value.toJson());
+		JsonArrayBuilder builder = this.builder;
 
-			this.json = builder.build();
-		}
-		else
+		if (builder == null)
 		{
-			this.builder.add(value.toJson());
+			builder = this.toWriteMode();
 		}
+
+		builder.add(value.toJson());
 	}
 
 	public void put(String value)
 	{
-		if (this.builder == null)
-		{
-			JsonArrayBuilder builder = Json.createArrayBuilder(this.json);
-			builder.add(value);
+		JsonArrayBuilder builder = this.builder;
 
-			this.json = builder.build();
-		}
-		else
+		if (builder == null)
 		{
-			this.builder.add(value);
+			builder = this.toWriteMode();
 		}
+
+		builder.add(value);
 	}
 
 	public void put(double value)
 	{
-		if (this.builder == null)
-		{
-			JsonArrayBuilder builder = Json.createArrayBuilder(this.json);
-			builder.add(value);
+		JsonArrayBuilder builder = this.builder;
 
-			this.json = builder.build();
-		}
-		else
+		if (builder == null)
 		{
-			this.builder.add(value);
+			builder = this.toWriteMode();
 		}
+
+		builder.add(value);
 	}
 
 	public void put(long value)
 	{
-		if (this.builder == null)
-		{
-			JsonArrayBuilder builder = Json.createArrayBuilder(this.json);
-			builder.add(value);
+		JsonArrayBuilder builder = this.builder;
 
-			this.json = builder.build();
-		}
-		else
+		if (builder == null)
 		{
-			this.builder.add(value);
+			builder = this.toWriteMode();
 		}
+
+		builder.add(value);
 	}
 
 	public void put(boolean value)
 	{
-		if (this.builder == null)
-		{
-			JsonArrayBuilder builder = Json.createArrayBuilder(this.json);
-			builder.add(value);
+		JsonArrayBuilder builder = this.builder;
 
-			this.json = builder.build();
-		}
-		else
+		if (builder == null)
 		{
-			this.builder.add(value);
+			builder = this.toWriteMode();
 		}
+
+		builder.add(value);
+	}
+
+	private JsonArrayBuilder toWriteMode()
+	{
+		JsonArrayBuilder builder = Json.createArrayBuilder(this.json);
+		this.builder = builder;
+		this.json = null;
+
+		return builder;
 	}
 
 	public int length()

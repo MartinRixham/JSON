@@ -45,7 +45,12 @@ public class JSONObject implements JsonData
 
 	public boolean getBoolean(String property)
 	{
-		JsonObject json = this.json == null ? this.builder.build() : this.json;
+		JsonObject json = this.json;
+
+		if (json == null)
+		{
+			json = this.toReadMode();
+		}
 
 		if (json.containsKey(property))
 		{
@@ -59,7 +64,12 @@ public class JSONObject implements JsonData
 
 	public double getNumber(String property)
 	{
-		JsonObject json = this.json == null ? this.builder.build() : this.json;
+		JsonObject json = this.json;
+
+		if (json == null)
+		{
+			json = this.toReadMode();
+		}
 
 		if (json.containsKey(property))
 		{
@@ -73,7 +83,12 @@ public class JSONObject implements JsonData
 
 	public String getString(String property)
 	{
-		JsonObject json = this.json == null ? this.builder.build() : this.json;
+		JsonObject json = this.json;
+
+		if (json == null)
+		{
+			json = this.toReadMode();
+		}
 
 		if (json.containsKey(property))
 		{
@@ -87,7 +102,12 @@ public class JSONObject implements JsonData
 
 	public JSONObject getObject(String property)
 	{
-		JsonObject json = this.json == null ? this.builder.build() : this.json;
+		JsonObject json = this.json;
+
+		if (json == null)
+		{
+			json = this.toReadMode();
+		}
 
 		if (json.containsKey(property))
 		{
@@ -101,7 +121,12 @@ public class JSONObject implements JsonData
 
 	public JSONArray getArray(String property)
 	{
-		JsonObject json = this.json == null ? this.builder.build() : this.json;
+		JsonObject json = this.json;
+
+		if (json == null)
+		{
+			json = this.toReadMode();
+		}
 
 		if (json.containsKey(property))
 		{
@@ -113,94 +138,94 @@ public class JSONObject implements JsonData
 		}
 	}
 
+	private JsonObject toReadMode()
+	{
+		JsonObject json = this.builder.build();
+		this.json = json;
+		this.builder = null;
+
+		return json;
+	}
+
 	public void put(String property, JSONArray value)
 	{
-		if (this.builder == null)
-		{
-			JsonObjectBuilder builder = Json.createObjectBuilder(this.json);
-			builder.add(property, value.toJson());
+		JsonObjectBuilder builder = this.builder;
 
-			this.json = builder.build();
-		}
-		else
+		if (builder == null)
 		{
-			this.builder.add(property, value.toJson());
+			builder = this.toWriteMode();
 		}
+
+		builder.add(property, value.toJson());
 	}
 
 	public void put(String property, JSONObject value)
 	{
-		if (this.builder == null)
-		{
-			JsonObjectBuilder builder = Json.createObjectBuilder(this.json);
-			builder.add(property, value.toJson());
+		JsonObjectBuilder builder = this.builder;
 
-			this.json = builder.build();
-		}
-		else
+		if (builder == null)
 		{
-			this.builder.add(property, value.toJson());
+			builder = this.toWriteMode();
 		}
+
+		builder.add(property, value.toJson());
 	}
 
 	public void put(String property, String value)
 	{
-		if (this.builder == null)
-		{
-			JsonObjectBuilder builder = Json.createObjectBuilder(this.json);
-			builder.add(property, value);
+		JsonObjectBuilder builder = this.builder;
 
-			this.json = builder.build();
-		}
-		else
+		if (builder == null)
 		{
-			this.builder.add(property, value);
+			builder = this.toWriteMode();
 		}
+
+		builder.add(property, value);
 	}
 
 	public void put(String property, double value)
 	{
-		if (this.builder == null)
-		{
-			JsonObjectBuilder builder = Json.createObjectBuilder(this.json);
-			builder.add(property, value);
+		JsonObjectBuilder builder = this.builder;
 
-			this.json = builder.build();
-		}
-		else
+		if (builder == null)
 		{
-			this.builder.add(property, value);
+			builder = this.toWriteMode();
 		}
+
+		builder.add(property, value);
 	}
 
 	public void put(String property, long value)
 	{
-		if (this.builder == null)
-		{
-			JsonObjectBuilder builder = Json.createObjectBuilder(this.json);
-			builder.add(property, value);
+		JsonObjectBuilder builder = this.builder;
 
-			this.json = builder.build();
-		}
-		else
+		if (builder == null)
 		{
-			this.builder.add(property, value);
+			builder = this.toWriteMode();
 		}
+
+		builder.add(property, value);
 	}
 
 	public void put(String property, boolean value)
 	{
-		if (this.builder == null)
-		{
-			JsonObjectBuilder builder = Json.createObjectBuilder(this.json);
-			builder.add(property, value);
+		JsonObjectBuilder builder = this.builder;
 
-			this.json = builder.build();
-		}
-		else
+		if (builder == null)
 		{
-			this.builder.add(property, value);
+			builder = this.toWriteMode();
 		}
+
+		builder.add(property, value);
+	}
+
+	private JsonObjectBuilder toWriteMode()
+	{
+		JsonObjectBuilder builder = Json.createObjectBuilder(this.json);
+		this.builder = builder;
+		this.json = null;
+
+		return builder;
 	}
 
 	JsonObjectBuilder toJson()
