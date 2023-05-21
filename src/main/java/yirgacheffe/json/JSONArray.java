@@ -1,9 +1,9 @@
 package yirgacheffe.json;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonReader;
+import jakarta.json.Json;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonReader;
 import java.io.StringReader;
 
 public class JSONArray implements JsonData

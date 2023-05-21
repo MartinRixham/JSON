@@ -2,7 +2,7 @@ package yirgacheffe.json;
 
 import org.junit.Test;
 
-import javax.json.JsonException;
+import jakarta.json.JsonException;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;

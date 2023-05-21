@@ -1,9 +1,9 @@
 package yirgacheffe.json;
 
-import javax.json.Json;
-import javax.json.JsonException;
-import javax.json.JsonReader;
-import javax.json.JsonStructure;
+import jakarta.json.Json;
+import jakarta.json.JsonException;
+import jakarta.json.JsonReader;
+import jakarta.json.JsonStructure;
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
