@@ -1,255 +1,586 @@
 package yirgacheffe.json;
 
-import jakarta.json.Json;
-import jakarta.json.JsonObject;
-import jakarta.json.JsonObjectBuilder;
-import jakarta.json.JsonReader;
-import java.io.StringReader;
+import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.Set;
+import java.util.HashSet;
 
-public class JSONObject implements JsonData
+public class JSONObject
 {
-	private JsonObject json;
-
-	private JsonObjectBuilder builder;
-
-	public JSONObject()
+	private JSONObject()
 	{
-		this.builder = Json.createObjectBuilder();
 	}
 
-	public JSONObject(String data)
+	public interface Read
 	{
-		JsonReader reader = Json.createReader(new StringReader(data));
+		boolean has(String key);
 
-		this.json = reader.readObject();
+		boolean getBoolean(String key);
+
+		double getNumber(String key);
+
+		String getString(String key);
+
+		Read getObject(String key);
+
+		JSONArray.Read getArray(String key);
+
+		JSONValue getValue(String key);
+
+		String validate();
+
+		Set<String> getKeys();
 	}
 
-	JSONObject(JsonObject json)
+	public static class Write
 	{
-		this.json = json;
+		private final Map<String, String> map = new LinkedHashMap<>();
+
+		private Write()
+		{
+		}
+
+		public Write put(String key, boolean value)
+		{
+			this.map.put(key, Boolean.toString(value));
+
+			return this;
+		}
+
+		public Write put(String key, long value)
+		{
+			this.map.put(key, Long.toString(value));
+
+			return this;
+		}
+
+		public Write put(String key, double value)
+		{
+			this.map.put(key, Double.toString(value));
+
+			return this;
+		}
+
+		public Write put(String key, String value)
+		{
+			this.map.put(key, "\"" + value + "\"");
+
+			return this;
+		}
+
+		public Write put(String key, Write value)
+		{
+			this.map.put(key, value.toString());
+
+			return this;
+		}
+
+		public Write put(String key, JSONArray.Write value)
+		{
+			this.map.put(key, value.toString());
+
+			return this;
+		}
+
+		public Read read()
+		{
+			return new Valid(this.map);
+		}
+
+		@Override
+		public String toString()
+		{
+			StringBuilder builder = new StringBuilder("{");
+
+			for (Map.Entry<String, String> pair: this.map.entrySet())
+			{
+				builder
+					.append('"')
+					.append(pair.getKey())
+					.append("\":")
+					.append(pair.getValue())
+					.append(',');
+			}
+
+			if (this.map.size() > 0)
+			{
+				builder.deleteCharAt(builder.length() - 1);
+			}
+
+			builder.append('}');
+
+			return builder.toString();
+		}
 	}
 
-	public boolean has(String property)
+	static class Invalid implements Read
 	{
-		if (this.json == null)
-		{
-			JsonObject json = this.builder.build();
+		private final String error;
 
-			return json.containsKey(property);
-		}
-		else
+		Invalid(String error)
 		{
-			return this.json.containsKey(property);
-		}
-	}
-
-	public boolean getBoolean(String property)
-	{
-		JsonObject json = this.json;
-
-		if (json == null)
-		{
-			json = this.toReadMode();
+			this.error = error;
 		}
 
-		if (json.containsKey(property))
-		{
-			return JSONValue.getBoolean(json.get(property));
-		}
-		else
+		@Override
+		public boolean has(String key)
 		{
 			return false;
 		}
-	}
 
-	public double getNumber(String property)
-	{
-		JsonObject json = this.json;
-
-		if (json == null)
+		@Override
+		public boolean getBoolean(String key)
 		{
-			json = this.toReadMode();
+			return false;
 		}
 
-		if (json.containsKey(property))
-		{
-			return JSONValue.getNumber(json.get(property));
-		}
-		else
+		@Override
+		public double getNumber(String key)
 		{
 			return Double.NaN;
 		}
-	}
 
-	public String getString(String property)
-	{
-		JsonObject json = this.json;
-
-		if (json == null)
-		{
-			json = this.toReadMode();
-		}
-
-		if (json.containsKey(property))
-		{
-			return JSONValue.getString(json.get(property));
-		}
-		else
+		@Override
+		public String getString(String key)
 		{
 			return "";
 		}
-	}
 
-	public JSONObject getObject(String property)
-	{
-		JsonObject json = this.json;
-
-		if (json == null)
+		@Override
+		public Read getObject(String key)
 		{
-			json = this.toReadMode();
+			return new Invalid(this.error);
 		}
 
-		if (json.containsKey(property))
+		@Override
+		public JSONArray.Read getArray(String key)
 		{
-			return JSONValue.getObject(json.get(property));
+			return new JSONArray.Invalid(this.error);
+		}
+
+		@Override
+		public JSONValue getValue(String key)
+		{
+			return new JSONValue.Invalid(this.error);
+		}
+
+		@Override
+		public String validate()
+		{
+			return this.error;
+		}
+
+		@Override
+		public Set<String> getKeys()
+		{
+			return new HashSet<>();
+		}
+
+		@Override
+		public boolean equals(Object other)
+		{
+			return this.hashCode() == other.hashCode();
+		}
+
+		@Override
+		public int hashCode()
+		{
+			return this.error.hashCode();
+		}
+
+		@Override
+		public String toString()
+		{
+			return this.error;
+		}
+	}
+
+	static class Valid implements Read
+	{
+		private final Map<String, String> map;
+
+		private Valid(Map<String, String> map)
+		{
+			this.map = map;
+		}
+
+		@Override
+		public boolean has(String key)
+		{
+			return this.map.containsKey(key);
+		}
+
+		@Override
+		public boolean getBoolean(String key)
+		{
+			String value =  this.map.get(key);
+
+			if (value == null)
+			{
+				return false;
+			}
+
+			try
+			{
+				return Double.parseDouble(value) != 0d;
+			}
+			catch (NumberFormatException e)
+			{
+				return !(value.length() == 0 ||
+					value.equals("null") ||
+					value.equals("false") ||
+					value.equals("\"\""));
+			}
+		}
+
+		@Override
+		public double getNumber(String key)
+		{
+			String value = this.map.get(key);
+
+			if (value == null)
+			{
+				return Double.NaN;
+			}
+			else
+			{
+				try
+				{
+					return Double.parseDouble(value);
+				}
+				catch (NumberFormatException e)
+				{
+					return Double.NaN;
+				}
+			}
+		}
+
+		@Override
+		public String getString(String key)
+		{
+			String value = this.map.get(key);
+
+			if (value == null)
+			{
+				return "";
+			}
+			else if (value.length() > 1 &&
+				value.charAt(0) == '"' &&
+				value.charAt(value.length() - 1) == '"')
+			{
+				return value.substring(1, value.length() - 1);
+			}
+			else
+			{
+				return value;
+			}
+		}
+
+		@Override
+		public Read getObject(String key)
+		{
+			if (this.map.containsKey(key))
+			{
+				return read(this.map.get(key));
+			}
+			else
+			{
+				return new Invalid("Failed to read object with key \"" + key + "\".");
+			}
+		}
+
+		@Override
+		public JSONArray.Read getArray(String key)
+		{
+			if (this.map.containsKey(key))
+			{
+				return JSONArray.read(this.map.get(key));
+			}
+			else
+			{
+				return new JSONArray.Invalid("Failed to read array with key \"" + key + "\".");
+			}
+		}
+
+		@Override
+		public JSONValue getValue(String key)
+		{
+			return JSONValue.read(this.map.get(key));
+		}
+
+		@Override
+		public String validate()
+		{
+			StringBuilder errors = new StringBuilder();
+
+			for (Map.Entry<String, String> pair: this.map.entrySet())
+			{
+				String error = JSONValue.read(pair.getValue()).validate();
+
+				if (error.length() > 0)
+				{
+					errors.append("Value of key ")
+							.append(pair.getKey())
+							.append(": ")
+							.append(error)
+							.append(", ");
+				}
+			}
+
+			if (errors.length() == 0)
+			{
+				return "";
+			}
+			else
+			{
+				errors.setLength(errors.length() - 2);
+
+				return errors.toString();
+			}
+		}
+
+		@Override
+		public Set<String> getKeys()
+		{
+			return this.map.keySet();
+		}
+
+		@Override
+		public boolean equals(Object other)
+		{
+			return this.hashCode() == other.hashCode();
+		}
+
+		@Override
+		public int hashCode()
+		{
+			int hash = 0;
+
+			for (String value: this.map.values())
+			{
+				hash = hash ^ JSONValue.read(value).hashCode();
+			}
+
+			return hash;
+		}
+	}
+
+	public static Write write()
+	{
+		return new Write();
+	}
+
+	private static final byte START = 0;
+	private static final byte BEFORE_KEY = 1;
+	private static final byte IN_KEY = 2;
+	private static final byte AFTER_KEY = 3;
+	private static final byte BEFORE_VALUE = 4;
+	private static final byte IN_VALUE = 5;
+	private static final byte END = 6;
+
+	private static final byte LITERAL = 0;
+	private static final byte STRING = 1;
+	private static final byte OBJECT = 2;
+	private static final byte ARRAY = 3;
+
+	public static Read read(String string)
+	{
+		if (string == null || string.length() == 0)
+		{
+			return new Invalid("Failed to parse object: No data.");
+		}
+
+		Map<String, String> map = new LinkedHashMap<>();
+		byte state = START;
+		int depth = 0;
+		StringBuilder builder = new StringBuilder();
+		boolean escape = false;
+		String key = "";
+		byte type = LITERAL;
+
+		for (int i = 0; i < string.length(); i++)
+		{
+			char character = string.charAt(i);
+
+			if (state == IN_VALUE)
+			{
+				if (escape)
+				{
+					builder.append(character);
+					escape = false;
+				}
+				else if (character == '\\')
+				{
+					escape = true;
+				}
+				else if (type == STRING)
+				{
+					builder.append(character);
+
+					if (character == '"')
+					{
+						map.put(key, builder.toString());
+						state = BEFORE_KEY;
+					}
+				}
+				else if (type == OBJECT)
+				{
+					builder.append(character);
+
+					if (character == '}')
+					{
+						if (depth == 0)
+						{
+							map.put(key, builder.toString());
+							state = BEFORE_KEY;
+						}
+						else
+						{
+							depth -= 1;
+						}
+					}
+					else if (character == '{')
+					{
+						depth += 1;
+					}
+				}
+				else if (type == ARRAY)
+				{
+					builder.append(character);
+					if (character == ']')
+					{
+						if (depth == 0)
+						{
+							map.put(key, builder.toString());
+							state = BEFORE_KEY;
+						}
+						else
+						{
+							depth -= 1;
+						}
+					}
+					else if (character == '[')
+					{
+						depth += 1;
+					}
+				}
+				else
+				{
+					if (character == '}')
+					{
+						map.put(key, builder.toString());
+						state = END;
+					}
+					else if (character == ',')
+					{
+						map.put(key, builder.toString());
+						state = BEFORE_KEY;
+					}
+					else if (!Character.isWhitespace(character))
+					{
+						builder.append(character);
+					}
+				}
+			}
+			else if (state == IN_KEY)
+			{
+				if (escape)
+				{
+					builder.append(character);
+					escape = false;
+				}
+				else if (character == '\\')
+				{
+					escape = true;
+				}
+				else if (character == '"')
+				{
+					key = builder.toString();
+					state = AFTER_KEY;
+				}
+				else
+				{
+					builder.append(character);
+				}
+			}
+			else if (state == BEFORE_KEY)
+			{
+				if (character == '}')
+				{
+					state = END;
+				}
+				else if (character == '"')
+				{
+					builder.setLength(0);
+					state = IN_KEY;
+				}
+				else if (character != ',' && !Character.isWhitespace(character))
+				{
+					return new Invalid("Failed to parse object at character " + i + ": Found " + character + " when expecting key.");
+				}
+			}
+			else if (state == AFTER_KEY)
+			{
+				if (character == ':')
+				{
+					state = BEFORE_VALUE;
+				}
+				else if (Character.isWhitespace(character))
+				{
+					return new Invalid("Failed to parse object at character " + i + ": Found " + character + " when expecting :.");
+				}
+			}
+			else if (state == BEFORE_VALUE)
+			{
+				if (!Character.isWhitespace(character))
+				{
+					if (character == '{')
+					{
+						depth = 0;
+						type = OBJECT;
+					}
+					else if (character == '[')
+					{
+						depth = 0;
+						type = ARRAY;
+					}
+					else if (character == '"')
+					{
+						type = STRING;
+					}
+					else {
+						type = LITERAL;
+					}
+
+					builder.setLength(0);
+					builder.append(character);
+					state = IN_VALUE;
+				}
+			}
+			else if (state == START)
+			{
+				if (character == '{')
+				{
+					state = BEFORE_KEY;
+				}
+				else if (!Character.isWhitespace(character))
+				{
+					return new Invalid("Failed to parse object: Started with " + character + " instead of {.");
+				}
+			}
+			else if (!Character.isWhitespace(character))
+			{
+				return new Invalid("Failed to parse object at character " + i + ": Found " + character + " after end of object.");
+			}
+		}
+
+		if (state == END)
+		{
+			return new Valid(map);
 		}
 		else
 		{
-			return new NullJSONObject();
-		}
-	}
-
-	public JSONArray getArray(String property)
-	{
-		JsonObject json = this.json;
-
-		if (json == null)
-		{
-			json = this.toReadMode();
-		}
-
-		if (json.containsKey(property))
-		{
-			return JSONValue.getArray(json.get(property));
-		}
-		else
-		{
-			return new NullJSONArray();
-		}
-	}
-
-	private JsonObject toReadMode()
-	{
-		JsonObject json = this.builder.build();
-		this.json = json;
-		this.builder = null;
-
-		return json;
-	}
-
-	public void put(String property, JSONArray value)
-	{
-		JsonObjectBuilder builder = this.builder;
-
-		if (builder == null)
-		{
-			builder = this.toWriteMode();
-		}
-
-		builder.add(property, value.toJson());
-	}
-
-	public void put(String property, JSONObject value)
-	{
-		JsonObjectBuilder builder = this.builder;
-
-		if (builder == null)
-		{
-			builder = this.toWriteMode();
-		}
-
-		builder.add(property, value.toJson());
-	}
-
-	public void put(String property, String value)
-	{
-		JsonObjectBuilder builder = this.builder;
-
-		if (builder == null)
-		{
-			builder = this.toWriteMode();
-		}
-
-		builder.add(property, value);
-	}
-
-	public void put(String property, double value)
-	{
-		JsonObjectBuilder builder = this.builder;
-
-		if (builder == null)
-		{
-			builder = this.toWriteMode();
-		}
-
-		builder.add(property, value);
-	}
-
-	public void put(String property, long value)
-	{
-		JsonObjectBuilder builder = this.builder;
-
-		if (builder == null)
-		{
-			builder = this.toWriteMode();
-		}
-
-		builder.add(property, value);
-	}
-
-	public void put(String property, boolean value)
-	{
-		JsonObjectBuilder builder = this.builder;
-
-		if (builder == null)
-		{
-			builder = this.toWriteMode();
-		}
-
-		builder.add(property, value);
-	}
-
-	private JsonObjectBuilder toWriteMode()
-	{
-		JsonObjectBuilder builder = Json.createObjectBuilder(this.json);
-		this.builder = builder;
-		this.json = null;
-
-		return builder;
-	}
-
-	JsonObjectBuilder toJson()
-	{
-		if (this.builder == null)
-		{
-			return Json.createObjectBuilder(this.json);
-		}
-		else
-		{
-			return this.builder;
-		}
-	}
-
-	@Override
-	public String toString()
-	{
-		if (this.builder == null)
-		{
-			return this.json.toString();
-		}
-		else
-		{
-			return this.builder.build().toString();
+			return new Invalid("Failed to parse object: Ran out of characters before end of object.");
 		}
 	}
 }

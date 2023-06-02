@@ -2,14 +2,8 @@ package yirgacheffe.json;
 
 import org.junit.Test;
 
-import jakarta.json.JsonException;
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class JSONObjectTest
@@ -17,255 +11,217 @@ public class JSONObjectTest
 	@Test
 	public void testEmptyObject()
 	{
-		JSONObject json = new JSONObject();
+		JSONObject.Read json = JSONObject.read("");
 
 		assertFalse(json.has("thingy"));
 		assertFalse(json.getBoolean("thingy"));
 		assertTrue(Double.isNaN(json.getNumber("thingy")));
 		assertEquals("", json.getString("thingy"));
-		assertEquals("", json.getObject("thingy").toString());
-		assertEquals("", json.getArray("thingy").toString());
-		assertEquals("{}", json.toString());
+		assertEquals("Failed to parse object: No data.", json.getObject("thingy").toString());
+		assertEquals("Failed to parse object: No data.", json.getArray("thingy").toString());
 	}
 
 	@Test
 	public void testParseEmptyObject()
 	{
-		JSONObject json = new JSONObject("{}");
+		JSONObject.Read json = JSONObject.read("{}");
 
 		assertFalse(json.has("thingy"));
 		assertFalse(json.getBoolean("thingy"));
 		assertTrue(Double.isNaN(json.getNumber("thingy")));
 		assertEquals("", json.getString("thingy"));
-		assertEquals("", json.getObject("thingy").toString());
-		assertEquals("", json.getArray("thingy").toString());
-		assertEquals("{}", json.toString());
+		assertEquals("Failed to read object with key \"thingy\".", json.getObject("thingy").toString());
+		assertEquals("Failed to read array with key \"thingy\".", json.getArray("thingy").toString());
 	}
 
 	@Test
 	public void testParseString()
 	{
-		JSONObject json = new JSONObject("{ \"thingy\": \"sumpt\" }");
+		JSONObject.Read json = JSONObject.read("{ \"thingy\": \"sumpt\" }");
 
 		assertTrue(json.has("thingy"));
 		assertTrue(json.getBoolean("thingy"));
 		assertTrue(Double.isNaN(json.getNumber("thingy")));
 		assertEquals("sumpt", json.getString("thingy"));
-		assertEquals("", json.getObject("thingy").toString());
-		assertEquals("", json.getArray("thingy").toString());
-		assertEquals("{\"thingy\":\"sumpt\"}", json.toString());
+		assertEquals("Failed to parse object: Started with \" instead of {.", json.getObject("thingy").toString());
+		assertEquals("Failed to parse array: Started with \" instead of [.", json.getArray("thingy").toString());
 	}
 
 	@Test
 	public void testParseEmptyString()
 	{
-		JSONObject json = new JSONObject("{ \"thingy\": \"\" }");
+		JSONObject.Read json = JSONObject.read("{ \"thingy\": \"\" }");
 
 		assertTrue(json.has("thingy"));
 		assertFalse(json.getBoolean("thingy"));
 		assertTrue(Double.isNaN(json.getNumber("thingy")));
 		assertEquals("", json.getString("thingy"));
-		assertEquals("", json.getObject("thingy").toString());
-		assertEquals("", json.getArray("thingy").toString());
-		assertEquals("{\"thingy\":\"\"}", json.toString());
+		assertEquals("Failed to parse object: Started with \" instead of {.", json.getObject("thingy").toString());
+		assertEquals("Failed to parse array: Started with \" instead of [.", json.getArray("thingy").toString());
 	}
 
 	@Test
 	public void testParseZeroInteger()
 	{
-		JSONObject json = new JSONObject("{ \"zero\": 0 }");
+		JSONObject.Read json = JSONObject.read("{ \"zero\": 0 }");
 
 		assertTrue(json.has("zero"));
 		assertFalse(json.getBoolean("zero"));
 		assertEquals(0, json.getNumber("zero"), 0);
 		assertEquals("0", json.getString("zero"));
-		assertEquals("", json.getObject("zero").toString());
-		assertEquals("", json.getArray("zero").toString());
-		assertEquals("{\"zero\":0}", json.toString());
+		assertEquals("Failed to parse object: Started with 0 instead of {.", json.getObject("zero").toString());
+		assertEquals("Failed to parse array: Started with 0 instead of [.", json.getArray("zero").toString());
 	}
 
 	@Test
 	public void testParseOneInteger()
 	{
-		JSONObject json = new JSONObject("{ \"one\": 1 }");
+		JSONObject.Read json = JSONObject.read("{ \"one\": 1 }");
 
 		assertTrue(json.has("one"));
 		assertTrue(json.getBoolean("one"));
 		assertEquals(1, json.getNumber("one"), 0);
 		assertEquals("1", json.getString("one"));
-		assertEquals("", json.getObject("one").toString());
-		assertEquals("", json.getArray("one").toString());
-		assertEquals("{\"one\":1}", json.toString());
+		assertEquals("Failed to parse object: Started with 1 instead of {.", json.getObject("one").toString());
+		assertEquals("Failed to parse array: Started with 1 instead of [.", json.getArray("one").toString());
 	}
 
 	@Test
 	public void testParseZeroFloat()
 	{
-		JSONObject json = new JSONObject("{ \"zero\": 0.0 }");
+		JSONObject.Read json = JSONObject.read("{ \"zero\": 0.0 }");
 
 		assertTrue(json.has("zero"));
 		assertFalse(json.getBoolean("zero"));
 		assertEquals(0, json.getNumber("zero"), 0);
 		assertEquals("0.0", json.getString("zero"));
-		assertEquals("", json.getObject("zero").toString());
-		assertEquals("", json.getArray("zero").toString());
-		assertEquals("{\"zero\":0.0}", json.toString());
+		assertEquals("Failed to parse object: Started with 0 instead of {.", json.getObject("zero").toString());
+		assertEquals("Failed to parse array: Started with 0 instead of [.", json.getArray("zero").toString());
 	}
 
 	@Test
 	public void testParseOneFloat()
 	{
-		JSONObject json = new JSONObject("{ \"one\": 1.0 }");
+		JSONObject.Read json = JSONObject.read("{ \"one\": 1.0 }");
 
 		assertTrue(json.has("one"));
 		assertTrue(json.getBoolean("one"));
 		assertEquals(1, json.getNumber("one"), 0);
 		assertEquals("1.0", json.getString("one"));
-		assertEquals("", json.getObject("one").toString());
-		assertEquals("", json.getArray("one").toString());
-		assertEquals("{\"one\":1.0}", json.toString());
+		assertEquals("Failed to parse object: Started with 1 instead of {.", json.getObject("one").toString());
+		assertEquals("Failed to parse array: Started with 1 instead of [.", json.getArray("one").toString());
 	}
 
 	@Test
 	public void testParseZeroExponential()
 	{
-		JSONObject json = new JSONObject("{ \"zero\": 0E2 }");
+		JSONObject.Read json = JSONObject.read("{ \"zero\": 0E2 }");
 
 		assertTrue(json.has("zero"));
 		assertFalse(json.getBoolean("zero"));
 		assertEquals(0, json.getNumber("zero"), 0);
-		assertEquals("0E+2", json.getString("zero"));
-		assertEquals("", json.getObject("zero").toString());
-		assertEquals("", json.getArray("zero").toString());
-		assertEquals("{\"zero\":0E+2}", json.toString());
+		assertEquals("0E2", json.getString("zero"));
+		assertEquals("Failed to parse object: Started with 0 instead of {.", json.getObject("zero").toString());
+		assertEquals("Failed to parse array: Started with 0 instead of [.", json.getArray("zero").toString());
 	}
 
 	@Test
 	public void testParseOneHundredExponential()
 	{
-		JSONObject json = new JSONObject("{ \"one\": 1e2 }");
+		JSONObject.Read json = JSONObject.read("{ \"one\": 1e2 }");
 
 		assertTrue(json.has("one"));
 		assertTrue(json.getBoolean("one"));
 		assertEquals(100, json.getNumber("one"), 0);
-		assertEquals("1E+2", json.getString("one"));
-		assertEquals("", json.getObject("one").toString());
-		assertEquals("", json.getArray("one").toString());
-		assertEquals("{\"one\":1E+2}", json.toString());
+		assertEquals("1e2", json.getString("one"));
+		assertEquals("Failed to parse object: Started with 1 instead of {.", json.getObject("one").toString());
+		assertEquals("Failed to parse array: Started with 1 instead of [.", json.getArray("one").toString());
 	}
 
 	@Test
 	public void testParseTrue()
 	{
-		JSONObject json = new JSONObject("{ \"tru\": true }");
+		JSONObject.Read json = JSONObject.read("{ \"tru\": true }");
 
 		assertTrue(json.has("tru"));
 		assertTrue(json.getBoolean("tru"));
 		assertTrue(Double.isNaN(json.getNumber("tru")));
 		assertEquals("true", json.getString("tru"));
-		assertEquals("", json.getObject("tru").toString());
-		assertEquals("", json.getArray("tru").toString());
-		assertEquals("{\"tru\":true}", json.toString());
+		assertEquals("Failed to parse object: Started with t instead of {.", json.getObject("tru").toString());
+		assertEquals("Failed to parse array: Started with t instead of [.", json.getArray("tru").toString());
 	}
 
 	@Test
 	public void testParseFalse()
 	{
-		JSONObject json = new JSONObject("{ \"fals\": false }");
+		JSONObject.Read json = JSONObject.read("{ \"fals\": false }");
 
 		assertTrue(json.has("fals"));
 		assertFalse(json.getBoolean("fals"));
 		assertTrue(Double.isNaN(json.getNumber("fals")));
 		assertEquals("false", json.getString("fals"));
-		assertEquals("", json.getObject("fals").toString());
-		assertEquals("", json.getArray("fals").toString());
-		assertEquals("{\"fals\":false}", json.toString());
+		assertEquals("Failed to parse object: Started with f instead of {.", json.getObject("fals").toString());
+		assertEquals("Failed to parse array: Started with f instead of [.", json.getArray("fals").toString());
 	}
 
 	@Test
 	public void testParseNull()
 	{
-		JSONObject json = new JSONObject("{ \"nul\": null }");
+		JSONObject.Read json = JSONObject.read("{ \"nul\": null }");
 
 		assertTrue(json.has("nul"));
 		assertFalse(json.getBoolean("nul"));
 		assertTrue(Double.isNaN(json.getNumber("nul")));
 		assertEquals("null", json.getString("nul"));
-		assertEquals("", json.getObject("nul").toString());
-		assertEquals("", json.getArray("nul").toString());
-		assertEquals("{\"nul\":null}", json.toString());
+		assertEquals("Failed to parse object: Started with n instead of {.", json.getObject("nul").toString());
+		assertEquals("Failed to parse array: Started with n instead of [.", json.getArray("nul").toString());
 	}
 
 	@Test
 	public void testInvalidJson()
 	{
-		PrintStream originalError = System.err;
-
-		OutputStream spyError = new ByteArrayOutputStream();
-		PrintStream printStream = new PrintStream(spyError);
-
-		System.setErr(printStream);
-
-		JsonException exception = null;
-
-		try
-		{
-			JSONObject json = new JSONObject("{ \"nul\": null");
-		}
-		catch (JsonException e)
-		{
-			exception = e;
-		}
-
-		assertNotNull(exception);
+		JSONObject.Read json = JSONObject.read("{ \"nul\": null");
 
 		assertEquals(
-			"Invalid token=EOF at (line no=1, column no=39, offset=38)." +
-				" Expected tokens are: [COMMA, CURLYCLOSE]",
-			exception.getMessage());
-
-		assertEquals("", spyError.toString());
-
-		System.setErr(originalError);
+			"Failed to parse object: Ran out of characters before end of object.",
+				json.toString());
 	}
 
 	@Test
 	public void testObjectWithChildObject()
 	{
-		JSONObject json = new JSONObject("{ \"obj\": {} }");
+		JSONObject.Read json = JSONObject.read("{ \"obj\": {} }");
 
 		assertTrue(json.has("obj"));
 		assertTrue(json.getBoolean("obj"));
 		assertTrue(Double.isNaN(json.getNumber("obj")));
 		assertEquals("{}", json.getString("obj"));
-		assertEquals("{}", json.getObject("obj").toString());
-		assertEquals("", json.getArray("obj").toString());
-		assertEquals("{\"obj\":{}}", json.toString());
+		assertEquals(JSONObject.read("{}"), json.getObject("obj"));
+		assertEquals("Failed to parse array: Started with { instead of [.", json.getArray("obj").toString());
 	}
 
 	@Test
 	public void testObjectWithChildArray()
 	{
-		JSONObject json = new JSONObject("{ \"arr\": [] }");
+		JSONObject.Read json = JSONObject.read("{ \"arr\": [] }");
 
 		assertTrue(json.has("arr"));
 		assertTrue(json.getBoolean("arr"));
 		assertTrue(Double.isNaN(json.getNumber("arr")));
 		assertEquals("[]", json.getString("arr"));
-		assertEquals("", json.getObject("arr").toString());
-		assertEquals("[]", json.getArray("arr").toString());
-		assertEquals("{\"arr\":[]}", json.toString());
+		assertEquals("Failed to parse object: Started with [ instead of {.", json.getObject("arr").toString());
+		assertEquals(JSONArray.read("[]"), json.getArray("arr"));
 	}
 
 	@Test
 	public void testPutProperties()
 	{
-		JSONObject json = new JSONObject();
+		JSONObject.Write json = JSONObject.write();
 
-		json.put("obj", new JSONObject());
-		json.put("arr", new JSONArray());
-		json.put("notherObj", new JSONObject("{}"));
-		json.put("notherArr", new JSONArray("[]"));
+		json.put("obj", JSONObject.write());
+		json.put("arr", JSONArray.write());
+		json.put("notherObj", JSONObject.write());
+		json.put("notherArr", JSONArray.write());
 		json.put("thingy", "sumpt");
 		json.put("int", 1);
 		json.put("float", 1.0);
@@ -290,12 +246,12 @@ public class JSONObjectTest
 	@Test
 	public void testPutPropertiesOnEmptyObject()
 	{
-		JSONObject json = new JSONObject("{}");
+		JSONObject.Write json = JSONObject.write();
 
-		json.put("obj", new JSONObject());
-		json.put("arr", new JSONArray());
-		json.put("notherObj", new JSONObject("{}"));
-		json.put("notherArr", new JSONArray("[]"));
+		json.put("obj", JSONObject.write());
+		json.put("arr", JSONArray.write());
+		json.put("notherObj", JSONObject.write());
+		json.put("notherArr", JSONArray.write());
 		json.put("thingy", "sumpt");
 		json.put("int", 1);
 		json.put("float", 1.0);
@@ -320,8 +276,8 @@ public class JSONObjectTest
 	@Test
 	public void testGetDeepObjectProperty()
 	{
-		JSONObject json =
-			new JSONObject(
+		JSONObject.Read json =
+			JSONObject.read(
 				"{ \"arr\": [1,2,{\"wibble\":{\"thingy\":[[8,8,8,\"sumpt\"]]}}] }");
 
 		assertEquals("sumpt",

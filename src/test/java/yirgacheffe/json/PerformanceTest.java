@@ -23,7 +23,7 @@ public final class PerformanceTest
 
 		System.out.println("---------- parsing JSON ----------");
 		long startTime = getCPUTime();
-		JSONObject json = new JSONObject(data);
+		String errors = JSONObject.read(data).validate();
 		long endTime = getCPUTime();
 
 		System.out.println(
@@ -31,8 +31,7 @@ public final class PerformanceTest
 				Duration.ofNanos(endTime - startTime).getSeconds() +
 				" seconds ----------");
 
-		//System.out.println("---------- printing ----------");
-		//System.out.println(json.toString());
+		System.out.println(errors);
 	}
 
 	private static long getCPUTime()
