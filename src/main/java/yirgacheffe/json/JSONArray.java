@@ -270,13 +270,13 @@ public final class JSONArray
 			{
 				return other.equals(this);
 			}
-			else if (!(other instanceof Invalid))
+			else if (other instanceof Invalid)
 			{
-				return false;
+				return this.error.equals(((Invalid) other).error);
 			}
 			else
 			{
-				return this.error.equals(((Invalid) other).error);
+				return false;
 			}
 		}
 

@@ -252,13 +252,13 @@ interface JSONValue
 			{
 				return other.equals(JSONArray.read(this.string));
 			}
-			else if (!(other instanceof Valid))
+			else if (other instanceof Valid)
 			{
-				return false;
+				return this.string.equals(((Valid) other).string);
 			}
 			else
 			{
-				return this.string.equals(((Valid) other).string);
+				return false;
 			}
 		}
 

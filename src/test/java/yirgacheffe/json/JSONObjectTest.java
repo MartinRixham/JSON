@@ -422,7 +422,7 @@ public class JSONObjectTest
 				"\"exp\":100.0," +
 				"\"tru\":true," +
 				"\"fals\":false" +
-				"}",
+			"}",
 			json.toString());
 	}
 
@@ -466,11 +466,11 @@ public class JSONObjectTest
 			"            {\n" +
 			"                \"wibble\":\n" +
 			"                    {\n" +
-			"                        \"this\": \"that\",\n" +
 			"                        \"thingy\":\n" +
 			"                            [\n" +
 			"                                [8,8,8,\"sumpt\"]\n" +
-			"                            ]\n" +
+			"                            ],\n" +
+			"                        \"this\": \"that\"\n" +
 			"                    }\n" +
 			"            }\n" +
 			"        ]\n" +

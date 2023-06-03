@@ -2,6 +2,7 @@ package yirgacheffe.json;
 
 import java.nio.CharBuffer;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.HashSet;
@@ -185,13 +186,13 @@ public final class JSONObject
 			{
 				return other.equals(this);
 			}
-			else if (!(other instanceof Invalid))
+			else if (other instanceof Invalid)
 			{
-				return false;
+				return this.error.equals(((Invalid) other).error);
 			}
 			else
 			{
-				return this.error.equals(((Invalid) other).error);
+				return false;
 			}
 		}
 
@@ -464,7 +465,7 @@ public final class JSONObject
 			return new Invalid("Failed to parse object: No data.");
 		}
 
-		Map<String, CharSequence> map = new LinkedHashMap<>();
+		Map<String, CharSequence> map = new HashMap<>();
 		byte state = START;
 		int depth = 0;
 		int offset = 0;
