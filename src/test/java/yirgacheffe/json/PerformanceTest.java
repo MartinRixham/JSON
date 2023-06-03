@@ -23,13 +23,13 @@ public final class PerformanceTest
 
 		System.out.println("---------- parsing JSON ----------");
 		long startTime = getCPUTime();
-		JSONObject.read(data).validate();
+		JSONObject.read(data);
 		long endTime = getCPUTime();
 
 		System.out.println(
 			"---------- parsing took " +
-				Duration.ofNanos(endTime - startTime).toMillis() +
-				" milliseconds ----------");
+			Duration.ofNanos(endTime - startTime).toMillis() +
+			" milliseconds ----------");
 	}
 
 	private static long getCPUTime()
@@ -40,21 +40,14 @@ public final class PerformanceTest
 	}
 }
 
-// previous runs:
-// ---------- parsing took 56 seconds ----------
-// ---------- parsing took 47 seconds ----------
-// ---------- parsing took 45 seconds ----------
-// ---------- parsing took 9 seconds ----------
-// ---------- parsing took 1 seconds ----------
-
-// bigger example JSON file
+// old JSONP implementation runs:
 // ---------- parsing took 37 seconds ----------
 // ---------- parsing took 13 seconds ----------
 // ---------- parsing took 8 seconds ----------
 // ---------- parsing took 2 seconds ----------
 
-// initial parsing
+// initial parsing:
 // ---------- parsing took 458 milliseconds ----------
 
-// validation
-// ---------- parsing took 11,865 milliseconds ----------
+// validation:
+// ---------- validation took 11,865 milliseconds ----------

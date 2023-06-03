@@ -161,6 +161,11 @@ public final class JSONArray
 			return this;
 		}
 
+		public Read read()
+		{
+			return new Valid(this.list);
+		}
+
 		@Override
 		public String toString()
 		{
@@ -261,7 +266,18 @@ public final class JSONArray
 		@Override
 		public boolean equals(Object other)
 		{
-			return this.hashCode() == other.hashCode();
+			if (other instanceof JSONValue.Invalid)
+			{
+				return other.equals(this);
+			}
+			else if (!(other instanceof Invalid))
+			{
+				return false;
+			}
+			else
+			{
+				return this.error.equals(((Invalid) other).error);
+			}
 		}
 
 		@Override
@@ -279,9 +295,9 @@ public final class JSONArray
 
 	static final class Valid implements Read
 	{
-		private List<CharSequence> list;
+		private final List<? extends CharSequence> list;
 
-		private Valid(List<CharSequence> list)
+		private Valid(List<? extends CharSequence> list)
 		{
 			this.list = list;
 		}
@@ -334,11 +350,9 @@ public final class JSONArray
 			}
 			else
 			{
-				String string = value.toString();
-
 				try
 				{
-					return Double.parseDouble(string);
+					return Double.parseDouble(value.toString());
 				}
 				catch (NumberFormatException e)
 				{
@@ -362,17 +376,15 @@ public final class JSONArray
 				return "";
 			}
 
-			String string = value.toString();
-
 			if (value.length() > 1 &&
 				value.charAt(0) == '"' &&
 				value.charAt(value.length() - 1) == '"')
 			{
-				return string.substring(1, value.length() - 1);
+				return value.subSequence(1, value.length() - 1).toString();
 			}
 			else
 			{
-				return string;
+				return value.toString();
 			}
 		}
 
@@ -484,13 +496,40 @@ public final class JSONArray
 		@Override
 		public boolean equals(Object other)
 		{
-			return this.hashCode() == other.hashCode();
+			if (other instanceof JSONValue.Valid)
+			{
+				return other.equals(this);
+			}
+			else if (other instanceof Valid)
+			{
+				Valid otherArray = (Valid) other;
+
+				if (this.length() != otherArray.length())
+				{
+					return false;
+				}
+
+				for (int i = 0; i < this.list.size(); i++)
+				{
+					if (!JSONValue.read(this.list.get(i))
+						.equals(JSONValue.read(otherArray.list.get(i))))
+					{
+						return false;
+					}
+				}
+
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		@Override
 		public int hashCode()
 		{
-			int hash = 0;
+			int hash = 2;
 
 			for (CharSequence value: this.list)
 			{

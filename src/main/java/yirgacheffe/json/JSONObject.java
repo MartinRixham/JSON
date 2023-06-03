@@ -85,7 +85,7 @@ public final class JSONObject
 
 		public Read read()
 		{
-			return JSONObject.read(this.toString());
+			return new Valid(this.map);
 		}
 
 		@Override
@@ -180,7 +180,18 @@ public final class JSONObject
 		@Override
 		public boolean equals(Object other)
 		{
-			return this.hashCode() == other.hashCode();
+			if (other instanceof JSONValue.Invalid)
+			{
+				return other.equals(this);
+			}
+			else if (!(other instanceof Invalid))
+			{
+				return false;
+			}
+			else
+			{
+				return this.error.equals(((Invalid) other).error);
+			}
 		}
 
 		@Override
@@ -198,9 +209,9 @@ public final class JSONObject
 
 	static final class Valid implements Read
 	{
-		private final Map<String, CharSequence> map;
+		private final Map<String, ? extends CharSequence> map;
 
-		private Valid(Map<String, CharSequence> map)
+		private Valid(Map<String, ? extends CharSequence> map)
 		{
 			this.map = map;
 		}
@@ -247,11 +258,9 @@ public final class JSONObject
 			}
 			else
 			{
-				String string = value.toString();
-
 				try
 				{
-					return Double.parseDouble(string);
+					return Double.parseDouble(value.toString());
 				}
 				catch (NumberFormatException e)
 				{
@@ -270,17 +279,15 @@ public final class JSONObject
 				return "";
 			}
 
-			String string = value.toString();
-
-			if (string.length() > 1 &&
-				string.charAt(0) == '"' &&
-				string.charAt(value.length() - 1) == '"')
+			if (value.length() > 1 &&
+				value.charAt(0) == '"' &&
+				value.charAt(value.length() - 1) == '"')
 			{
-				return string.substring(1, value.length() - 1);
+				return value.subSequence(1, value.length() - 1).toString();
 			}
 			else
 			{
-				return string;
+				return value.toString();
 			}
 		}
 
@@ -322,7 +329,7 @@ public final class JSONObject
 		{
 			StringBuilder errors = new StringBuilder();
 
-			for (Map.Entry<String, CharSequence> pair: this.map.entrySet())
+			for (Map.Entry<String, ? extends CharSequence> pair: this.map.entrySet())
 			{
 				String error = JSONValue.read(pair.getValue()).validate();
 
@@ -357,13 +364,40 @@ public final class JSONObject
 		@Override
 		public boolean equals(Object other)
 		{
-			return this.hashCode() == other.hashCode();
+			if (other instanceof JSONValue.Valid)
+			{
+				return other.equals(this);
+			}
+			else if (!(other instanceof Valid))
+			{
+				Valid otherObject = (Valid) other;
+
+				if (!this.map.keySet().equals(otherObject.map.keySet()))
+				{
+					return false;
+				}
+
+				for (String key: this.map.keySet())
+				{
+					if (!JSONValue.read(this.map.get(key))
+						.equals(JSONValue.read(otherObject.map.get(key))))
+					{
+						return false;
+					}
+				}
+
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		@Override
 		public int hashCode()
 		{
-			int hash = 0;
+			int hash = 1;
 
 			for (CharSequence value: this.map.values())
 			{

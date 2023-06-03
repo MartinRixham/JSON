@@ -2,9 +2,10 @@ package yirgacheffe.json;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class JSONArrayTest
 {
@@ -22,6 +23,8 @@ public class JSONArrayTest
 
 		assertEquals(0, json.length());
 		assertEquals("Failed to parse array: No data.", json.validate());
+		assertNotEquals(JSONArray.read("[]"), json);
+		assertNotEquals(JSONArray.read("[]").hashCode(), json.hashCode());
 	}
 
 	@Test
@@ -55,6 +58,8 @@ public class JSONArrayTest
 
 		assertEquals(0, json.length());
 		assertEquals("", json.validate());
+		assertEquals(JSONArray.read("[]"), json);
+		assertEquals(JSONArray.read("[]").hashCode(), json.hashCode());
 	}
 
 	@Test
@@ -76,6 +81,8 @@ public class JSONArrayTest
 
 		assertEquals(1, json.length());
 		assertEquals("", json.validate());
+		assertNotEquals(JSONArray.read("[]"), json);
+		assertNotEquals(JSONArray.read("[]").hashCode(), json.hashCode());
 	}
 
 	@Test
@@ -89,6 +96,23 @@ public class JSONArrayTest
 
 		assertEquals(1, json.length());
 		assertEquals("", json.validate());
+		assertNotEquals(JSONArray.read("[]"), json);
+		assertNotEquals(JSONArray.read("[]").hashCode(), json.hashCode());
+	}
+
+	@Test
+	public void testParseEscapedString()
+	{
+		JSONArray.Read json = JSONArray.read("[\"\\\"\"]");
+
+		assertFalse(json.getBoolean(1));
+		assertTrue(Double.isNaN(json.getNumber(0)));
+		assertEquals("\\\"", json.getString(0));
+
+		assertEquals(1, json.length());
+		assertEquals("", json.validate());
+		assertNotEquals(JSONArray.read("[]"), json);
+		assertNotEquals(JSONArray.read("[]").hashCode(), json.hashCode());
 	}
 
 	@Test
@@ -102,6 +126,23 @@ public class JSONArrayTest
 
 		assertEquals(1, json.length());
 		assertEquals("", json.validate());
+		assertNotEquals(JSONArray.read("[]"), json);
+		assertNotEquals(JSONArray.read("[]").hashCode(), json.hashCode());
+	}
+
+	@Test
+	public void testParseInteger()
+	{
+		JSONArray.Read json = JSONArray.read("[22]");
+
+		assertTrue(json.getBoolean(0));
+		assertEquals(22, json.getNumber(0), 0);
+		assertEquals("22", json.getString(0));
+
+		assertEquals(1, json.length());
+		assertEquals("", json.validate());
+		assertNotEquals(JSONArray.read("[]"), json);
+		assertNotEquals(JSONArray.read("[]").hashCode(), json.hashCode());
 	}
 
 	@Test
@@ -115,6 +156,8 @@ public class JSONArrayTest
 
 		assertEquals(1, json.length());
 		assertEquals("", json.validate());
+		assertNotEquals(JSONArray.read("[]"), json);
+		assertNotEquals(JSONArray.read("[]").hashCode(), json.hashCode());
 	}
 
 	@Test
@@ -128,6 +171,8 @@ public class JSONArrayTest
 
 		assertEquals(1, json.length());
 		assertEquals("", json.validate());
+		assertNotEquals(JSONArray.read("[]"), json);
+		assertNotEquals(JSONArray.read("[]").hashCode(), json.hashCode());
 	}
 
 	@Test
@@ -142,6 +187,9 @@ public class JSONArrayTest
 		assertEquals(
 			"Failed to parse array: Ran out of characters before end of array.",
 			json.validate());
+
+		assertNotEquals(JSONArray.read("[]"), json);
+		assertNotEquals(JSONArray.read("[]").hashCode(), json.hashCode());
 	}
 
 	@Test
@@ -160,6 +208,8 @@ public class JSONArrayTest
 
 		assertEquals(1, json.length());
 		assertEquals("", json.validate());
+		assertNotEquals(JSONArray.read("[]"), json);
+		assertNotEquals(JSONArray.read("[]").hashCode(), json.hashCode());
 	}
 
 	@Test
@@ -179,6 +229,8 @@ public class JSONArrayTest
 
 		assertEquals(1, json.length());
 		assertEquals("", json.validate());
+		assertNotEquals(JSONArray.read("[]"), json);
+		assertNotEquals(JSONArray.read("[]").hashCode(), json.hashCode());
 	}
 
 	@Test
@@ -200,6 +252,8 @@ public class JSONArrayTest
 		assertEquals(
 			"[{},[],{},[],\"sumpt\",1,1.0,100.0,true,false]",
 			json.toString());
+
+		assertEquals("", json.read().validate());
 	}
 
 	@Test
@@ -271,6 +325,8 @@ public class JSONArrayTest
 
 		assertEquals(2, json.length());
 		assertEquals("", json.validate());
+		assertNotEquals(JSONArray.read("[]"), json);
+		assertNotEquals(JSONArray.read("[]").hashCode(), json.hashCode());
 	}
 
 	@Test
@@ -284,6 +340,8 @@ public class JSONArrayTest
 
 		assertEquals(1, json.length());
 		assertEquals("", json.validate());
+		assertNotEquals(JSONArray.read("[]"), json);
+		assertNotEquals(JSONArray.read("[]").hashCode(), json.hashCode());
 	}
 
 	@Test
@@ -297,6 +355,7 @@ public class JSONArrayTest
 
 		assertEquals(33, json.length());
 		assertEquals("", json.validate());
+		assertNotEquals(JSONArray.read("[]"), json);
 
 		int count = 0;
 

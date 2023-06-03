@@ -2,9 +2,10 @@ package yirgacheffe.json;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class JSONObjectTest
 {
@@ -25,6 +26,8 @@ public class JSONObjectTest
 			"Failed to parse object: No data.", json.getArray("thingy").toString());
 
 		assertEquals("Failed to parse object: No data.", json.validate());
+		assertNotEquals(JSONObject.read("{}"), json);
+		assertNotEquals(JSONObject.read("{}").hashCode(), json.hashCode());
 	}
 
 	@Test
@@ -46,6 +49,8 @@ public class JSONObjectTest
 			json.getArray("thingy").toString());
 
 		assertEquals("", json.validate());
+		assertEquals(JSONObject.read("{}"), json);
+		assertEquals(JSONObject.read("{}").hashCode(), json.hashCode());
 	}
 
 	@Test
@@ -67,6 +72,8 @@ public class JSONObjectTest
 			json.getArray("thingy").toString());
 
 		assertEquals("", json.validate());
+		assertNotEquals(JSONObject.read("{}"), json);
+		assertNotEquals(JSONObject.read("{}").hashCode(), json.hashCode());
 	}
 
 	@Test
@@ -88,6 +95,23 @@ public class JSONObjectTest
 			json.getArray("thingy").toString());
 
 		assertEquals("", json.validate());
+		assertNotEquals(JSONObject.read("{}"), json);
+		assertNotEquals(JSONObject.read("{}").hashCode(), json.hashCode());
+	}
+
+	@Test
+	public void testParseEscapedString()
+	{
+		JSONObject.Read json = JSONObject.read("{ \"th\\\"ingy\": \"\\\"\" }");
+
+		assertTrue(json.has("th\\\"ingy"));
+		assertTrue(json.getBoolean("th\\\"ingy"));
+		assertTrue(Double.isNaN(json.getNumber("th\\\"ingy")));
+		assertEquals("\\\"", json.getString("th\\\"ingy"));
+
+		assertEquals("", json.validate());
+		assertNotEquals(JSONObject.read("{}"), json);
+		assertNotEquals(JSONObject.read("{}").hashCode(), json.hashCode());
 	}
 
 	@Test
@@ -102,6 +126,9 @@ public class JSONObjectTest
 
 		assertEquals(
 			"Failed to parse object: Duplicate key \"thingy\".", json.validate());
+
+		assertNotEquals(JSONObject.read("{}"), json);
+		assertNotEquals(JSONObject.read("{}").hashCode(), json.hashCode());
 	}
 
 	@Test
@@ -123,6 +150,8 @@ public class JSONObjectTest
 			json.getArray("zero").toString());
 
 		assertEquals("", json.validate());
+		assertNotEquals(JSONObject.read("{}"), json);
+		assertNotEquals(JSONObject.read("{}").hashCode(), json.hashCode());
 	}
 
 	@Test
@@ -144,6 +173,23 @@ public class JSONObjectTest
 			json.getArray("one").toString());
 
 		assertEquals("", json.validate());
+		assertNotEquals(JSONObject.read("{}"), json);
+		assertNotEquals(JSONObject.read("{}").hashCode(), json.hashCode());
+	}
+
+	@Test
+	public void testParseInteger()
+	{
+		JSONObject.Read json = JSONObject.read("{ \"twenty-two\": 22 }");
+
+		assertTrue(json.has("twenty-two"));
+		assertTrue(json.getBoolean("twenty-two"));
+		assertEquals(22, json.getNumber("twenty-two"), 0);
+		assertEquals("22", json.getString("twenty-two"));
+
+		assertEquals("", json.validate());
+		assertNotEquals(JSONObject.read("{}"), json);
+		assertNotEquals(JSONObject.read("{}").hashCode(), json.hashCode());
 	}
 
 	@Test
@@ -165,6 +211,8 @@ public class JSONObjectTest
 			json.getArray("zero").toString());
 
 		assertEquals("", json.validate());
+		assertNotEquals(JSONObject.read("{}"), json);
+		assertNotEquals(JSONObject.read("{}").hashCode(), json.hashCode());
 	}
 
 	@Test
@@ -178,6 +226,8 @@ public class JSONObjectTest
 		assertEquals("1.0", json.getString("one"));
 
 		assertEquals("", json.validate());
+		assertNotEquals(JSONObject.read("{}"), json);
+		assertNotEquals(JSONObject.read("{}").hashCode(), json.hashCode());
 	}
 
 	@Test
@@ -191,6 +241,8 @@ public class JSONObjectTest
 		assertEquals("0E2", json.getString("zero"));
 
 		assertEquals("", json.validate());
+		assertNotEquals(JSONObject.read("{}"), json);
+		assertNotEquals(JSONObject.read("{}").hashCode(), json.hashCode());
 	}
 
 	@Test
@@ -204,6 +256,8 @@ public class JSONObjectTest
 		assertEquals("1e2", json.getString("one"));
 
 		assertEquals("", json.validate());
+		assertNotEquals(JSONObject.read("{}"), json);
+		assertNotEquals(JSONObject.read("{}").hashCode(), json.hashCode());
 	}
 
 	@Test
@@ -217,6 +271,8 @@ public class JSONObjectTest
 		assertEquals("true", json.getString("tru"));
 
 		assertEquals("", json.validate());
+		assertNotEquals(JSONObject.read("{}"), json);
+		assertNotEquals(JSONObject.read("{}").hashCode(), json.hashCode());
 	}
 
 	@Test
@@ -230,6 +286,8 @@ public class JSONObjectTest
 		assertEquals("false", json.getString("fals"));
 
 		assertEquals("", json.validate());
+		assertNotEquals(JSONObject.read("{}"), json);
+		assertNotEquals(JSONObject.read("{}").hashCode(), json.hashCode());
 	}
 
 	@Test
@@ -243,6 +301,8 @@ public class JSONObjectTest
 		assertEquals("null", json.getString("nul"));
 
 		assertEquals("", json.validate());
+		assertNotEquals(JSONObject.read("{}"), json);
+		assertNotEquals(JSONObject.read("{}").hashCode(), json.hashCode());
 	}
 
 	@Test
@@ -257,6 +317,9 @@ public class JSONObjectTest
 		assertEquals(
 			"Failed to parse object: Ran out of characters before end of object.",
 			json.validate());
+
+		assertNotEquals(JSONObject.read("{}"), json);
+		assertNotEquals(JSONObject.read("{}").hashCode(), json.hashCode());
 	}
 
 	@Test
@@ -275,6 +338,8 @@ public class JSONObjectTest
 			json.getArray("obj").toString());
 
 		assertEquals("", json.validate());
+		assertNotEquals(JSONObject.read("{}"), json);
+		assertNotEquals(JSONObject.read("{}").hashCode(), json.hashCode());
 	}
 
 	@Test
@@ -293,6 +358,8 @@ public class JSONObjectTest
 
 		assertEquals(JSONArray.read("[]"), json.getArray("arr"));
 		assertEquals("", json.validate());
+		assertNotEquals(JSONObject.read("{}"), json);
+		assertNotEquals(JSONObject.read("{}").hashCode(), json.hashCode());
 	}
 
 	@Test
@@ -323,6 +390,8 @@ public class JSONObjectTest
 				"\"tru\":true" +
 			"}",
 			json.toString());
+
+		assertEquals("", json.read().validate());
 	}
 
 	@Test
@@ -338,7 +407,8 @@ public class JSONObjectTest
 			.put("int", 1)
 			.put("float", 1.0)
 			.put("exp", 1e2)
-			.put("tru", true);
+			.put("tru", true)
+			.put("fals", false);
 
 		assertEquals(
 			"{" +
@@ -350,7 +420,8 @@ public class JSONObjectTest
 				"\"int\":1," +
 				"\"float\":1.0," +
 				"\"exp\":100.0," +
-				"\"tru\":true" +
+				"\"tru\":true," +
+				"\"fals\":false" +
 				"}",
 			json.toString());
 	}
@@ -371,5 +442,7 @@ public class JSONObjectTest
 				.getString(3));
 
 		assertEquals("", json.validate());
+		assertNotEquals(JSONObject.read("{}"), json);
+		assertNotEquals(JSONObject.read("{}").hashCode(), json.hashCode());
 	}
 }

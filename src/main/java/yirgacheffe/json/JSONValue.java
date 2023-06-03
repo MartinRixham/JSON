@@ -110,7 +110,14 @@ interface JSONValue
 		@Override
 		public boolean equals(Object other)
 		{
-			return this.hashCode() == other.hashCode();
+			if (other instanceof Invalid)
+			{
+				return this.error.equals(((Invalid) other).error);
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		@Override
@@ -237,7 +244,22 @@ interface JSONValue
 		@Override
 		public boolean equals(Object other)
 		{
-			return this.hashCode() == other.hashCode();
+			if (this.isObject())
+			{
+				return other.equals(JSONObject.read(this.string));
+			}
+			else if (this.isArray())
+			{
+				return other.equals(JSONArray.read(this.string));
+			}
+			else if (!(other instanceof Valid))
+			{
+				return false;
+			}
+			else
+			{
+				return this.string.equals(((Valid) other).string);
+			}
 		}
 
 		@Override
@@ -258,14 +280,14 @@ interface JSONValue
 		}
 	}
 
-	static JSONValue read(CharSequence characters)
+	static JSONValue read(CharSequence value)
 	{
-		if (characters == null || characters.length() == 0)
+		if (value == null || value.length() == 0)
 		{
 			return new Invalid("");
 		}
 
-		String string = characters.toString();
+		String string = value.toString();
 
 		try
 		{
