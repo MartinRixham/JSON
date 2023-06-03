@@ -160,7 +160,7 @@ public class JSONArrayTest
 	}
 
 	@Test
-	public void testPutProperties()
+	public void testPushProperties()
 	{
 		JSONArray.Write json = JSONArray.write();
 
@@ -177,6 +177,24 @@ public class JSONArrayTest
 		assertEquals(
 			"[{},[],{},[],\"sumpt\",1,1.0,100.0,true]",
 			json.toString());
+	}
+
+	@Test
+	public void testPushAllProperties()
+	{
+		JSONArray.Write json = JSONArray.write();
+
+		json.push(JSONObject.write(), JSONObject.write());
+		json.push(JSONArray.write(), JSONArray.write());
+		json.push("thingy", "sumpt");
+		json.push(1, 2);
+		json.push(1.0, 2.0);
+		json.push(1e2, 2e1);
+		json.push(true, false);
+
+		assertEquals(
+				"[{},{},[],[],\"thingy\",\"sumpt\",1,2,1.0,2.0,100.0,20.0,true,false]",
+				json.toString());
 	}
 
 	@Test

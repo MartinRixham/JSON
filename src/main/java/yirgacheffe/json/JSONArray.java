@@ -39,9 +39,37 @@ public class JSONArray
 			return this;
 		}
 
+		Write push(boolean... values)
+		{
+			String[] strings = new String[values.length];
+
+			for (int i = 0; i < values.length; i++)
+			{
+				strings[i] = Boolean.toString(values[i]);
+			}
+
+			this.list.addAll(Arrays.asList(strings));
+
+			return this;
+		}
+
 		Write push(long value)
 		{
 			this.list.add(Long.toString(value));
+
+			return this;
+		}
+
+		Write push(long... values)
+		{
+			String[] strings = new String[values.length];
+
+			for (int i = 0; i < values.length; i++)
+			{
+				strings[i] = Long.toString(values[i]);
+			}
+
+			this.list.addAll(Arrays.asList(strings));
 
 			return this;
 		}
@@ -53,9 +81,37 @@ public class JSONArray
 			return this;
 		}
 
+		Write push(double... values)
+		{
+			String[] strings = new String[values.length];
+
+			for (int i = 0; i < values.length; i++)
+			{
+				strings[i] = Double.toString(values[i]);
+			}
+
+			this.list.addAll(Arrays.asList(strings));
+
+			return this;
+		}
+
 		Write push(String value)
 		{
 			this.list.add(("\"" + value + "\""));
+
+			return this;
+		}
+
+		Write push(String... values)
+		{
+			String[] strings = new String[values.length];
+
+			for (int i = 0; i < values.length; i++)
+			{
+				strings[i] = "\"" + values[i] + "\"";
+			}
+
+			this.list.addAll(Arrays.asList(strings));
 
 			return this;
 		}
@@ -67,9 +123,37 @@ public class JSONArray
 			return this;
 		}
 
+		Write push(JSONObject.Write... values)
+		{
+			String[] strings = new String[values.length];
+
+			for (int i = 0; i < values.length; i++)
+			{
+				strings[i] = values[i].toString();
+			}
+
+			this.list.addAll(Arrays.asList(strings));
+
+			return this;
+		}
+
 		Write push(Write value)
 		{
 			this.list.add((value.toString()));
+
+			return this;
+		}
+
+		Write push(Write... values)
+		{
+			String[] strings = new String[values.length];
+
+			for (int i = 0; i < values.length; i++)
+			{
+				strings[i] = values[i].toString();
+			}
+
+			this.list.addAll(Arrays.asList(strings));
 
 			return this;
 		}
