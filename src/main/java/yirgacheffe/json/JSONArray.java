@@ -302,27 +302,20 @@ public final class JSONArray
 		@Override
 		public boolean getBoolean(int index)
 		{
-			if (index >= 0 && this.list.size() > index)
+			if (0 <= index && index < this.list.size())
 			{
-				CharSequence value = this.list.get(index);
-
-				if (value == null)
-				{
-					return false;
-				}
-
-				String string = value.toString();
+				String value = this.list.get(index).toString();
 
 				try
 				{
-					return Double.parseDouble(string) != 0d;
+					return Double.parseDouble(value) != 0d;
 				}
 				catch (NumberFormatException e)
 				{
-					return !(string.length() == 0 ||
-						string.equals("null") ||
-						string.equals("false") ||
-						string.equals("\"\""));
+					return !(value.length() == 0 ||
+						value.equals("null") ||
+						value.equals("false") ||
+						value.equals("\"\""));
 				}
 			}
 			else
@@ -341,20 +334,13 @@ public final class JSONArray
 
 			CharSequence value = this.list.get(index);
 
-			if (value == null)
+			try
+			{
+				return Double.parseDouble(value.toString());
+			}
+			catch (NumberFormatException e)
 			{
 				return Double.NaN;
-			}
-			else
-			{
-				try
-				{
-					return Double.parseDouble(value.toString());
-				}
-				catch (NumberFormatException e)
-				{
-					return Double.NaN;
-				}
 			}
 		}
 
@@ -367,11 +353,6 @@ public final class JSONArray
 			}
 
 			CharSequence value = this.list.get(index);
-
-			if (value == null)
-			{
-				return "";
-			}
 
 			if (value.length() > 1 &&
 				value.charAt(0) == '"' &&
@@ -388,7 +369,7 @@ public final class JSONArray
 		@Override
 		public JSONObject.Read getObject(int index)
 		{
-			if (index >= 0 && this.list.size() > index)
+			if (0 <= index && index < this.list.size())
 			{
 				return JSONObject.read(this.list.get(index));
 			}
@@ -403,7 +384,7 @@ public final class JSONArray
 		@Override
 		public Read getArray(int index)
 		{
-			if (index >= 0 && this.list.size() > index)
+			if (0 <= index && index < this.list.size())
 			{
 				return read(this.list.get(index));
 			}
@@ -418,7 +399,7 @@ public final class JSONArray
 		@Override
 		public JSONValue getValue(int index)
 		{
-			if (index >= 0 && this.list.size() > index)
+			if (0 <= index && index < this.list.size())
 			{
 				return JSONValue.read(this.list.get(index));
 			}
