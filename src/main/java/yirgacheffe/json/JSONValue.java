@@ -278,6 +278,23 @@ interface JSONValue
 				return this.string.hashCode();
 			}
 		}
+
+		@Override
+		public String toString()
+		{
+			if (this.isObject())
+			{
+				return JSONObject.read(this.string).toString();
+			}
+			else if (this.isArray())
+			{
+				return JSONArray.read(this.string).toString();
+			}
+			else
+			{
+				return this.string.toString();
+			}
+		}
 	}
 
 	static JSONValue read(CharSequence value)

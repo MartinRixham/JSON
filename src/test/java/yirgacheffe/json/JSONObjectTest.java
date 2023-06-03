@@ -431,7 +431,20 @@ public class JSONObjectTest
 	{
 		JSONObject.Read json =
 			JSONObject.read(
-				"{ \"arr\": [1,2,{\"wibble\":{\"thingy\":[[8,8,8,\"sumpt\"]]}}] }");
+				"{" +
+					"\"arr\":" +
+						"[" +
+							"1," +
+							"2," +
+							"{" +
+								"\"wibble\":" +
+									"{" +
+										"\"this\":\"that\"," +
+										"\"thingy\":[[8,8,8,\"sumpt\"]]" +
+									"}" +
+							"}" +
+						"]" +
+				"}");
 
 		assertEquals("sumpt",
 			json.getArray("arr")
@@ -444,5 +457,23 @@ public class JSONObjectTest
 		assertEquals("", json.validate());
 		assertNotEquals(JSONObject.read("{}"), json);
 		assertNotEquals(JSONObject.read("{}").hashCode(), json.hashCode());
+
+		assertEquals("{\n" +
+			"    \"arr\":\n" +
+			"        [\n" +
+			"            1,\n" +
+			"            2,\n" +
+			"            {\n" +
+			"                \"wibble\":\n" +
+			"                    {\n" +
+			"                        \"this\": \"that\",\n" +
+			"                        \"thingy\":\n" +
+			"                            [\n" +
+			"                                [8,8,8,\"sumpt\"]\n" +
+			"                            ]\n" +
+			"                    }\n" +
+			"            }\n" +
+			"        ]\n" +
+			"}", json.toString());
 	}
 }

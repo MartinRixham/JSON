@@ -538,6 +538,40 @@ public final class JSONArray
 
 			return hash;
 		}
+
+		@Override
+		public String toString()
+		{
+			String indent = "    ";
+			StringBuilder builder = new StringBuilder("[");
+			boolean newLine = false;
+
+			for (CharSequence string: this.list)
+			{
+				JSONValue value = JSONValue.read(string);
+
+				if (value.isObject() || value.isArray())
+				{
+					newLine = true;
+				}
+			}
+
+			for (CharSequence value: this.list)
+			{
+				builder.append(newLine ? "\n" : "")
+					.append(newLine ? indent : "")
+					.append(JSONValue.read(value).toString()
+						.replace("\n", "\n" + indent))
+					.append(',');
+			}
+
+			builder.setLength(builder.length() - 1);
+
+			builder.append(newLine ? "\n" : "")
+				.append(']');
+
+			return builder.toString();
+		}
 	}
 
 	public static Write write()

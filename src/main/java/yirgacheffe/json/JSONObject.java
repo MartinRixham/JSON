@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.Map.Entry;
 
 public final class JSONObject
 {
@@ -405,6 +406,36 @@ public final class JSONObject
 			}
 
 			return hash;
+		}
+
+		@Override
+		public String toString()
+		{
+			String indent = "    ";
+			StringBuilder builder = new StringBuilder("{");
+
+			for (Entry<String, ? extends CharSequence> pair: this.map.entrySet())
+			{
+				JSONValue value = JSONValue.read(pair.getValue());
+				boolean newLine = value.isObject() || value.isArray();
+
+				builder
+					.append('\n')
+					.append(indent)
+					.append('"')
+					.append(pair.getKey())
+					.append("\":")
+					.append(newLine ? '\n' : ' ')
+					.append(newLine ? indent + indent : "")
+					.append(value.toString()
+						.replace("\n", "\n" + indent + indent))
+					.append(',');
+			}
+
+			builder.setLength(builder.length() - 1);
+			builder.append("\n}");
+
+			return builder.toString();
 		}
 	}
 
