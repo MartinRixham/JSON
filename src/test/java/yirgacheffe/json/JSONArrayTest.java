@@ -190,6 +190,20 @@ public class JSONArrayTest
 
 		assertNotEquals(JSONArray.read("[]"), json);
 		assertNotEquals(JSONArray.read("[]").hashCode(), json.hashCode());
+		assertEquals(JSONArray.read("[null"), json);
+		assertNotEquals(JSONValue.read("[null"), json);
+		assertNotEquals("[null", json);
+		assertNotEquals(JSONArray.read(""), json);
+		assertNotEquals(JSONArray.write().read(), json);
+
+		int count = 0;
+
+		for (JSONValue value: json)
+		{
+			count++;
+		}
+
+		assertEquals(0, count);
 	}
 
 	@Test
@@ -291,8 +305,8 @@ public class JSONArrayTest
 		json.push(true, false);
 
 		assertEquals(
-				"[{},{},[],[],\"thingy\",\"sumpt\",1,2,1.0,2.0,100.0,20.0,true,false]",
-				json.toString());
+			"[{},{},[],[],\"thingy\",\"sumpt\",1,2,1.0,2.0,100.0,20.0,true,false]",
+			json.toString());
 	}
 
 	@Test

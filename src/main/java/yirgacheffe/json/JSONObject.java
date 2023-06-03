@@ -182,11 +182,7 @@ public final class JSONObject
 		@Override
 		public boolean equals(Object other)
 		{
-			if (other instanceof JSONValue.Invalid)
-			{
-				return other.equals(this);
-			}
-			else if (other instanceof Invalid)
+			if (other instanceof Invalid)
 			{
 				return this.error.equals(((Invalid) other).error);
 			}

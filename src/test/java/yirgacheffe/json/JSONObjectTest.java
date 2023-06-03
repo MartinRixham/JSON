@@ -320,6 +320,11 @@ public class JSONObjectTest
 
 		assertNotEquals(JSONObject.read("{}"), json);
 		assertNotEquals(JSONObject.read("{}").hashCode(), json.hashCode());
+		assertEquals(JSONObject.read("{ \"nul\": null"), json);
+		assertNotEquals(JSONValue.read("{ \"nul\": null"), json);
+		assertNotEquals("{ \"nul\": null", json);
+		assertNotEquals(JSONObject.read(""), json);
+		assertNotEquals(JSONObject.write().read(), json);
 	}
 
 	@Test
