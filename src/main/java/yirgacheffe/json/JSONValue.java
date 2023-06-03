@@ -290,7 +290,7 @@ public interface JSONValue
 		@Override
 		public int hashCode()
 		{
-			if (this.isObject())
+			if (this.isObject() || this.isArray())
 			{
 				return JSONObject.read(this.value).hashCode();
 			}
@@ -326,7 +326,7 @@ public interface JSONValue
 	{
 		if (value == null || value.length() == 0)
 		{
-			return new Invalid("");
+			return new Invalid("Failed to parse value: No data.");
 		}
 
 		String string = value.toString();

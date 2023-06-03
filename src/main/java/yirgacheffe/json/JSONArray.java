@@ -542,6 +542,11 @@ public final class JSONArray
 		@Override
 		public String toString()
 		{
+			if (this.list.size() == 0)
+			{
+				return "[]";
+			}
+
 			String indent = "    ";
 			StringBuilder builder = new StringBuilder("[");
 			boolean newLine = false;
@@ -566,9 +571,7 @@ public final class JSONArray
 			}
 
 			builder.setLength(builder.length() - 1);
-
-			builder.append(newLine ? "\n" : "")
-				.append(']');
+			builder.append(newLine ? "\n" : "").append(']');
 
 			return builder.toString();
 		}

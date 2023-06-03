@@ -412,6 +412,11 @@ public final class JSONObject
 		@Override
 		public String toString()
 		{
+			if (this.map.size() == 0)
+			{
+				return "{}";
+			}
+
 			String indent = "    ";
 			StringBuilder builder = new StringBuilder("{");
 
