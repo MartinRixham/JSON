@@ -370,7 +370,7 @@ public final class JSONObject
 			{
 				return other.equals(this);
 			}
-			else if (!(other instanceof Valid))
+			else if (other instanceof Valid)
 			{
 				Valid otherObject = (Valid) other;
 
