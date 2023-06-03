@@ -28,8 +28,8 @@ public final class PerformanceTest
 
 		System.out.println(
 			"---------- parsing took " +
-				Duration.ofNanos(endTime - startTime).getNano() +
-				" seconds ----------");
+				Duration.ofNanos(endTime - startTime).toMillis() +
+				" milliseconds ----------");
 	}
 
 	private static long getCPUTime()
@@ -54,7 +54,7 @@ public final class PerformanceTest
 // ---------- parsing took 2 seconds ----------
 
 // initial parsing
-// ---------- parsing took 457616 milliseconds ----------
+// ---------- parsing took 458 milliseconds ----------
 
 // validation
-// ---------- parsing took 466508 milliseconds ----------
+// ---------- parsing took 11,865 milliseconds ----------

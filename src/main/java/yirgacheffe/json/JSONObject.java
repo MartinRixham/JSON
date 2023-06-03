@@ -493,7 +493,15 @@ public class JSONObject
 				else if (character == '"')
 				{
 					key = CharBuffer.wrap(characters, offset + 1, i).toString();
-					state = AFTER_KEY;
+
+					if (map.containsKey(key))
+					{
+						return new Invalid("Failed to parse object: Duplicate key \"" + key + "\".");
+					}
+					else
+					{
+						state = AFTER_KEY;
+					}
 				}
 			}
 			else if (state == BEFORE_KEY)

@@ -65,6 +65,18 @@ public class JSONObjectTest
 	}
 
 	@Test
+	public void testParseDuplicateKey()
+	{
+		JSONObject.Read json = JSONObject.read("{ \"thingy\": \"\", \"thingy\": 0 }");
+
+		assertFalse(json.has("thingy"));
+		assertFalse(json.getBoolean("thingy"));
+		assertTrue(Double.isNaN(json.getNumber("thingy")));
+		assertEquals("", json.getString("thingy"));
+		assertEquals("Failed to parse object: Duplicate key \"thingy\".", json.validate());
+	}
+
+	@Test
 	public void testParseZeroInteger()
 	{
 		JSONObject.Read json = JSONObject.read("{ \"zero\": 0 }");
