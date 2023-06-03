@@ -19,6 +19,7 @@ public class JSONArrayTest
 		assertEquals("", json.getString(0));
 		assertEquals("Failed to parse array: No data.", json.getObject(0).toString());
 		assertEquals("Failed to parse array: No data.", json.getArray(0).toString());
+		assertFalse(json.getValue(0) instanceof JSONValue.Valid);
 		assertEquals("Failed to parse array: No data.", json.toString());
 
 		assertEquals(0, json.length());
@@ -35,6 +36,7 @@ public class JSONArrayTest
 		assertFalse(json.getBoolean(0));
 		assertTrue(Double.isNaN(json.getNumber(0)));
 		assertEquals("", json.getString(0));
+		assertFalse(json.getValue(0) instanceof JSONValue.Valid);
 
 		assertEquals(
 			"Failed to read array index 0 of array of length 0.",
@@ -47,6 +49,7 @@ public class JSONArrayTest
 		assertFalse(json.getBoolean(-1));
 		assertTrue(Double.isNaN(json.getNumber(-1)));
 		assertEquals("", json.getString(-1));
+		assertFalse(json.getValue(-1) instanceof JSONValue.Valid);
 
 		assertEquals(
 			"Failed to read array index -1 of array of length 0.",
@@ -79,6 +82,7 @@ public class JSONArrayTest
 			"Failed to parse array: Started with \" instead of [.",
 			json.getArray(0).toString());
 
+		assertTrue(json.getValue(0) instanceof JSONValue.Valid);
 		assertEquals(1, json.length());
 		assertEquals("", json.validate());
 		assertNotEquals(JSONArray.read("[]"), json);
@@ -93,6 +97,7 @@ public class JSONArrayTest
 		assertFalse(json.getBoolean(0));
 		assertTrue(Double.isNaN(json.getNumber(0)));
 		assertEquals("", json.getString(0));
+		assertTrue(json.getValue(0) instanceof JSONValue.Valid);
 
 		assertEquals(1, json.length());
 		assertEquals("", json.validate());
@@ -108,6 +113,7 @@ public class JSONArrayTest
 		assertFalse(json.getBoolean(1));
 		assertTrue(Double.isNaN(json.getNumber(0)));
 		assertEquals("\\\"", json.getString(0));
+		assertTrue(json.getValue(0) instanceof JSONValue.Valid);
 
 		assertEquals(1, json.length());
 		assertEquals("", json.validate());
@@ -123,6 +129,7 @@ public class JSONArrayTest
 		assertFalse(json.getBoolean(0));
 		assertEquals(0, json.getNumber(0), 0);
 		assertEquals("0", json.getString(0));
+		assertTrue(json.getValue(0) instanceof JSONValue.Valid);
 
 		assertEquals(1, json.length());
 		assertEquals("", json.validate());
@@ -138,6 +145,7 @@ public class JSONArrayTest
 		assertTrue(json.getBoolean(0));
 		assertEquals(22, json.getNumber(0), 0);
 		assertEquals("22", json.getString(0));
+		assertTrue(json.getValue(0) instanceof JSONValue.Valid);
 
 		assertEquals(1, json.length());
 		assertEquals("", json.validate());
@@ -153,6 +161,7 @@ public class JSONArrayTest
 		assertTrue(json.getBoolean(0));
 		assertTrue(Double.isNaN(json.getNumber(0)));
 		assertEquals("true", json.getString(0));
+		assertTrue(json.getValue(0) instanceof JSONValue.Valid);
 
 		assertEquals(1, json.length());
 		assertEquals("", json.validate());
@@ -168,6 +177,7 @@ public class JSONArrayTest
 		assertFalse(json.getBoolean(0));
 		assertTrue(Double.isNaN(json.getNumber(0)));
 		assertEquals("null", json.getString(0));
+		assertTrue(json.getValue(0) instanceof JSONValue.Valid);
 
 		assertEquals(1, json.length());
 		assertEquals("", json.validate());
@@ -188,6 +198,7 @@ public class JSONArrayTest
 			"Failed to parse array: Ran out of characters before end of array.",
 			json.validate());
 
+		assertFalse(json.getValue(0) instanceof JSONValue.Valid);
 		assertNotEquals(JSONArray.read("[]"), json);
 		assertNotEquals(JSONArray.read("[]").hashCode(), json.hashCode());
 		assertEquals(JSONArray.read("[null"), json);

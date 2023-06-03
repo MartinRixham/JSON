@@ -18,6 +18,7 @@ public class JSONObjectTest
 		assertFalse(json.getBoolean("thingy"));
 		assertTrue(Double.isNaN(json.getNumber("thingy")));
 		assertEquals("", json.getString("thingy"));
+		assertFalse(json.getValue("thingy") instanceof JSONValue.Valid);
 
 		assertEquals(
 			"Failed to parse object: No data.", json.getObject("thingy").toString());
@@ -39,6 +40,7 @@ public class JSONObjectTest
 		assertFalse(json.getBoolean("thingy"));
 		assertTrue(Double.isNaN(json.getNumber("thingy")));
 		assertEquals("", json.getString("thingy"));
+		assertFalse(json.getValue("thingy") instanceof JSONValue.Valid);
 
 		assertEquals(
 			"Failed to read object with key \"thingy\".",
@@ -62,6 +64,7 @@ public class JSONObjectTest
 		assertTrue(json.getBoolean("thingy"));
 		assertTrue(Double.isNaN(json.getNumber("thingy")));
 		assertEquals("sumpt", json.getString("thingy"));
+		assertTrue(json.getValue("thingy") instanceof JSONValue.Valid);
 
 		assertEquals(
 			"Failed to parse object: Started with \" instead of {.",
@@ -85,6 +88,7 @@ public class JSONObjectTest
 		assertFalse(json.getBoolean("thingy"));
 		assertTrue(Double.isNaN(json.getNumber("thingy")));
 		assertEquals("", json.getString("thingy"));
+		assertTrue(json.getValue("thingy") instanceof JSONValue.Valid);
 
 		assertEquals(
 			"Failed to parse object: Started with \" instead of {.",
@@ -108,6 +112,7 @@ public class JSONObjectTest
 		assertTrue(json.getBoolean("th\\\"ingy"));
 		assertTrue(Double.isNaN(json.getNumber("th\\\"ingy")));
 		assertEquals("\\\"", json.getString("th\\\"ingy"));
+		assertTrue(json.getValue("th\\\"ingy") instanceof JSONValue.Valid);
 
 		assertEquals("", json.validate());
 		assertNotEquals(JSONObject.read("{}"), json);
@@ -123,6 +128,7 @@ public class JSONObjectTest
 		assertFalse(json.getBoolean("thingy"));
 		assertTrue(Double.isNaN(json.getNumber("thingy")));
 		assertEquals("", json.getString("thingy"));
+		assertFalse(json.getValue("thingy") instanceof JSONValue.Valid);
 
 		assertEquals(
 			"Failed to parse object: Duplicate key \"thingy\".", json.validate());
@@ -140,6 +146,7 @@ public class JSONObjectTest
 		assertFalse(json.getBoolean("zero"));
 		assertEquals(0, json.getNumber("zero"), 0);
 		assertEquals("0", json.getString("zero"));
+		assertTrue(json.getValue("zero") instanceof JSONValue.Valid);
 
 		assertEquals(
 			"Failed to parse object: Started with 0 instead of {.",
@@ -163,6 +170,7 @@ public class JSONObjectTest
 		assertTrue(json.getBoolean("one"));
 		assertEquals(1, json.getNumber("one"), 0);
 		assertEquals("1", json.getString("one"));
+		assertTrue(json.getValue("one") instanceof JSONValue.Valid);
 
 		assertEquals(
 			"Failed to parse object: Started with 1 instead of {.",
@@ -186,6 +194,7 @@ public class JSONObjectTest
 		assertTrue(json.getBoolean("twenty-two"));
 		assertEquals(22, json.getNumber("twenty-two"), 0);
 		assertEquals("22", json.getString("twenty-two"));
+		assertTrue(json.getValue("twenty-two") instanceof JSONValue.Valid);
 
 		assertEquals("", json.validate());
 		assertNotEquals(JSONObject.read("{}"), json);
@@ -201,6 +210,7 @@ public class JSONObjectTest
 		assertFalse(json.getBoolean("zero"));
 		assertEquals(0, json.getNumber("zero"), 0);
 		assertEquals("0.0", json.getString("zero"));
+		assertTrue(json.getValue("zero") instanceof JSONValue.Valid);
 
 		assertEquals(
 			"Failed to parse object: Started with 0 instead of {.",
@@ -224,6 +234,7 @@ public class JSONObjectTest
 		assertTrue(json.getBoolean("one"));
 		assertEquals(1, json.getNumber("one"), 0);
 		assertEquals("1.0", json.getString("one"));
+		assertTrue(json.getValue("one") instanceof JSONValue.Valid);
 
 		assertEquals("", json.validate());
 		assertNotEquals(JSONObject.read("{}"), json);
@@ -239,6 +250,7 @@ public class JSONObjectTest
 		assertFalse(json.getBoolean("zero"));
 		assertEquals(0, json.getNumber("zero"), 0);
 		assertEquals("0E2", json.getString("zero"));
+		assertTrue(json.getValue("zero") instanceof JSONValue.Valid);
 
 		assertEquals("", json.validate());
 		assertNotEquals(JSONObject.read("{}"), json);
@@ -254,6 +266,7 @@ public class JSONObjectTest
 		assertTrue(json.getBoolean("one"));
 		assertEquals(100, json.getNumber("one"), 0);
 		assertEquals("1e2", json.getString("one"));
+		assertTrue(json.getValue("one") instanceof JSONValue.Valid);
 
 		assertEquals("", json.validate());
 		assertNotEquals(JSONObject.read("{}"), json);
@@ -269,6 +282,7 @@ public class JSONObjectTest
 		assertTrue(json.getBoolean("tru"));
 		assertTrue(Double.isNaN(json.getNumber("tru")));
 		assertEquals("true", json.getString("tru"));
+		assertTrue(json.getValue("tru") instanceof JSONValue.Valid);
 
 		assertEquals("", json.validate());
 		assertNotEquals(JSONObject.read("{}"), json);
@@ -284,6 +298,7 @@ public class JSONObjectTest
 		assertFalse(json.getBoolean("fals"));
 		assertTrue(Double.isNaN(json.getNumber("fals")));
 		assertEquals("false", json.getString("fals"));
+		assertTrue(json.getValue("fals") instanceof JSONValue.Valid);
 
 		assertEquals("", json.validate());
 		assertNotEquals(JSONObject.read("{}"), json);
@@ -299,6 +314,7 @@ public class JSONObjectTest
 		assertFalse(json.getBoolean("nul"));
 		assertTrue(Double.isNaN(json.getNumber("nul")));
 		assertEquals("null", json.getString("nul"));
+		assertTrue(json.getValue("nul") instanceof JSONValue.Valid);
 
 		assertEquals("", json.validate());
 		assertNotEquals(JSONObject.read("{}"), json);
@@ -318,6 +334,7 @@ public class JSONObjectTest
 			"Failed to parse object: Ran out of characters before end of object.",
 			json.validate());
 
+		assertFalse(json.getValue("nul") instanceof JSONValue.Valid);
 		assertNotEquals(JSONObject.read("{}"), json);
 		assertNotEquals(JSONObject.read("{}").hashCode(), json.hashCode());
 		assertEquals(JSONObject.read("{ \"nul\": null"), json);
@@ -336,6 +353,7 @@ public class JSONObjectTest
 		assertTrue(json.getBoolean("obj"));
 		assertTrue(Double.isNaN(json.getNumber("obj")));
 		assertEquals("{}", json.getString("obj"));
+		assertTrue(json.getValue("obj") instanceof JSONValue.Valid);
 		assertEquals(JSONObject.read("{}"), json.getObject("obj"));
 
 		assertEquals(
@@ -356,6 +374,7 @@ public class JSONObjectTest
 		assertTrue(json.getBoolean("arr"));
 		assertTrue(Double.isNaN(json.getNumber("arr")));
 		assertEquals("[]", json.getString("arr"));
+		assertTrue(json.getValue("arr") instanceof JSONValue.Valid);
 
 		assertEquals(
 			"Failed to parse object: Started with [ instead of {.",
