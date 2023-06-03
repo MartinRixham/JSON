@@ -325,7 +325,7 @@ public final class JSONObject
 		@Override
 		public String validate()
 		{
-			StringBuilder errors = new StringBuilder();
+			StringBuilder errors = new StringBuilder("{");
 
 			for (Map.Entry<String, ? extends CharSequence> pair: this.map.entrySet())
 			{
@@ -333,21 +333,24 @@ public final class JSONObject
 
 				if (error.length() > 0)
 				{
-					errors.append("Value of key ")
-							.append(pair.getKey())
-							.append(": ")
-							.append(error)
-							.append(", ");
+					errors.append("\"Value of ")
+							.append(pair.getKey().replace("\\", "\\\\")
+								.replace("\"", "\\\""))
+							.append("\": \"")
+							.append(error.replace("\\", "\\\\")
+								.replace("\"", "\\\""))
+							.append("\", ");
 				}
 			}
 
-			if (errors.length() == 0)
+			if (errors.length() < 2)
 			{
 				return "";
 			}
 			else
 			{
 				errors.setLength(errors.length() - 2);
+				errors.append('}');
 
 				return errors.toString();
 			}
@@ -408,7 +411,13 @@ public final class JSONObject
 		@Override
 		public String toString()
 		{
-			if (this.map.size() == 0)
+			String errors = this.validate();
+
+			if (errors.length() > 0)
+			{
+				return errors;
+			}
+			else if (this.map.size() == 0)
 			{
 				return "{}";
 			}
@@ -597,7 +606,7 @@ public final class JSONObject
 				{
 					state = BEFORE_VALUE;
 				}
-				else if (Character.isWhitespace(character))
+				else if (!Character.isWhitespace(character))
 				{
 					return new Invalid(
 						"Failed to parse object at character " + i +

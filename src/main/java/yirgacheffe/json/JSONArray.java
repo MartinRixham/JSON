@@ -420,7 +420,7 @@ public final class JSONArray
 		@Override
 		public String validate()
 		{
-			StringBuilder errors = new StringBuilder();
+			StringBuilder errors = new StringBuilder("{");
 
 			for (int i = 0; i < this.list.size(); i++)
 			{
@@ -428,21 +428,23 @@ public final class JSONArray
 
 				if (error.length() > 0)
 				{
-					errors.append("Value at array position ")
+					errors.append("\"Value at array position ")
 						.append(i)
-						.append(": ")
-						.append(error)
-						.append(", ");
+						.append("\": \"")
+						.append(error.replace("\\", "\\\\")
+							.replace("\"", "\\\""))
+						.append("\", ");
 				}
 			}
 
-			if (errors.length() == 0)
+			if (errors.length() < 2)
 			{
 				return "";
 			}
 			else
 			{
 				errors.setLength(errors.length() - 2);
+				errors.append("}");
 
 				return errors.toString();
 			}
@@ -520,7 +522,13 @@ public final class JSONArray
 		@Override
 		public String toString()
 		{
-			if (this.list.size() == 0)
+			String errors = this.validate();
+
+			if (errors.length() > 0)
+			{
+				return errors;
+			}
+			else if (this.list.size() == 0)
 			{
 				return "[]";
 			}

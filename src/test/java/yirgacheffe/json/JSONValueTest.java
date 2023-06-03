@@ -39,6 +39,8 @@ public class JSONValueTest
 			new JSONValue.Invalid("Failed to parse value: No data.").hashCode(),
 			value.hashCode());
 
+		assertNotEquals(0, value.hashCode());
+
 		assertEquals("Failed to parse value: No data.", value.validate());
 		assertEquals("Failed to parse value: No data.", value.toString());
 		assertNotEquals("", value);
@@ -259,6 +261,11 @@ public class JSONValueTest
 
 		assertEquals("", value.validate());
 		assertEquals("{}", value.toString());
+		assertEquals(JSONValue.read("{}"), value);
+		assertEquals(JSONObject.read("{}"), value);
+		assertNotEquals("{}", value);
+		assertEquals(JSONValue.read("{}").hashCode(), value.hashCode());
+		assertNotEquals(0, value.hashCode());
 	}
 
 	@Test
@@ -303,6 +310,11 @@ public class JSONValueTest
 
 		assertEquals("", value.validate());
 		assertEquals("[]", value.toString());
+		assertEquals(JSONValue.read("[]"), value);
+		assertEquals(JSONArray.read("[]"), value);
+		assertNotEquals("[]", value);
+		assertEquals(JSONValue.read("[]").hashCode(), value.hashCode());
+		assertNotEquals(0, value.hashCode());
 	}
 
 	@Test

@@ -26,6 +26,7 @@ public class JSONObjectTest
 		assertEquals(
 			"Failed to parse object: No data.", json.getArray("thingy").toString());
 
+		assertEquals(0, json.getKeys().size());
 		assertEquals("Failed to parse object: No data.", json.validate());
 		assertNotEquals(JSONObject.read("{}"), json);
 		assertNotEquals(JSONObject.read("{}").hashCode(), json.hashCode());
@@ -50,6 +51,7 @@ public class JSONObjectTest
 			"Failed to read array with key \"thingy\".",
 			json.getArray("thingy").toString());
 
+		assertEquals(0, json.getKeys().size());
 		assertEquals("", json.validate());
 		assertEquals(JSONObject.read("{}"), json);
 		assertEquals(JSONObject.read("{}").hashCode(), json.hashCode());
@@ -74,8 +76,9 @@ public class JSONObjectTest
 			"Failed to parse array: Started with \" instead of [.",
 			json.getArray("thingy").toString());
 
+		assertEquals(1, json.getKeys().size());
 		assertEquals("", json.validate());
-		assertNotEquals(JSONObject.read("{}"), json);
+		assertNotEquals(JSONObject.read("{\"thingy\":\"\"}"), json);
 		assertNotEquals(JSONObject.read("{}").hashCode(), json.hashCode());
 	}
 
@@ -334,7 +337,11 @@ public class JSONObjectTest
 			"Failed to parse object: Ran out of characters before end of object.",
 			json.validate());
 
-		assertFalse(json.getValue("nul") instanceof JSONValue.Valid);
+		assertEquals(
+			"Failed to parse object: Ran out of characters before end of object.",
+			json.getValue("nul").toString());
+
+		assertEquals(0, json.getKeys().size());
 		assertNotEquals(JSONObject.read("{}"), json);
 		assertNotEquals(JSONObject.read("{}").hashCode(), json.hashCode());
 		assertEquals(JSONObject.read("{ \"nul\": null"), json);
@@ -342,6 +349,27 @@ public class JSONObjectTest
 		assertNotEquals("{ \"nul\": null", json);
 		assertNotEquals(JSONObject.read(""), json);
 		assertNotEquals(JSONObject.write().read(), json);
+	}
+
+	@Test
+	public void testDataTheDoesNotParse()
+	{
+		assertEquals(
+			"Failed to parse object at character 2: Found { after end of object.",
+			JSONObject.read("{}{}").toString());
+
+		assertEquals(
+			"Failed to parse object at character 6: Found , when expecting :.",
+			JSONObject.read("{\"key\",\"value\"}").toString());
+
+		assertEquals(
+			"Failed to parse object at character 1: Found : when expecting key.",
+			JSONObject.read("{:\"key\":\"value\"}").toString());
+
+		assertEquals(
+			"{\"Value of key\": \"Failed to parse value:" +
+				" ,\\\"value\\\" is not a JSON value.\"}",
+			JSONObject.read("{\"key\":,\"value\"}").toString());
 	}
 
 	@Test
@@ -363,6 +391,20 @@ public class JSONObjectTest
 		assertEquals("", json.validate());
 		assertNotEquals(JSONObject.read("{}"), json);
 		assertNotEquals(JSONObject.read("{}").hashCode(), json.hashCode());
+	}
+
+	@Test
+	public void testNestedObjects()
+	{
+		JSONObject.Read json = JSONObject.read("{\"obj\":{\"obj\":{}}}");
+
+		assertEquals("{\n" +
+			"    \"obj\":\n" +
+			"        {\n" +
+			"            \"obj\":\n" +
+			"                {}\n" +
+			"        }\n" +
+			"}", json.toString());
 	}
 
 	@Test
