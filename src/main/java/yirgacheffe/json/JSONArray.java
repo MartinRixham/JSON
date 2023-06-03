@@ -3,6 +3,7 @@ package yirgacheffe.json;
 import java.nio.CharBuffer;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Arrays;
 import java.util.Iterator;
 
@@ -33,7 +34,7 @@ public final class JSONArray
 
 	public static final class Write
 	{
-		private List<String> list = new ArrayList<>();
+		private final List<String> list = new LinkedList<>();
 
 		Write push(boolean value)
 		{

@@ -23,7 +23,7 @@ public final class PerformanceTest
 
 		System.out.println("---------- parsing JSON ----------");
 		long startTime = getCPUTime();
-		JSONObject.read(data).validate();
+		JSONObject.read(data);
 		long endTime = getCPUTime();
 
 		System.out.println(
@@ -48,6 +48,8 @@ public final class PerformanceTest
 
 // initial parsing:
 // ---------- parsing took 458 milliseconds ----------
+// ---------- parsing took 464 milliseconds ----------
 
 // validation:
 // ---------- validation took 11,865 milliseconds ----------
+// ---------- validation took 10,735 milliseconds ----------

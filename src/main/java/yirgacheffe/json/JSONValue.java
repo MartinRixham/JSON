@@ -26,7 +26,7 @@ public interface JSONValue
 
 	String validate();
 
-	class Invalid implements JSONValue
+	final class Invalid implements JSONValue
 	{
 		private String error;
 
@@ -133,9 +133,9 @@ public interface JSONValue
 		}
 	}
 
-	class Valid implements JSONValue
+	final class Valid implements JSONValue
 	{
-		private CharSequence value;
+		private final CharSequence value;
 
 		Valid(CharSequence value)
 		{
