@@ -463,7 +463,7 @@ public final class JSONArray
 		{
 			return new Iterator<JSONValue>()
 			{
-				private final int index = 0;
+				private int index = 0;
 
 				@Override
 				public boolean hasNext()
@@ -474,7 +474,9 @@ public final class JSONArray
 				@Override
 				public JSONValue next()
 				{
-					return JSONValue.read(Valid.this.list.get(this.index));
+					JSONValue value = JSONValue.read(Valid.this.list.get(this.index));
+					this.index++;
+					return value;
 				}
 			};
 		}

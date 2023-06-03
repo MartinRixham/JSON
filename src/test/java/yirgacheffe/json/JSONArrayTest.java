@@ -195,9 +195,31 @@ public class JSONArrayTest
 		json.push(1.0);
 		json.push(1e2);
 		json.push(true);
+		json.push(false);
 
 		assertEquals(
-			"[{},[],{},[],\"sumpt\",1,1.0,100.0,true]",
+			"[{},[],{},[],\"sumpt\",1,1.0,100.0,true,false]",
+			json.toString());
+	}
+
+	@Test
+	public void testPushChainedProperties()
+	{
+		JSONArray.Write json = JSONArray.write();
+
+		json.push(JSONObject.write())
+			.push(JSONArray.write())
+			.push(JSONObject.write())
+			.push(JSONArray.write())
+			.push("sumpt")
+			.push(1)
+			.push(1.0)
+			.push(1e2)
+			.push(false)
+			.push(true);
+
+		assertEquals(
+			"[{},[],{},[],\"sumpt\",1,1.0,100.0,false,true]",
 			json.toString());
 	}
 
@@ -217,6 +239,25 @@ public class JSONArrayTest
 		assertEquals(
 				"[{},{},[],[],\"thingy\",\"sumpt\",1,2,1.0,2.0,100.0,20.0,true,false]",
 				json.toString());
+	}
+
+	@Test
+	public void testPushAllChainedProperties()
+	{
+		JSONArray.Write json = JSONArray.write();
+
+		json.push(JSONObject.write(), JSONObject.write())
+			.push(JSONArray.write(), JSONArray.write())
+			.push("t", "s")
+			.push(1, 2)
+			.push(1.0, 2.0)
+			.push(1e2, 2e1)
+			.push(false, true)
+			.push(true, false);
+
+		assertEquals(
+			"[{},{},[],[],\"t\",\"s\",1,2,1.0,2.0,100.0,20.0,false,true,true,false]",
+			json.toString());
 	}
 
 	@Test
@@ -256,5 +297,14 @@ public class JSONArrayTest
 
 		assertEquals(33, json.length());
 		assertEquals("", json.validate());
+
+		int count = 0;
+
+		for (JSONValue value: json)
+		{
+			count++;
+		}
+
+		assertEquals(33, count);
 	}
 }

@@ -326,6 +326,36 @@ public class JSONObjectTest
 	}
 
 	@Test
+	public void testPutChainedProperties()
+	{
+		JSONObject.Write json = JSONObject.write();
+
+		json.put("obj", JSONObject.write())
+			.put("arr", JSONArray.write())
+			.put("notherObj", JSONObject.write())
+			.put("notherArr", JSONArray.write())
+			.put("thingy", "sumpt")
+			.put("int", 1)
+			.put("float", 1.0)
+			.put("exp", 1e2)
+			.put("tru", true);
+
+		assertEquals(
+			"{" +
+				"\"obj\":{}," +
+				"\"arr\":[]," +
+				"\"notherObj\":{}," +
+				"\"notherArr\":[]," +
+				"\"thingy\":\"sumpt\"," +
+				"\"int\":1," +
+				"\"float\":1.0," +
+				"\"exp\":100.0," +
+				"\"tru\":true" +
+				"}",
+			json.toString());
+	}
+
+	@Test
 	public void testGetDeepObjectProperty()
 	{
 		JSONObject.Read json =
