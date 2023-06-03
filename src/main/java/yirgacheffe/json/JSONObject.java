@@ -1,5 +1,6 @@
 package yirgacheffe.json;
 
+import java.nio.CharBuffer;
 import java.util.Map;
 import java.util.LinkedHashMap;
 import java.util.Set;
@@ -84,7 +85,7 @@ public class JSONObject
 
 		public Read read()
 		{
-			return new Valid(this.map);
+			return JSONObject.read(this.toString());
 		}
 
 		@Override
@@ -197,9 +198,9 @@ public class JSONObject
 
 	static class Valid implements Read
 	{
-		private final Map<String, String> map;
+		private final Map<String, CharSequence> map;
 
-		private Valid(Map<String, String> map)
+		private Valid(Map<String, CharSequence> map)
 		{
 			this.map = map;
 		}
@@ -213,30 +214,32 @@ public class JSONObject
 		@Override
 		public boolean getBoolean(String key)
 		{
-			String value =  this.map.get(key);
+			CharSequence value = this.map.get(key);
 
 			if (value == null)
 			{
 				return false;
 			}
 
+			String string = value.toString();
+
 			try
 			{
-				return Double.parseDouble(value) != 0d;
+				return Double.parseDouble(string) != 0d;
 			}
 			catch (NumberFormatException e)
 			{
-				return !(value.length() == 0 ||
-					value.equals("null") ||
-					value.equals("false") ||
-					value.equals("\"\""));
+				return !(string.length() == 0 ||
+					string.equals("null") ||
+					string.equals("false") ||
+					string.equals("\"\""));
 			}
 		}
 
 		@Override
 		public double getNumber(String key)
 		{
-			String value = this.map.get(key);
+			CharSequence value = this.map.get(key);
 
 			if (value == null)
 			{
@@ -244,9 +247,11 @@ public class JSONObject
 			}
 			else
 			{
+				String string = value.toString();
+
 				try
 				{
-					return Double.parseDouble(value);
+					return Double.parseDouble(string);
 				}
 				catch (NumberFormatException e)
 				{
@@ -258,21 +263,24 @@ public class JSONObject
 		@Override
 		public String getString(String key)
 		{
-			String value = this.map.get(key);
+			CharSequence value = this.map.get(key);
 
 			if (value == null)
 			{
 				return "";
 			}
-			else if (value.length() > 1 &&
-				value.charAt(0) == '"' &&
-				value.charAt(value.length() - 1) == '"')
+
+			String string = value.toString();
+
+			if (string.length() > 1 &&
+				string.charAt(0) == '"' &&
+				string.charAt(value.length() - 1) == '"')
 			{
-				return value.substring(1, value.length() - 1);
+				return string.substring(1, value.length() - 1);
 			}
 			else
 			{
-				return value;
+				return string;
 			}
 		}
 
@@ -313,7 +321,7 @@ public class JSONObject
 		{
 			StringBuilder errors = new StringBuilder();
 
-			for (Map.Entry<String, String> pair: this.map.entrySet())
+			for (Map.Entry<String, CharSequence> pair: this.map.entrySet())
 			{
 				String error = JSONValue.read(pair.getValue()).validate();
 
@@ -356,7 +364,7 @@ public class JSONObject
 		{
 			int hash = 0;
 
-			for (String value: this.map.values())
+			for (CharSequence value: this.map.values())
 			{
 				hash = hash ^ JSONValue.read(value).hashCode();
 			}
@@ -383,30 +391,29 @@ public class JSONObject
 	private static final byte OBJECT = 2;
 	private static final byte ARRAY = 3;
 
-	public static Read read(String string)
+	public static Read read(CharSequence characters)
 	{
-		if (string == null || string.length() == 0)
+		if (characters == null || characters.length() == 0)
 		{
 			return new Invalid("Failed to parse object: No data.");
 		}
 
-		Map<String, String> map = new LinkedHashMap<>();
+		Map<String, CharSequence> map = new LinkedHashMap<>();
 		byte state = START;
 		int depth = 0;
-		StringBuilder builder = new StringBuilder();
+		int offset = 0;
 		boolean escape = false;
 		String key = "";
 		byte type = LITERAL;
 
-		for (int i = 0; i < string.length(); i++)
+		for (int i = 0; i < characters.length(); i++)
 		{
-			char character = string.charAt(i);
+			char character = characters.charAt(i);
 
 			if (state == IN_VALUE)
 			{
 				if (escape)
 				{
-					builder.append(character);
 					escape = false;
 				}
 				else if (character == '\\')
@@ -415,23 +422,19 @@ public class JSONObject
 				}
 				else if (type == STRING)
 				{
-					builder.append(character);
-
 					if (character == '"')
 					{
-						map.put(key, builder.toString());
+						map.put(key, CharBuffer.wrap(characters, offset, i + 1));
 						state = BEFORE_KEY;
 					}
 				}
 				else if (type == OBJECT)
 				{
-					builder.append(character);
-
 					if (character == '}')
 					{
 						if (depth == 0)
 						{
-							map.put(key, builder.toString());
+							map.put(key, CharBuffer.wrap(characters, offset, i + 1));
 							state = BEFORE_KEY;
 						}
 						else
@@ -446,12 +449,11 @@ public class JSONObject
 				}
 				else if (type == ARRAY)
 				{
-					builder.append(character);
 					if (character == ']')
 					{
 						if (depth == 0)
 						{
-							map.put(key, builder.toString());
+							map.put(key, CharBuffer.wrap(characters, offset, i + 1));
 							state = BEFORE_KEY;
 						}
 						else
@@ -468,17 +470,13 @@ public class JSONObject
 				{
 					if (character == '}')
 					{
-						map.put(key, builder.toString());
+						map.put(key, CharBuffer.wrap(characters, offset, i));
 						state = END;
 					}
-					else if (character == ',')
+					else if (Character.isWhitespace(character) || character == ',')
 					{
-						map.put(key, builder.toString());
+						map.put(key, CharBuffer.wrap(characters, offset, i));
 						state = BEFORE_KEY;
-					}
-					else if (!Character.isWhitespace(character))
-					{
-						builder.append(character);
 					}
 				}
 			}
@@ -486,7 +484,6 @@ public class JSONObject
 			{
 				if (escape)
 				{
-					builder.append(character);
 					escape = false;
 				}
 				else if (character == '\\')
@@ -495,12 +492,8 @@ public class JSONObject
 				}
 				else if (character == '"')
 				{
-					key = builder.toString();
+					key = CharBuffer.wrap(characters, offset + 1, i).toString();
 					state = AFTER_KEY;
-				}
-				else
-				{
-					builder.append(character);
 				}
 			}
 			else if (state == BEFORE_KEY)
@@ -511,7 +504,7 @@ public class JSONObject
 				}
 				else if (character == '"')
 				{
-					builder.setLength(0);
+					offset = i;
 					state = IN_KEY;
 				}
 				else if (character != ',' && !Character.isWhitespace(character))
@@ -552,8 +545,7 @@ public class JSONObject
 						type = LITERAL;
 					}
 
-					builder.setLength(0);
-					builder.append(character);
+					offset = i;
 					state = IN_VALUE;
 				}
 			}

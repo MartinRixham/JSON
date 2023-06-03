@@ -19,7 +19,9 @@ public class JSONArrayTest
 		assertEquals("Failed to parse array: No data.", json.getObject(0).toString());
 		assertEquals("Failed to parse array: No data.", json.getArray(0).toString());
 		assertEquals("Failed to parse array: No data.", json.toString());
+
 		assertEquals(0, json.length());
+		assertEquals("Failed to parse array: No data.", json.validate());
 	}
 
 	@Test
@@ -40,6 +42,7 @@ public class JSONArrayTest
 		assertEquals("Failed to read array index -1 of array of length 0.", json.getArray(-1).toString());
 
 		assertEquals(0, json.length());
+		assertEquals("", json.validate());
 	}
 
 	@Test
@@ -54,6 +57,7 @@ public class JSONArrayTest
 		assertEquals("Failed to parse array: Started with \" instead of [.", json.getArray(0).toString());
 
 		assertEquals(1, json.length());
+		assertEquals("", json.validate());
 	}
 
 	@Test
@@ -68,6 +72,7 @@ public class JSONArrayTest
 		assertEquals("Failed to parse array: Started with \" instead of [.", json.getArray(0).toString());
 
 		assertEquals(1, json.length());
+		assertEquals("", json.validate());
 	}
 
 	@Test
@@ -82,6 +87,7 @@ public class JSONArrayTest
 		assertEquals("Failed to parse array: Started with 0 instead of [.", json.getArray(0).toString());
 
 		assertEquals(1, json.length());
+		assertEquals("", json.validate());
 	}
 
 	@Test
@@ -96,6 +102,7 @@ public class JSONArrayTest
 		assertEquals("Failed to parse array: Started with t instead of [.", json.getArray(0).toString());
 
 		assertEquals(1, json.length());
+		assertEquals("", json.validate());
 	}
 
 	@Test
@@ -110,6 +117,7 @@ public class JSONArrayTest
 		assertEquals("Failed to parse array: Started with n instead of [.", json.getArray(0).toString());
 
 		assertEquals(1, json.length());
+		assertEquals("", json.validate());
 	}
 
 	@Test
@@ -117,9 +125,8 @@ public class JSONArrayTest
 	{
 		JSONArray.Read json = JSONArray.read("[null");
 
-		assertEquals(
-			"Failed to parse array: Ran out of characters before end of array.",
-			json.toString());
+		assertEquals("Failed to parse array: Ran out of characters before end of array.", json.toString());
+		assertEquals("Failed to parse array: Ran out of characters before end of array.", json.validate());
 	}
 
 	@Test
@@ -134,6 +141,7 @@ public class JSONArrayTest
 		assertEquals("Failed to parse array: Started with { instead of [.", json.getArray(0).toString());
 
 		assertEquals(1, json.length());
+		assertEquals("", json.validate());
 	}
 
 	@Test
@@ -148,6 +156,7 @@ public class JSONArrayTest
 		assertEquals(JSONArray.read("[]"), json.getArray(0));
 
 		assertEquals(1, json.length());
+		assertEquals("", json.validate());
 	}
 
 	@Test
@@ -182,6 +191,7 @@ public class JSONArrayTest
 		assertEquals("Failed to parse array: Started with 2 instead of [.", json.getArray(1).toString());
 
 		assertEquals(2, json.length());
+		assertEquals("", json.validate());
 	}
 
 	@Test
@@ -196,6 +206,7 @@ public class JSONArrayTest
 		assertEquals("Failed to read array index 1 of array of length 1.", json.getArray(1).toString());
 
 		assertEquals(1, json.length());
+		assertEquals("", json.validate());
 	}
 
 	@Test
@@ -208,5 +219,6 @@ public class JSONArrayTest
 				"30,31,32]");
 
 		assertEquals(33, json.length());
+		assertEquals("", json.validate());
 	}
 }

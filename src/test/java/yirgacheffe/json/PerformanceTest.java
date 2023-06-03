@@ -23,15 +23,13 @@ public final class PerformanceTest
 
 		System.out.println("---------- parsing JSON ----------");
 		long startTime = getCPUTime();
-		String errors = JSONObject.read(data).validate();
+		JSONObject.read(data).validate();
 		long endTime = getCPUTime();
 
 		System.out.println(
 			"---------- parsing took " +
-				Duration.ofNanos(endTime - startTime).getSeconds() +
+				Duration.ofNanos(endTime - startTime).getNano() +
 				" seconds ----------");
-
-		System.out.println(errors);
 	}
 
 	private static long getCPUTime()
@@ -54,3 +52,9 @@ public final class PerformanceTest
 // ---------- parsing took 13 seconds ----------
 // ---------- parsing took 8 seconds ----------
 // ---------- parsing took 2 seconds ----------
+
+// initial parsing
+// ---------- parsing took 457616 milliseconds ----------
+
+// validation
+// ---------- parsing took 466508 milliseconds ----------

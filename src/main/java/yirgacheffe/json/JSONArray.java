@@ -1,5 +1,6 @@
 package yirgacheffe.json;
 
+import java.nio.CharBuffer;
 import java.util.*;
 
 public class JSONArray
@@ -191,9 +192,9 @@ public class JSONArray
 
 	static class Valid implements Read
 	{
-		private List<String> list;
+		private List<CharSequence> list;
 
-		private Valid(List<String> list)
+		private Valid(List<CharSequence> list)
 		{
 			this.list = list;
 		}
@@ -203,23 +204,25 @@ public class JSONArray
 		{
 			if (index >= 0 && this.list.size() > index)
 			{
-				String value = this.list.get(index);
+				CharSequence value = this.list.get(index);
 
 				if (value == null)
 				{
 					return false;
 				}
 
+				String string = value.toString();
+
 				try
 				{
-					return Double.parseDouble(value) != 0d;
+					return Double.parseDouble(string) != 0d;
 				}
 				catch (NumberFormatException e)
 				{
-					return !(value.length() == 0 ||
-						value.equals("null") ||
-						value.equals("false") ||
-						value.equals("\"\""));
+					return !(string.length() == 0 ||
+						string.equals("null") ||
+						string.equals("false") ||
+						string.equals("\"\""));
 				}
 			}
 			else
@@ -236,7 +239,7 @@ public class JSONArray
 				return Double.NaN;
 			}
 
-			String value = this.list.get(index);
+			CharSequence value = this.list.get(index);
 
 			if (value == null)
 			{
@@ -244,9 +247,11 @@ public class JSONArray
 			}
 			else
 			{
+				String string = value.toString();
+
 				try
 				{
-					return Double.parseDouble(value);
+					return Double.parseDouble(string);
 				}
 				catch (NumberFormatException e)
 				{
@@ -263,21 +268,24 @@ public class JSONArray
 				return "";
 			}
 
-			String value = this.list.get(index);
+			CharSequence value = this.list.get(index);
 
 			if (value == null)
 			{
 				return "";
 			}
-			else if (value.length() > 1 &&
+
+			String string = value.toString();
+
+			if (value.length() > 1 &&
 				value.charAt(0) == '"' &&
 				value.charAt(value.length() - 1) == '"')
 			{
-				return value.substring(1, value.length() - 1);
+				return string.substring(1, value.length() - 1);
 			}
 			else
 			{
-				return value;
+				return string;
 			}
 		}
 
@@ -389,7 +397,7 @@ public class JSONArray
 		{
 			int hash = 0;
 
-			for (String value: this.list)
+			for (CharSequence value: this.list)
 			{
 				hash = hash ^ JSONValue.read(value).hashCode();
 			}
@@ -414,29 +422,28 @@ public class JSONArray
 	private static final byte OBJECT = 2;
 	private static final byte ARRAY = 3;
 
-	public static Read read(String string)
+	public static Read read(CharSequence characters)
 	{
-		if (string == null || string.length() == 0)
+		if (characters == null || characters.length() == 0)
 		{
 			return new Invalid("Failed to parse array: No data.");
 		}
 
-		List<String> list = new ArrayList<>();
+		List<CharSequence> list = new ArrayList<>();
 		byte state = START;
 		int depth = 0;
-		StringBuilder builder = new StringBuilder();
+		int offset = 0;
 		boolean escape = false;
 		byte type = LITERAL;
 
-		for (int i = 0; i < string.length(); i++)
+		for (int i = 0; i < characters.length(); i++)
 		{
-			char character = string.charAt(i);
+			char character = characters.charAt(i);
 
 			if (state == IN_VALUE)
 			{
 				if (escape)
 				{
-					builder.append(character);
 					escape = false;
 				}
 				else if (character == '\\')
@@ -445,23 +452,19 @@ public class JSONArray
 				}
 				else if (type == STRING)
 				{
-					builder.append(character);
-
 					if (character == '"')
 					{
-						list.add(builder.toString());
+						list.add(CharBuffer.wrap(characters, offset, i + 1));
 						state = AFTER_VALUE;
 					}
 				}
 				else if (type == OBJECT)
 				{
-					builder.append(character);
-
 					if (character == '}')
 					{
 						if (depth == 0)
 						{
-							list.add(builder.toString());
+							list.add(CharBuffer.wrap(characters, offset, i + 1));
 							state = AFTER_VALUE;
 						}
 						else
@@ -476,13 +479,11 @@ public class JSONArray
 				}
 				else if (type == ARRAY)
 				{
-					builder.append(character);
-
 					if (character == ']')
 					{
 						if (depth == 0)
 						{
-							list.add(builder.toString());
+							list.add(CharBuffer.wrap(characters, offset, i + 1));
 							state = AFTER_VALUE;
 						}
 						else
@@ -499,17 +500,13 @@ public class JSONArray
 				{
 					if (character == ']')
 					{
-						list.add(builder.toString());
+						list.add(CharBuffer.wrap(characters, offset, i));
 						state = END;
 					}
-					else if (character == ',')
+					else if (Character.isWhitespace(character) || character == ',')
 					{
-						list.add(builder.toString());
+						list.add(CharBuffer.wrap(characters, offset, i));
 						state = BEFORE_VALUE;
-					}
-					else if (!Character.isWhitespace(character))
-					{
-						builder.append(character);
 					}
 				}
 			}
@@ -539,8 +536,7 @@ public class JSONArray
 						type = LITERAL;
 					}
 
-					builder.setLength(0);
-					builder.append(character);
+					offset = i;
 					state = IN_VALUE;
 				}
 			}

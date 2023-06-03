@@ -264,12 +264,14 @@ interface JSONValue
 		}
 	}
 
-	static JSONValue read(String string)
+	static JSONValue read(CharSequence characters)
 	{
-		if (string == null || string.length() == 0)
+		if (characters == null || characters.length() == 0)
 		{
 			return new Invalid("");
 		}
+
+		String string = characters.toString();
 
 		try
 		{
