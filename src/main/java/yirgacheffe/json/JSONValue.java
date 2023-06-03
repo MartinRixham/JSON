@@ -1,6 +1,6 @@
 package yirgacheffe.json;
 
-interface JSONValue
+public interface JSONValue
 {
 	boolean isNull();
 
@@ -80,25 +80,25 @@ interface JSONValue
 		@Override
 		public double getNumber()
 		{
-			return 0;
+			return Double.NaN;
 		}
 
 		@Override
 		public String getString()
 		{
-			return null;
+			return "";
 		}
 
 		@Override
 		public JSONObject.Read getObject()
 		{
-			return null;
+			return new JSONObject.Invalid(this.error);
 		}
 
 		@Override
 		public JSONArray.Read getArray()
 		{
-			return null;
+			return new JSONArray.Invalid(this.error);
 		}
 
 		@Override
@@ -135,23 +135,25 @@ interface JSONValue
 
 	class Valid implements JSONValue
 	{
-		private String string;
+		private CharSequence value;
 
-		Valid(String string)
+		Valid(CharSequence value)
 		{
-			this.string = string;
+			this.value = value;
 		}
 
 		@Override
 		public boolean isNull()
 		{
-			return this.string.equals("null");
+			return this.value.toString().equals("null");
 		}
 
 		@Override
 		public boolean isBoolean()
 		{
-			return this.string.equals("true") || this.string.equals("false");
+			String string = this.value.toString();
+
+			return string.equals("true") || string.equals("false");
 		}
 
 		@Override
@@ -159,7 +161,7 @@ interface JSONValue
 		{
 			try
 			{
-				Double.parseDouble(this.string);
+				Double.parseDouble(this.value.toString());
 
 				return true;
 			}
@@ -172,25 +174,37 @@ interface JSONValue
 		@Override
 		public boolean isString()
 		{
-			return this.string.charAt(0) == '"';
+			return this.value.charAt(0) == '"';
 		}
 
 		@Override
 		public boolean isObject()
 		{
-			return this.string.charAt(0) == '{';
+			return this.value.charAt(0) == '{';
 		}
 
 		@Override
 		public boolean isArray()
 		{
-			return this.string.charAt(0) == '[';
+			return this.value.charAt(0) == '[';
 		}
 
 		@Override
 		public boolean getBoolean()
 		{
-			return this.string.equals("true");
+			String string = this.value.toString();
+
+			try
+			{
+				return Double.parseDouble(string) != 0d;
+			}
+			catch (NumberFormatException e)
+			{
+				return !(string.length() == 0 ||
+					string.equals("null") ||
+					string.equals("false") ||
+					string.equals("\"\""));
+			}
 		}
 
 		@Override
@@ -198,7 +212,7 @@ interface JSONValue
 		{
 			try
 			{
-				return Double.parseDouble(this.string);
+				return Double.parseDouble(this.value.toString());
 			}
 			catch (NumberFormatException e)
 			{
@@ -209,19 +223,30 @@ interface JSONValue
 		@Override
 		public String getString()
 		{
-			return this.string.substring(1, this.string.length() - 1);
+			CharSequence value = this.value;
+
+			if (value.length() > 1 &&
+				value.charAt(0) == '"' &&
+				value.charAt(value.length() - 1) == '"')
+			{
+				return value.subSequence(1, value.length() - 1).toString();
+			}
+			else
+			{
+				return value.toString();
+			}
 		}
 
 		@Override
 		public JSONObject.Read getObject()
 		{
-			return JSONObject.read(this.string);
+			return JSONObject.read(this.value);
 		}
 
 		@Override
 		public JSONArray.Read getArray()
 		{
-			return JSONArray.read(this.string);
+			return JSONArray.read(this.value);
 		}
 
 		@Override
@@ -229,11 +254,11 @@ interface JSONValue
 		{
 			if (this.isObject())
 			{
-				return JSONObject.read(this.string).validate();
+				return JSONObject.read(this.value).validate();
 			}
 			else if (this.isArray())
 			{
-				return JSONArray.read(this.string).validate();
+				return JSONArray.read(this.value).validate();
 			}
 			else
 			{
@@ -246,15 +271,15 @@ interface JSONValue
 		{
 			if (this.isObject())
 			{
-				return other.equals(JSONObject.read(this.string));
+				return other.equals(JSONObject.read(this.value));
 			}
 			else if (this.isArray())
 			{
-				return other.equals(JSONArray.read(this.string));
+				return other.equals(JSONArray.read(this.value));
 			}
 			else if (other instanceof Valid)
 			{
-				return this.string.equals(((Valid) other).string);
+				return this.value.toString().equals(((Valid) other).value.toString());
 			}
 			else
 			{
@@ -267,15 +292,15 @@ interface JSONValue
 		{
 			if (this.isObject())
 			{
-				return JSONObject.read(this.string).hashCode();
+				return JSONObject.read(this.value).hashCode();
 			}
 			else if (this.isArray())
 			{
-				return JSONArray.read(this.string).hashCode();
+				return JSONArray.read(this.value).hashCode();
 			}
 			else
 			{
-				return this.string.hashCode();
+				return this.value.hashCode();
 			}
 		}
 
@@ -284,15 +309,15 @@ interface JSONValue
 		{
 			if (this.isObject())
 			{
-				return JSONObject.read(this.string).toString();
+				return JSONObject.read(this.value).toString();
 			}
 			else if (this.isArray())
 			{
-				return JSONArray.read(this.string).toString();
+				return JSONArray.read(this.value).toString();
 			}
 			else
 			{
-				return this.string.toString();
+				return this.value.toString();
 			}
 		}
 	}

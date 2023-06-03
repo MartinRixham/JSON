@@ -23,7 +23,7 @@ public final class PerformanceTest
 
 		System.out.println("---------- parsing JSON ----------");
 		long startTime = getCPUTime();
-		JSONObject.read(data);
+		JSONObject.read(data).validate();
 		long endTime = getCPUTime();
 
 		System.out.println(
