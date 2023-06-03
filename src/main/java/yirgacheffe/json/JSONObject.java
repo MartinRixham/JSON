@@ -6,7 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.HashSet;
 
-public class JSONObject
+public final class JSONObject
 {
 	private JSONObject()
 	{
@@ -33,7 +33,7 @@ public class JSONObject
 		Set<String> getKeys();
 	}
 
-	public static class Write
+	public static final class Write
 	{
 		private final Map<String, String> map = new LinkedHashMap<>();
 
@@ -114,7 +114,7 @@ public class JSONObject
 		}
 	}
 
-	static class Invalid implements Read
+	static final class Invalid implements Read
 	{
 		private final String error;
 
@@ -196,7 +196,7 @@ public class JSONObject
 		}
 	}
 
-	static class Valid implements Read
+	static final class Valid implements Read
 	{
 		private final Map<String, CharSequence> map;
 
@@ -306,7 +306,8 @@ public class JSONObject
 			}
 			else
 			{
-				return new JSONArray.Invalid("Failed to read array with key \"" + key + "\".");
+				return new JSONArray.Invalid(
+					"Failed to read array with key \"" + key + "\".");
 			}
 		}
 
@@ -496,7 +497,8 @@ public class JSONObject
 
 					if (map.containsKey(key))
 					{
-						return new Invalid("Failed to parse object: Duplicate key \"" + key + "\".");
+						return new Invalid(
+							"Failed to parse object: Duplicate key \"" + key + "\".");
 					}
 					else
 					{
@@ -517,7 +519,9 @@ public class JSONObject
 				}
 				else if (character != ',' && !Character.isWhitespace(character))
 				{
-					return new Invalid("Failed to parse object at character " + i + ": Found " + character + " when expecting key.");
+					return new Invalid(
+						"Failed to parse object at character " + i +
+						": Found " + character + " when expecting key.");
 				}
 			}
 			else if (state == AFTER_KEY)
@@ -528,7 +532,9 @@ public class JSONObject
 				}
 				else if (Character.isWhitespace(character))
 				{
-					return new Invalid("Failed to parse object at character " + i + ": Found " + character + " when expecting :.");
+					return new Invalid(
+						"Failed to parse object at character " + i +
+						": Found " + character + " when expecting :.");
 				}
 			}
 			else if (state == BEFORE_VALUE)
@@ -549,7 +555,8 @@ public class JSONObject
 					{
 						type = STRING;
 					}
-					else {
+					else
+					{
 						type = LITERAL;
 					}
 
@@ -565,12 +572,16 @@ public class JSONObject
 				}
 				else if (!Character.isWhitespace(character))
 				{
-					return new Invalid("Failed to parse object: Started with " + character + " instead of {.");
+					return new Invalid(
+						"Failed to parse object: Started with " + character +
+						" instead of {.");
 				}
 			}
 			else if (!Character.isWhitespace(character))
 			{
-				return new Invalid("Failed to parse object at character " + i + ": Found " + character + " after end of object.");
+				return new Invalid(
+					"Failed to parse object at character " + i +
+					": Found " + character + " after end of object.");
 			}
 		}
 
@@ -580,7 +591,8 @@ public class JSONObject
 		}
 		else
 		{
-			return new Invalid("Failed to parse object: Ran out of characters before end of object.");
+			return new Invalid(
+				"Failed to parse object: Ran out of characters before end of object.");
 		}
 	}
 }

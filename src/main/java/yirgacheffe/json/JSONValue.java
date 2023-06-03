@@ -1,11 +1,5 @@
 package yirgacheffe.json;
 
-import jakarta.json.JsonArray;
-import jakarta.json.JsonNumber;
-import jakarta.json.JsonObject;
-import jakarta.json.JsonString;
-import jakarta.json.JsonValue;
-
 interface JSONValue
 {
 	boolean isNull();
@@ -283,7 +277,8 @@ interface JSONValue
 		{
 			if (string.length() == 1)
 			{
-				return new Invalid("Failed to parse value: " + string + " is not a JSON value.");
+				return new Invalid(
+					"Failed to parse value: " + string + " is not a JSON value.");
 			}
 			else if (string.equals("null") ||
 				string.equals("true") ||
@@ -296,7 +291,8 @@ interface JSONValue
 			}
 			else
 			{
-				return new Invalid("Failed to parse value: " + string + " is not a JSON value.");
+				return new Invalid(
+					"Failed to parse value: " + string + " is not a JSON value.");
 			}
 		}
 	}

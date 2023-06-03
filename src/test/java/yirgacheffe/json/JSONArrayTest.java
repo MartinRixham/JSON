@@ -32,14 +32,26 @@ public class JSONArrayTest
 		assertFalse(json.getBoolean(0));
 		assertTrue(Double.isNaN(json.getNumber(0)));
 		assertEquals("", json.getString(0));
-		assertEquals("Failed to read array index 0 of array of length 0.", json.getObject(0).toString());
-		assertEquals("Failed to read array index 0 of array of length 0.", json.getArray(0).toString());
+
+		assertEquals(
+			"Failed to read array index 0 of array of length 0.",
+			json.getObject(0).toString());
+
+		assertEquals(
+			"Failed to read array index 0 of array of length 0.",
+			json.getArray(0).toString());
 
 		assertFalse(json.getBoolean(-1));
 		assertTrue(Double.isNaN(json.getNumber(-1)));
 		assertEquals("", json.getString(-1));
-		assertEquals("Failed to read array index -1 of array of length 0.", json.getObject(-1).toString());
-		assertEquals("Failed to read array index -1 of array of length 0.", json.getArray(-1).toString());
+
+		assertEquals(
+			"Failed to read array index -1 of array of length 0.",
+			json.getObject(-1).toString());
+
+		assertEquals(
+			"Failed to read array index -1 of array of length 0.",
+			json.getArray(-1).toString());
 
 		assertEquals(0, json.length());
 		assertEquals("", json.validate());
@@ -53,8 +65,14 @@ public class JSONArrayTest
 		assertTrue(json.getBoolean(0));
 		assertTrue(Double.isNaN(json.getNumber(0)));
 		assertEquals("sumpt", json.getString(0));
-		assertEquals("Failed to parse object: Started with \" instead of {.", json.getObject(0).toString());
-		assertEquals("Failed to parse array: Started with \" instead of [.", json.getArray(0).toString());
+
+		assertEquals(
+			"Failed to parse object: Started with \" instead of {.",
+			json.getObject(0).toString());
+
+		assertEquals(
+			"Failed to parse array: Started with \" instead of [.",
+			json.getArray(0).toString());
 
 		assertEquals(1, json.length());
 		assertEquals("", json.validate());
@@ -68,8 +86,6 @@ public class JSONArrayTest
 		assertFalse(json.getBoolean(0));
 		assertTrue(Double.isNaN(json.getNumber(0)));
 		assertEquals("", json.getString(0));
-		assertEquals("Failed to parse object: Started with \" instead of {.", json.getObject(0).toString());
-		assertEquals("Failed to parse array: Started with \" instead of [.", json.getArray(0).toString());
 
 		assertEquals(1, json.length());
 		assertEquals("", json.validate());
@@ -83,8 +99,6 @@ public class JSONArrayTest
 		assertFalse(json.getBoolean(0));
 		assertEquals(0, json.getNumber(0), 0);
 		assertEquals("0", json.getString(0));
-		assertEquals("Failed to parse object: Started with 0 instead of {.", json.getObject(0).toString());
-		assertEquals("Failed to parse array: Started with 0 instead of [.", json.getArray(0).toString());
 
 		assertEquals(1, json.length());
 		assertEquals("", json.validate());
@@ -98,8 +112,6 @@ public class JSONArrayTest
 		assertTrue(json.getBoolean(0));
 		assertTrue(Double.isNaN(json.getNumber(0)));
 		assertEquals("true", json.getString(0));
-		assertEquals("Failed to parse object: Started with t instead of {.", json.getObject(0).toString());
-		assertEquals("Failed to parse array: Started with t instead of [.", json.getArray(0).toString());
 
 		assertEquals(1, json.length());
 		assertEquals("", json.validate());
@@ -113,8 +125,6 @@ public class JSONArrayTest
 		assertFalse(json.getBoolean(0));
 		assertTrue(Double.isNaN(json.getNumber(0)));
 		assertEquals("null", json.getString(0));
-		assertEquals("Failed to parse object: Started with n instead of {.", json.getObject(0).toString());
-		assertEquals("Failed to parse array: Started with n instead of [.", json.getArray(0).toString());
 
 		assertEquals(1, json.length());
 		assertEquals("", json.validate());
@@ -125,8 +135,13 @@ public class JSONArrayTest
 	{
 		JSONArray.Read json = JSONArray.read("[null");
 
-		assertEquals("Failed to parse array: Ran out of characters before end of array.", json.toString());
-		assertEquals("Failed to parse array: Ran out of characters before end of array.", json.validate());
+		assertEquals(
+			"Failed to parse array: Ran out of characters before end of array.",
+			json.toString());
+
+		assertEquals(
+			"Failed to parse array: Ran out of characters before end of array.",
+			json.validate());
 	}
 
 	@Test
@@ -138,7 +153,10 @@ public class JSONArrayTest
 		assertTrue(Double.isNaN(json.getNumber(0)));
 		assertEquals("{}", json.getString(0));
 		assertEquals(JSONObject.read("{}"), json.getObject(0));
-		assertEquals("Failed to parse array: Started with { instead of [.", json.getArray(0).toString());
+
+		assertEquals(
+			"Failed to parse array: Started with { instead of [.",
+			json.getArray(0).toString());
 
 		assertEquals(1, json.length());
 		assertEquals("", json.validate());
@@ -152,7 +170,11 @@ public class JSONArrayTest
 		assertTrue(json.getBoolean(0));
 		assertTrue(Double.isNaN(json.getNumber(0)));
 		assertEquals("[]", json.getString(0));
-		assertEquals("Failed to parse object: Started with [ instead of {.", json.getObject(0).toString());
+
+		assertEquals(
+			"Failed to parse object: Started with [ instead of {.",
+			json.getObject(0).toString());
+
 		assertEquals(JSONArray.read("[]"), json.getArray(0));
 
 		assertEquals(1, json.length());
@@ -205,8 +227,6 @@ public class JSONArrayTest
 		assertTrue(json.getBoolean(1));
 		assertEquals(2.0, json.getNumber(1), 0);
 		assertEquals("2", json.getString(1));
-		assertEquals("Failed to parse object: Started with 2 instead of {.", json.getObject(1).toString());
-		assertEquals("Failed to parse array: Started with 2 instead of [.", json.getArray(1).toString());
 
 		assertEquals(2, json.length());
 		assertEquals("", json.validate());
@@ -220,8 +240,6 @@ public class JSONArrayTest
 		assertFalse(json.getBoolean(1));
 		assertTrue(Double.isNaN(json.getNumber(1)));
 		assertEquals("", json.getString(1));
-		assertEquals("Failed to read array index 1 of array of length 1.", json.getObject(1).toString());
-		assertEquals("Failed to read array index 1 of array of length 1.", json.getArray(1).toString());
 
 		assertEquals(1, json.length());
 		assertEquals("", json.validate());

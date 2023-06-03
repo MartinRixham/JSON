@@ -1,9 +1,12 @@
 package yirgacheffe.json;
 
 import java.nio.CharBuffer;
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 
-public class JSONArray
+public final class JSONArray
 {
 	private JSONArray()
 	{
@@ -28,7 +31,7 @@ public class JSONArray
 		String validate();
 	}
 
-	public static class Write
+	public static final class Write
 	{
 		private List<String> list = new ArrayList<>();
 
@@ -179,7 +182,7 @@ public class JSONArray
 		}
 	}
 
-	static class Invalid implements Read
+	static final class Invalid implements Read
 	{
 		private final String error;
 
@@ -274,7 +277,7 @@ public class JSONArray
 		}
 	}
 
-	static class Valid implements Read
+	static final class Valid implements Read
 	{
 		private List<CharSequence> list;
 
@@ -382,7 +385,9 @@ public class JSONArray
 			}
 			else
 			{
-				return new JSONObject.Invalid("Failed to read array index " + index + " of array of length " + this.list.size() + ".");
+				return new JSONObject.Invalid(
+					"Failed to read array index " + index +
+					" of array of length " + this.list.size() + ".");
 			}
 		}
 
@@ -395,7 +400,9 @@ public class JSONArray
 			}
 			else
 			{
-				return new Invalid("Failed to read array index " + index + " of array of length " + this.list.size() + ".");
+				return new Invalid(
+					"Failed to read array index " + index +
+					" of array of length " + this.list.size() + ".");
 			}
 		}
 
@@ -408,7 +415,9 @@ public class JSONArray
 			}
 			else
 			{
-				return new JSONValue.Invalid("Failed to read array index " + index + " of array of length " + this.list.size() + ".");
+				return new JSONValue.Invalid(
+					"Failed to read array index " + index +
+					" of array of length " + this.list.size() + ".");
 			}
 		}
 
@@ -459,13 +468,13 @@ public class JSONArray
 				@Override
 				public boolean hasNext()
 				{
-					return index < list.size();
+					return this.index < Valid.this.list.size();
 				}
 
 				@Override
 				public JSONValue next()
 				{
-					return JSONValue.read(list.get(index));
+					return JSONValue.read(Valid.this.list.get(this.index));
 				}
 			};
 		}
@@ -616,7 +625,8 @@ public class JSONArray
 					{
 						type = STRING;
 					}
-					else {
+					else
+					{
 						type = LITERAL;
 					}
 
@@ -636,7 +646,9 @@ public class JSONArray
 				}
 				else if (!Character.isWhitespace(character))
 				{
-					return new Invalid("Failed to parse array at character " + i + ": Found " + character + " when expecting ,.");
+					return new Invalid(
+						"Failed to parse array at character " + i +
+						": Found " + character + " when expecting ,.");
 				}
 			}
 			else if (state == START)
@@ -647,12 +659,15 @@ public class JSONArray
 				}
 				else if (!Character.isWhitespace(character))
 				{
-					return new Invalid("Failed to parse array: Started with " + character + " instead of [.");
+					return new Invalid(
+						"Failed to parse array: Started with " + character +
+						" instead of [.");
 				}
 			}
 			else if (!Character.isWhitespace(character))
 			{
-				return new Invalid("Failed to parse array at character " + i + ": Found " + character + " after end of array.");
+				return new Invalid("Failed to parse array at character " + i +
+				": Found " + character + " after end of array.");
 			}
 		}
 
@@ -662,7 +677,8 @@ public class JSONArray
 		}
 		else
 		{
-			return new Invalid("Failed to parse array: Ran out of characters before end of array.");
+			return new Invalid(
+				"Failed to parse array: Ran out of characters before end of array.");
 		}
 	}
 }
