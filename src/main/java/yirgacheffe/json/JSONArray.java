@@ -323,26 +323,15 @@ public final class JSONArray
 		@Override
 		public boolean getBoolean(int index)
 		{
-			if (0 <= index && index < this.list.size())
-			{
-				String value = this.list.get(index).toString();
-
-				try
-				{
-					return Double.parseDouble(value) != 0d;
-				}
-				catch (NumberFormatException e)
-				{
-					return !(value.length() == 0 ||
-						value.equals("null") ||
-						value.equals("false") ||
-						value.equals("\"\""));
-				}
-			}
-			else
+			if (index < 0 || this.list.size() <= index)
 			{
 				return false;
 			}
+
+			CharSequence value = this.list.get(index);
+			JSONValue json = JSONValue.read(value);
+
+			return json.getBoolean();
 		}
 
 		@Override
@@ -374,21 +363,9 @@ public final class JSONArray
 			}
 
 			CharSequence value = this.list.get(index);
-
 			JSONValue json = JSONValue.read(value);
 
-			if (json instanceof JSONValue.Invalid)
-			{
-				return "";
-			}
-			else if (json.isString())
-			{
-				return value.subSequence(1, value.length() - 1).toString();
-			}
-			else
-			{
-				return value.toString();
-			}
+			return json.getString();
 		}
 
 		@Override

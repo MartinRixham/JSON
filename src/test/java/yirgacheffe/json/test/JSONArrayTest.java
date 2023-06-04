@@ -53,7 +53,9 @@ public class JSONArrayTest
 		assertFalse(json.getBoolean(-1));
 		assertTrue(Double.isNaN(json.getNumber(-1)));
 		assertEquals("", json.getString(-1));
-		assertFalse(json.getValue(-1) instanceof JSONValue.Valid);
+
+		assertEquals("Failed to read array index -1 of array of length 0.",
+			json.getValue(-1).toString());
 
 		assertEquals(
 			"Failed to read array index -1 of array of length 0.",
@@ -67,6 +69,28 @@ public class JSONArrayTest
 		assertEquals("", json.validate());
 		assertEquals(JSONArray.read("[]"), json);
 		assertEquals(JSONArray.read("[]").hashCode(), json.hashCode());
+		assertNotEquals(0, json.hashCode());
+	}
+
+	@Test
+	public void testParseNestedArrays()
+	{
+		JSONArray.Read json = JSONArray.read("[[]]");
+
+		assertTrue(json.getBoolean(0));
+		assertTrue(Double.isNaN(json.getNumber(0)));
+		assertEquals("[]", json.getString(0));
+		assertEquals("[]", json.getValue(0).toString());
+
+		assertEquals(
+			"Failed to parse object: Started with [ instead of {.",
+			json.getObject(0).toString());
+
+		assertEquals("[]", json.getArray(0).toString());
+		assertEquals(1, json.length());
+		assertEquals("", json.validate());
+		assertEquals(JSONArray.read("[\n    []\n]"), json);
+		assertEquals(JSONArray.read("[[]]").hashCode(), json.hashCode());
 	}
 
 	@Test
@@ -205,9 +229,11 @@ public class JSONArrayTest
 		assertFalse(json.getValue(0) instanceof JSONValue.Valid);
 		assertNotEquals(JSONArray.read("[]"), json);
 		assertNotEquals(JSONArray.read("[]").hashCode(), json.hashCode());
+		assertNotEquals(0, json.hashCode());
 		assertEquals(JSONArray.read("[null"), json);
 		assertNotEquals(JSONValue.read("[null"), json);
 		assertNotEquals("[null", json);
+		assertNotEquals(json, "[null");
 		assertNotEquals(JSONArray.read(""), json);
 		assertNotEquals(JSONArray.write().read(), json);
 
@@ -219,6 +245,75 @@ public class JSONArrayTest
 		}
 
 		assertEquals(0, count);
+	}
+
+	@Test
+	public void testInvalidValue()
+	{
+		JSONArray.Read json = JSONArray.read("[nonsense]");
+
+		assertFalse(json.getBoolean(0));
+		assertTrue(Double.isNaN(json.getNumber(0)));
+		assertEquals("", json.getString(0));
+
+		assertEquals(
+			"Failed to parse object: Started with n instead of {.",
+			json.getObject(0).toString());
+
+		assertEquals(
+			"Failed to parse array: Started with n instead of [.",
+			json.getArray(0).toString());
+
+		assertFalse(json.getValue(0) instanceof JSONValue.Valid);
+
+		assertEquals(
+			"{\n    \"value at array position 0\":" +
+				" \"Failed to parse value: nonsense is not a JSON value.\"\n}",
+			json.toString());
+
+		assertEquals(1, json.length());
+
+		assertEquals(
+			"{\"value at array position 0\": " +
+				"\"Failed to parse value: nonsense is not a JSON value.\"}",
+			json.validate());
+
+		assertNotEquals(JSONArray.read("[]"), json);
+		assertNotEquals(JSONArray.read("[]").hashCode(), json.hashCode());
+	}
+
+	@Test
+	public void invalidData()
+	{
+		assertEquals("{\n" +
+			"    \"value at array position 0\":\n" +
+			"        {\n" +
+			"            \"value at array position 0\":\n" +
+			"                {\n" +
+			"                    \"value at array position 0\": " +
+			"\"Failed to parse value: nonsence is not a JSON value.\"\n" +
+			"                }\n" +
+			"        }\n" +
+			"}", JSONArray.read("[[[nonsence]]]").toString());
+
+		assertEquals("Failed to parse array at character 3: Found : when expecting ,.",
+			JSONArray.read("[\"\":]").toString());
+
+		assertEquals("Failed to parse array at character 2: Found : after end of array.",
+			JSONArray.read("[]:").toString());
+
+		assertEquals("Failed to parse array at character 13: Found : after end of array.",
+			JSONArray.read("[\"\",nonsense]:").toString());
+	}
+
+	@Test
+	public void testUnequalArraysOfSameLength()
+	{
+		JSONArray.Read first = JSONArray.read("[1,2]");
+		JSONArray.Read second = JSONArray.read("[3,5]");
+
+		assertNotEquals(first, second);
+		assertNotEquals(first.hashCode(), second.hashCode());
 	}
 
 	@Test

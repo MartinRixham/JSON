@@ -251,19 +251,9 @@ public final class JSONObject
 				return false;
 			}
 
-			String string = value.toString();
+			JSONValue json = JSONValue.read(value);
 
-			try
-			{
-				return Double.parseDouble(string) != 0d;
-			}
-			catch (NumberFormatException e)
-			{
-				return !(string.length() == 0 ||
-					string.equals("null") ||
-					string.equals("false") ||
-					string.equals("\"\""));
-			}
+			return json.getBoolean();
 		}
 
 		@Override
@@ -300,18 +290,7 @@ public final class JSONObject
 
 			JSONValue json = JSONValue.read(value);
 
-			if (json instanceof JSONValue.Invalid)
-			{
-				return "";
-			}
-			else if (json.isString())
-			{
-				return value.subSequence(1, value.length() - 1).toString();
-			}
-			else
-			{
-				return value.toString();
-			}
+			return json.getString();
 		}
 
 		@Override
