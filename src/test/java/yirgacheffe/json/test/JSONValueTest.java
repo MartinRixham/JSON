@@ -1,6 +1,9 @@
-package yirgacheffe.json;
+package yirgacheffe.json.test;
 
 import org.junit.Test;
+import yirgacheffe.json.JSONArray;
+import yirgacheffe.json.JSONObject;
+import yirgacheffe.json.JSONValue;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -33,10 +36,10 @@ public class JSONValueTest
 			"Failed to parse value: No data.",
 			value.getArray().toString());
 
-		assertEquals(new JSONValue.Invalid("Failed to parse value: No data."), value);
+		assertEquals(JSONValue.read(""), value);
 
 		assertEquals(
-			new JSONValue.Invalid("Failed to parse value: No data.").hashCode(),
+			JSONValue.read("").hashCode(),
 			value.hashCode());
 
 		assertNotEquals(0, value.hashCode());

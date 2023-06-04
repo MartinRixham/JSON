@@ -4,29 +4,29 @@ import java.util.regex.Pattern;
 
 public abstract class JSONValue
 {
-	abstract boolean isNull();
+	public abstract boolean isNull();
 
-	abstract boolean isBoolean();
+	public abstract boolean isBoolean();
 
-	abstract boolean isNumber();
+	public abstract boolean isNumber();
 
-	abstract boolean isString();
+	public abstract boolean isString();
 
-	abstract boolean isObject();
+	public abstract boolean isObject();
 
-	abstract boolean isArray();
+	public abstract boolean isArray();
 
-	abstract boolean getBoolean();
+	public abstract boolean getBoolean();
 
-	abstract double getNumber();
+	public abstract double getNumber();
 
-	abstract String getString();
+	public abstract String getString();
 
-	abstract JSONObject.Read getObject();
+	public abstract JSONObject.Read getObject();
 
-	abstract JSONArray.Read getArray();
+	public abstract JSONArray.Read getArray();
 
-	abstract String validate();
+	public abstract String validate();
 
 	private static final Pattern JSON_NUMBER_PATTERN =
 		Pattern.compile("-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?");
@@ -34,7 +34,7 @@ public abstract class JSONValue
 	private static final Pattern JSON_LITTERAL_PATTERN =
 		Pattern.compile("null|true|false");
 
-	static final class Invalid extends JSONValue
+	public static final class Invalid extends JSONValue
 	{
 		private String error;
 
@@ -146,7 +146,7 @@ public abstract class JSONValue
 		}
 	}
 
-	static final class Valid extends JSONValue
+	public static final class Valid extends JSONValue
 	{
 		private final CharSequence value;
 
@@ -337,7 +337,7 @@ public abstract class JSONValue
 		}
 	}
 
-	static JSONValue read(CharSequence value)
+	public static JSONValue read(CharSequence value)
 	{
 		if (value == null || value.length() == 0)
 		{

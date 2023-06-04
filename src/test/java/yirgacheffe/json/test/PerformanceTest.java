@@ -1,4 +1,6 @@
-package yirgacheffe.json;
+package yirgacheffe.json.test;
+
+import yirgacheffe.json.JSONObject;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;

@@ -1,6 +1,10 @@
-package yirgacheffe.json;
+package yirgacheffe.json.test;
 
+import org.junit.Assert;
 import org.junit.Test;
+import yirgacheffe.json.JSONArray;
+import yirgacheffe.json.JSONObject;
+import yirgacheffe.json.JSONValue;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
@@ -225,7 +229,7 @@ public class JSONArrayTest
 		assertTrue(json.getBoolean(0));
 		assertTrue(Double.isNaN(json.getNumber(0)));
 		assertEquals("{}", json.getString(0));
-		assertEquals(JSONObject.read("{}"), json.getObject(0));
+		Assert.assertEquals(JSONObject.read("{}"), json.getObject(0));
 
 		assertEquals(
 			"Failed to parse array: Started with { instead of [.",

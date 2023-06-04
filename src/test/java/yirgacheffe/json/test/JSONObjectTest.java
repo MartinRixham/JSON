@@ -1,6 +1,10 @@
-package yirgacheffe.json;
+package yirgacheffe.json.test;
 
+import org.junit.Assert;
 import org.junit.Test;
+import yirgacheffe.json.JSONArray;
+import yirgacheffe.json.JSONObject;
+import yirgacheffe.json.JSONValue;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
@@ -428,7 +432,7 @@ public class JSONObjectTest
 			"Failed to parse object: Started with [ instead of {.",
 			json.getObject("arr").toString());
 
-		assertEquals(JSONArray.read("[]"), json.getArray("arr"));
+		Assert.assertEquals(JSONArray.read("[]"), json.getArray("arr"));
 		assertEquals("", json.validate());
 		assertNotEquals(JSONObject.read("{}"), json);
 		assertNotEquals(JSONObject.read("{}").hashCode(), json.hashCode());

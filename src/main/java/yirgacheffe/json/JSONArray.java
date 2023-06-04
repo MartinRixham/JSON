@@ -36,14 +36,14 @@ public final class JSONArray
 	{
 		private final List<String> list = new LinkedList<>();
 
-		Write push(boolean value)
+		public Write push(boolean value)
 		{
 			this.list.add(Boolean.toString(value));
 
 			return this;
 		}
 
-		Write push(boolean... values)
+		public Write push(boolean... values)
 		{
 			String[] strings = new String[values.length];
 
@@ -57,14 +57,14 @@ public final class JSONArray
 			return this;
 		}
 
-		Write push(long value)
+		public Write push(long value)
 		{
 			this.list.add(Long.toString(value));
 
 			return this;
 		}
 
-		Write push(long... values)
+		public Write push(long... values)
 		{
 			String[] strings = new String[values.length];
 
@@ -78,14 +78,14 @@ public final class JSONArray
 			return this;
 		}
 
-		Write push(double value)
+		public Write push(double value)
 		{
 			this.list.add(Double.toString(value));
 
 			return this;
 		}
 
-		Write push(double... values)
+		public Write push(double... values)
 		{
 			String[] strings = new String[values.length];
 
@@ -99,14 +99,14 @@ public final class JSONArray
 			return this;
 		}
 
-		Write push(String value)
+		public Write push(String value)
 		{
 			this.list.add(("\"" + value + "\""));
 
 			return this;
 		}
 
-		Write push(String... values)
+		public Write push(String... values)
 		{
 			String[] strings = new String[values.length];
 
@@ -120,14 +120,14 @@ public final class JSONArray
 			return this;
 		}
 
-		Write push(JSONObject.Write value)
+		public Write push(JSONObject.Write value)
 		{
 			this.list.add((value.toString()));
 
 			return this;
 		}
 
-		Write push(JSONObject.Write... values)
+		public Write push(JSONObject.Write... values)
 		{
 			String[] strings = new String[values.length];
 
@@ -141,14 +141,14 @@ public final class JSONArray
 			return this;
 		}
 
-		Write push(Write value)
+		public Write push(Write value)
 		{
 			this.list.add((value.toString()));
 
 			return this;
 		}
 
-		Write push(Write... values)
+		public Write push(Write... values)
 		{
 			String[] strings = new String[values.length];
 
@@ -188,9 +188,14 @@ public final class JSONArray
 		}
 	}
 
-	static final class Invalid implements Read
+	public static final class Invalid implements Read
 	{
 		private final String error;
+
+		private Invalid()
+		{
+			this.error = "";
+		}
 
 		Invalid(String error)
 		{
@@ -290,9 +295,14 @@ public final class JSONArray
 		}
 	}
 
-	static final class Valid implements Read
+	public static final class Valid implements Read
 	{
 		private final List<? extends CharSequence> list;
+
+		private Valid()
+		{
+			this.list = new ArrayList<>();
+		}
 
 		private Valid(List<? extends CharSequence> list)
 		{

@@ -116,9 +116,14 @@ public final class JSONObject
 		}
 	}
 
-	static final class Invalid implements Read
+	public static final class Invalid implements Read
 	{
 		private final String error;
+
+		private Invalid()
+		{
+			this.error = "";
+		}
 
 		Invalid(String error)
 		{
@@ -205,9 +210,14 @@ public final class JSONObject
 		}
 	}
 
-	static final class Valid implements Read
+	public static final class Valid implements Read
 	{
 		private final Map<String, ? extends CharSequence> map;
+
+		private Valid()
+		{
+			this.map = new HashMap<>();
+		}
 
 		private Valid(Map<String, ? extends CharSequence> map)
 		{
@@ -338,12 +348,12 @@ public final class JSONObject
 				if (error.length() > 0)
 				{
 					errors.append("\"Value of ")
-							.append(pair.getKey().replace("\\", "\\\\")
-								.replace("\"", "\\\""))
-							.append("\": \"")
-							.append(error.replace("\\", "\\\\")
-								.replace("\"", "\\\""))
-							.append("\", ");
+						.append(pair.getKey().replace("\\", "\\\\")
+							.replace("\"", "\\\""))
+						.append("\": \"")
+						.append(error.replace("\\", "\\\\")
+							.replace("\"", "\\\""))
+						.append("\", ");
 				}
 			}
 
