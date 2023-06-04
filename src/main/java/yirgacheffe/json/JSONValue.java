@@ -28,6 +28,11 @@ public abstract class JSONValue
 
 	public abstract String validate();
 
+	@Override
+	public abstract String toString();
+
+	abstract String print();
+
 	private static final Pattern JSON_NUMBER_PATTERN =
 		Pattern.compile("-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?");
 
@@ -141,6 +146,12 @@ public abstract class JSONValue
 
 		@Override
 		public String toString()
+		{
+			return this.error;
+		}
+
+		@Override
+		String print()
 		{
 			return this.error;
 		}
@@ -322,13 +333,21 @@ public abstract class JSONValue
 			{
 				return errors;
 			}
-			else if (this.isObject())
+			else
 			{
-				return JSONObject.read(this.value).toString();
+				return this.print();
+			}
+		}
+
+		String print()
+		{
+			if (this.isObject())
+			{
+				return JSONObject.read(this.value).print();
 			}
 			else if (this.isArray())
 			{
-				return JSONArray.read(this.value).toString();
+				return JSONArray.read(this.value).print();
 			}
 			else
 			{
@@ -339,25 +358,32 @@ public abstract class JSONValue
 
 	public static JSONValue read(CharSequence value)
 	{
-		if (value == null || value.length() == 0)
+		if (value == null)
 		{
 			return new Invalid("Failed to parse value: No data.");
 		}
-		else if (JSON_NUMBER_PATTERN.matcher(value).matches())
+
+		String string = value.toString();
+
+		if (string.length() == 0)
+		{
+			return new Invalid("Failed to parse value: No data.");
+		}
+		else if (JSON_NUMBER_PATTERN.matcher(string).matches())
 		{
 			return new Valid(value);
 		}
-		else if (value.length() == 1)
+		else if (string.length() == 1)
 		{
 			return new Invalid(
 				"Failed to parse value: " + value + " is not a JSON value.");
 		}
-		else if (JSON_LITTERAL_PATTERN.matcher(value).matches() ||
-			value.charAt(0) == '"' && value.charAt(value.length() - 1) == '"' ||
-			value.charAt(0) == '{' && value.charAt(value.length() - 1) == '}' ||
-			value.charAt(0) == '[' && value.charAt(value.length() - 1) == ']')
+		else if (JSON_LITTERAL_PATTERN.matcher(string).matches() ||
+			string.charAt(0) == '"' && string.charAt(value.length() - 1) == '"' ||
+			string.charAt(0) == '{' && string.charAt(value.length() - 1) == '}' ||
+			string.charAt(0) == '[' && string.charAt(value.length() - 1) == ']')
 		{
-			return new Valid(value);
+			return new Valid(string);
 		}
 		else
 		{

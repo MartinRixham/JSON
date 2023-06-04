@@ -13,23 +13,28 @@ public final class JSONArray
 	{
 	}
 
-	public interface Read extends Iterable<JSONValue>
+	public abstract static class Read implements Iterable<JSONValue>
 	{
-		boolean getBoolean(int index);
+		public abstract boolean getBoolean(int index);
 
-		Double getNumber(int index);
+		public abstract Double getNumber(int index);
 
-		String getString(int index);
+		public abstract String getString(int index);
 
-		JSONObject.Read getObject(int index);
+		public abstract JSONObject.Read getObject(int index);
 
-		JSONArray.Read getArray(int index);
+		public abstract JSONArray.Read getArray(int index);
 
-		JSONValue getValue(int index);
+		public abstract JSONValue getValue(int index);
 
-		int length();
+		public abstract int length();
 
-		String validate();
+		public abstract String validate();
+
+		@Override
+		public abstract String toString();
+
+		abstract String print();
 	}
 
 	public static final class Write
@@ -188,7 +193,7 @@ public final class JSONArray
 		}
 	}
 
-	public static final class Invalid implements Read
+	public static final class Invalid extends Read
 	{
 		private final String error;
 
@@ -293,9 +298,15 @@ public final class JSONArray
 		{
 			return this.error;
 		}
+
+		@Override
+		String print()
+		{
+			return this.error;
+		}
 	}
 
-	public static final class Valid implements Read
+	public static final class Valid extends Read
 	{
 		private final List<? extends CharSequence> list;
 
@@ -542,7 +553,16 @@ public final class JSONArray
 			{
 				return JSONObject.read(errors).toString();
 			}
-			else if (this.list.size() == 0)
+			else
+			{
+				return this.print();
+			}
+		}
+
+		@Override
+		String print()
+		{
+			if (this.list.size() == 0)
 			{
 				return "[]";
 			}
@@ -565,7 +585,7 @@ public final class JSONArray
 			{
 				builder.append(newLine ? "\n" : "")
 					.append(newLine ? indent : "")
-					.append(JSONValue.read(value).toString()
+					.append(JSONValue.read(value).print()
 						.replace("\n", "\n" + indent))
 					.append(newLine ? "," : ", ");
 			}

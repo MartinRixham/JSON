@@ -14,25 +14,30 @@ public final class JSONObject
 	{
 	}
 
-	public interface Read
+	public abstract static class Read
 	{
-		boolean has(String key);
+		public abstract boolean has(String key);
 
-		boolean getBoolean(String key);
+		public abstract boolean getBoolean(String key);
 
-		double getNumber(String key);
+		public abstract double getNumber(String key);
 
-		String getString(String key);
+		public abstract String getString(String key);
 
-		Read getObject(String key);
+		public abstract Read getObject(String key);
 
-		JSONArray.Read getArray(String key);
+		public abstract JSONArray.Read getArray(String key);
 
-		JSONValue getValue(String key);
+		public abstract JSONValue getValue(String key);
 
-		String validate();
+		public abstract String validate();
 
-		Set<String> getKeys();
+		public abstract Set<String> getKeys();
+
+		@Override
+		public abstract String toString();
+
+		abstract String print();
 	}
 
 	public static final class Write
@@ -116,7 +121,7 @@ public final class JSONObject
 		}
 	}
 
-	public static final class Invalid implements Read
+	public static final class Invalid extends Read
 	{
 		private final String error;
 
@@ -208,9 +213,15 @@ public final class JSONObject
 		{
 			return this.error;
 		}
+
+		@Override
+		String print()
+		{
+			return this.error;
+		}
 	}
 
-	public static final class Valid implements Read
+	public static final class Valid extends Read
 	{
 		private final Map<String, ? extends CharSequence> map;
 
@@ -431,7 +442,16 @@ public final class JSONObject
 			{
 				return read(errors).toString();
 			}
-			else if (this.map.size() == 0)
+			else
+			{
+				return this.print();
+			}
+		}
+
+		@Override
+		String print()
+		{
+			if (this.map.size() == 0)
 			{
 				return "{}";
 			}
@@ -452,7 +472,7 @@ public final class JSONObject
 					.append("\":")
 					.append(newLine ? '\n' : ' ')
 					.append(newLine ? indent + indent : "")
-					.append(value.toString()
+					.append(value.print()
 						.replace("\n", "\n" + indent + indent))
 					.append(',');
 			}
