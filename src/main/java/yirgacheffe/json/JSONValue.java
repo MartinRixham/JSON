@@ -36,9 +36,6 @@ public abstract class JSONValue
 	private static final Pattern JSON_NUMBER_PATTERN =
 		Pattern.compile("-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?");
 
-	private static final Pattern JSON_LITTERAL_PATTERN =
-		Pattern.compile("null|true|false");
-
 	public static final class Invalid extends JSONValue
 	{
 		private String error;
@@ -153,7 +150,7 @@ public abstract class JSONValue
 		@Override
 		String print()
 		{
-			return this.error;
+			throw new UnsupportedOperationException();
 		}
 	}
 
@@ -331,7 +328,7 @@ public abstract class JSONValue
 
 			if (errors.length() > 0)
 			{
-				return errors;
+				return JSONObject.read(errors).toString();
 			}
 			else
 			{
@@ -339,6 +336,7 @@ public abstract class JSONValue
 			}
 		}
 
+		@Override
 		String print()
 		{
 			if (this.isObject())
@@ -378,7 +376,9 @@ public abstract class JSONValue
 			return new Invalid(
 				"Failed to parse value: " + value + " is not a JSON value.");
 		}
-		else if (JSON_LITTERAL_PATTERN.matcher(string).matches() ||
+		else if (string.equals("null") ||
+			string.equals("true") ||
+			string.equals("false") ||
 			string.charAt(0) == '"' && string.charAt(value.length() - 1) == '"' ||
 			string.charAt(0) == '{' && string.charAt(value.length() - 1) == '}' ||
 			string.charAt(0) == '[' && string.charAt(value.length() - 1) == ']')

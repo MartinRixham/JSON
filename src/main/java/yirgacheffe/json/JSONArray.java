@@ -302,7 +302,7 @@ public final class JSONArray
 		@Override
 		String print()
 		{
-			return this.error;
+			throw new UnsupportedOperationException();
 		}
 	}
 

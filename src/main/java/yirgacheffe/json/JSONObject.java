@@ -217,7 +217,7 @@ public final class JSONObject
 		@Override
 		String print()
 		{
-			return this.error;
+			throw new UnsupportedOperationException();
 		}
 	}
 

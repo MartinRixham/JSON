@@ -52,8 +52,10 @@ public final class PerformanceTest
 // ---------- parsing took 458 milliseconds ----------
 // ---------- parsing took 464 milliseconds ----------
 // ---------- parsing took 448 milliseconds ----------
+// ---------- parsing took 442 milliseconds ----------
 
 // validation:
 // ---------- validation took 11,865 milliseconds ----------
 // ---------- validation took 10,735 milliseconds ----------
-// ---------- validation took 5144 milliseconds ----------
+// ---------- validation took 5,144 milliseconds ----------
+// ---------- validation took 4,834 milliseconds ----------
