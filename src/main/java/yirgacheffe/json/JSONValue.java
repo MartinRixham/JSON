@@ -1,34 +1,47 @@
 package yirgacheffe.json;
 
-public interface JSONValue
+import java.util.regex.Pattern;
+
+public abstract class JSONValue
 {
-	boolean isNull();
+	abstract boolean isNull();
 
-	boolean isBoolean();
+	abstract boolean isBoolean();
 
-	boolean isNumber();
+	abstract boolean isNumber();
 
-	boolean isString();
+	abstract boolean isString();
 
-	boolean isObject();
+	abstract boolean isObject();
 
-	boolean isArray();
+	abstract boolean isArray();
 
-	boolean getBoolean();
+	abstract boolean getBoolean();
 
-	double getNumber();
+	abstract double getNumber();
 
-	String getString();
+	abstract String getString();
 
-	JSONObject.Read getObject();
+	abstract JSONObject.Read getObject();
 
-	JSONArray.Read getArray();
+	abstract JSONArray.Read getArray();
 
-	String validate();
+	abstract String validate();
 
-	final class Invalid implements JSONValue
+	private static final Pattern JSON_NUMBER_PATTERN =
+		Pattern.compile("-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?");
+
+	private static final Pattern JSON_LITTERAL_PATTERN =
+		Pattern.compile("null|true|false");
+
+	static final class Invalid extends JSONValue
 	{
 		private String error;
+
+		private Invalid()
+		{
+			this.error = "";
+		}
 
 		Invalid(String error)
 		{
@@ -133,9 +146,14 @@ public interface JSONValue
 		}
 	}
 
-	final class Valid implements JSONValue
+	static final class Valid extends JSONValue
 	{
 		private final CharSequence value;
+
+		private Valid()
+		{
+			this.value = "";
+		}
 
 		Valid(CharSequence value)
 		{
@@ -159,16 +177,7 @@ public interface JSONValue
 		@Override
 		public boolean isNumber()
 		{
-			try
-			{
-				Double.parseDouble(this.value.toString());
-
-				return true;
-			}
-			catch (NumberFormatException e)
-			{
-				return false;
-			}
+			return JSON_NUMBER_PATTERN.matcher(this.value).matches();
 		}
 
 		@Override
@@ -334,36 +343,26 @@ public interface JSONValue
 		{
 			return new Invalid("Failed to parse value: No data.");
 		}
-
-		String string = value.toString();
-
-		try
+		else if (JSON_NUMBER_PATTERN.matcher(value).matches())
 		{
-			Double.parseDouble(string);
-
-			return new Valid(string);
+			return new Valid(value);
 		}
-		catch (NumberFormatException e)
+		else if (value.length() == 1)
 		{
-			if (string.length() == 1)
-			{
-				return new Invalid(
-					"Failed to parse value: " + string + " is not a JSON value.");
-			}
-			else if (string.equals("null") ||
-				string.equals("true") ||
-				string.equals("false") ||
-				string.charAt(0) == '"' && string.charAt(string.length() - 1) == '"' ||
-				string.charAt(0) == '{' && string.charAt(string.length() - 1) == '}' ||
-				string.charAt(0) == '[' && string.charAt(string.length() - 1) == ']')
-			{
-				return new Valid(string);
-			}
-			else
-			{
-				return new Invalid(
-					"Failed to parse value: " + string + " is not a JSON value.");
-			}
+			return new Invalid(
+				"Failed to parse value: " + value + " is not a JSON value.");
+		}
+		else if (JSON_LITTERAL_PATTERN.matcher(value).matches() ||
+			value.charAt(0) == '"' && value.charAt(value.length() - 1) == '"' ||
+			value.charAt(0) == '{' && value.charAt(value.length() - 1) == '}' ||
+			value.charAt(0) == '[' && value.charAt(value.length() - 1) == ']')
+		{
+			return new Valid(value);
+		}
+		else
+		{
+			return new Invalid(
+				"Failed to parse value: " + value + " is not a JSON value.");
 		}
 	}
 }

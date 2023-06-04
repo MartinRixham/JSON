@@ -366,10 +366,16 @@ public class JSONObjectTest
 			"Failed to parse object at character 1: Found : when expecting key.",
 			JSONObject.read("{:\"key\":\"value\"}").toString());
 
+		JSONObject.Read json = JSONObject.read("{\"key\":,\"value\"}");
+
 		assertEquals(
-			"{\"Value of key\": \"Failed to parse value:" +
-				" ,\\\"value\\\" is not a JSON value.\"}",
-			JSONObject.read("{\"key\":,\"value\"}").toString());
+			"{\n    " +
+					"\"Value of key\": \"Failed to parse value:" +
+					" ,\\\"value\\\" is not a JSON value.\"\n" +
+				"}",
+			json.toString());
+
+		assertEquals("", json.getString("key"));
 	}
 
 	@Test
@@ -534,7 +540,7 @@ public class JSONObjectTest
 			"                    {\n" +
 			"                        \"thingy\":\n" +
 			"                            [\n" +
-			"                                [8,8,8,\"sumpt\"]\n" +
+			"                                [8, 8, 8, \"sumpt\"]\n" +
 			"                            ],\n" +
 			"                        \"this\": \"that\"\n" +
 			"                    }\n" +

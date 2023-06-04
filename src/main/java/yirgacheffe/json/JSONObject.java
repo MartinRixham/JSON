@@ -277,9 +277,13 @@ public final class JSONObject
 				return "";
 			}
 
-			if (value.length() > 1 &&
-				value.charAt(0) == '"' &&
-				value.charAt(value.length() - 1) == '"')
+			JSONValue json = JSONValue.read(value);
+
+			if (json instanceof JSONValue.Invalid)
+			{
+				return "";
+			}
+			else if (json.isString())
 			{
 				return value.subSequence(1, value.length() - 1).toString();
 			}
@@ -415,7 +419,7 @@ public final class JSONObject
 
 			if (errors.length() > 0)
 			{
-				return errors;
+				return read(errors).toString();
 			}
 			else if (this.map.size() == 0)
 			{
@@ -443,7 +447,11 @@ public final class JSONObject
 					.append(',');
 			}
 
-			builder.setLength(builder.length() - 1);
+			if (this.map.size() > 0)
+			{
+				builder.setLength(builder.length() - 1);
+			}
+
 			builder.append("\n}");
 
 			return builder.toString();

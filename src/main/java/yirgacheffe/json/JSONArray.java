@@ -354,9 +354,13 @@ public final class JSONArray
 
 			CharSequence value = this.list.get(index);
 
-			if (value.length() > 1 &&
-				value.charAt(0) == '"' &&
-				value.charAt(value.length() - 1) == '"')
+			JSONValue json = JSONValue.read(value);
+
+			if (json instanceof JSONValue.Invalid)
+			{
+				return "";
+			}
+			else if (json.isString())
 			{
 				return value.subSequence(1, value.length() - 1).toString();
 			}
@@ -526,7 +530,7 @@ public final class JSONArray
 
 			if (errors.length() > 0)
 			{
-				return errors;
+				return JSONObject.read(errors).toString();
 			}
 			else if (this.list.size() == 0)
 			{
@@ -553,10 +557,14 @@ public final class JSONArray
 					.append(newLine ? indent : "")
 					.append(JSONValue.read(value).toString()
 						.replace("\n", "\n" + indent))
-					.append(',');
+					.append(newLine ? "," : ", ");
 			}
 
-			builder.setLength(builder.length() - 1);
+			if (this.list.size() > 0)
+			{
+				builder.setLength(builder.length() - (newLine ? 1 : 2));
+			}
+
 			builder.append(newLine ? "\n" : "").append(']');
 
 			return builder.toString();
