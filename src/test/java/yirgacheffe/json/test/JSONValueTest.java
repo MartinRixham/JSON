@@ -349,19 +349,19 @@ public class JSONValueTest
 
 		assertEquals(
 			"{\n" +
-			"    \"Value of key\":" +
+			"    \"value of key\":" +
 				" \"Failed to parse value: nonsense is not a JSON value.\"\n" +
 			"}",
 			value.getObject().toString());
 
 		assertEquals(
-			"{\"Value of key\":" +
+			"{\"value of key\":" +
 				" \"Failed to parse value: nonsense is not a JSON value.\"}",
 			value.validate());
 
 		assertEquals(
 			"{\n" +
-			"    \"Value of key\":" +
+			"    \"value of key\":" +
 				" \"Failed to parse value: nonsense is not a JSON value.\"\n" +
 			"}",
 			value.toString());
@@ -374,19 +374,19 @@ public class JSONValueTest
 
 		assertEquals(
 			"{\n" +
-			"    \"Value at array position 0\":" +
+			"    \"value at array position 0\":" +
 				" \"Failed to parse value: nonsense is not a JSON value.\"\n" +
 			"}",
 			value.getArray().toString());
 
 		assertEquals(
-			"{\"Value at array position 0\":" +
+			"{\"value at array position 0\":" +
 				" \"Failed to parse value: nonsense is not a JSON value.\"}",
 			value.validate());
 
 		assertEquals(
 			"{\n" +
-			"    \"Value at array position 0\":" +
+			"    \"value at array position 0\":" +
 				" \"Failed to parse value: nonsense is not a JSON value.\"\n" +
 			"}",
 			value.toString());

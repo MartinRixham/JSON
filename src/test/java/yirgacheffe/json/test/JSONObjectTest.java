@@ -374,7 +374,7 @@ public class JSONObjectTest
 
 		assertEquals(
 			"{\n    " +
-					"\"Value of key\": \"Failed to parse value:" +
+					"\"value of key\": \"Failed to parse value:" +
 					" ,\\\"value\\\" is not a JSON value.\"\n" +
 				"}",
 			json.toString());

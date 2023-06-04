@@ -18,20 +18,20 @@ public final class PerformanceTest
 	{
 		System.out.println("---------- downloading data ----------");
 		URL url = new URL(
-			"https://raw.githubusercontent.com/zemirco/sf-city-lots-json/" +
-				"33c27c137784a96d0fbd7f329dceda6cc7f49fa3/citylots.json");
+			"file:///home/martin/citylots.json");
 		String data =
 			new Scanner(url.openStream(), "UTF-8").useDelimiter("\\A").next();
 
 		System.out.println("---------- parsing JSON ----------");
 		long startTime = getCPUTime();
-		JSONObject.read(data);
+		String obj = JSONObject.read(data).validate();
 		long endTime = getCPUTime();
 
 		System.out.println(
 			"---------- parsing took " +
 			Duration.ofNanos(endTime - startTime).toMillis() +
 			" milliseconds ----------");
+		System.out.println(obj);
 	}
 
 	private static long getCPUTime()

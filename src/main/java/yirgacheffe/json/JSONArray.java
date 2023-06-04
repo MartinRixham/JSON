@@ -449,16 +449,22 @@ public final class JSONArray
 
 			for (int i = 0; i < this.list.size(); i++)
 			{
-				String error = JSONValue.read(this.list.get(i)).validate();
+				JSONValue value = JSONValue.read(this.list.get(i));
+				String error = value.validate();
 
 				if (error.length() > 0)
 				{
-					errors.append("\"Value at array position ")
+					String formattedError =
+						value.isObject() || value.isArray() ?
+							error :
+							'"' + error.replace("\\", "\\\\")
+								.replace("\"", "\\\"") + '"';
+
+					errors.append("\"value at array position ")
 						.append(i)
-						.append("\": \"")
-						.append(error.replace("\\", "\\\\")
-							.replace("\"", "\\\""))
-						.append("\", ");
+						.append("\": ")
+						.append(formattedError)
+						.append(", ");
 				}
 			}
 

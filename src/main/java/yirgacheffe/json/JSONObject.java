@@ -354,17 +354,23 @@ public final class JSONObject
 
 			for (Map.Entry<String, ? extends CharSequence> pair: this.map.entrySet())
 			{
-				String error = JSONValue.read(pair.getValue()).validate();
+				JSONValue value = JSONValue.read(pair.getValue());
+				String error = value.validate();
 
 				if (error.length() > 0)
 				{
-					errors.append("\"Value of ")
+					String formattedError =
+						value.isObject() || value.isArray() ?
+							error :
+							'"' + error.replace("\\", "\\\\")
+								.replace("\"", "\\\"") + '"';
+
+					errors.append("\"value of ")
 						.append(pair.getKey().replace("\\", "\\\\")
 							.replace("\"", "\\\""))
-						.append("\": \"")
-						.append(error.replace("\\", "\\\\")
-							.replace("\"", "\\\""))
-						.append("\", ");
+						.append("\": ")
+						.append(formattedError)
+						.append(", ");
 				}
 			}
 
