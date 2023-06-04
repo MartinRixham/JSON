@@ -13,6 +13,43 @@ import static org.junit.Assert.assertTrue;
 public class JSONValueTest
 {
 	@Test
+	public void testNull()
+	{
+		JSONValue value = JSONValue.read(null);
+
+		assertFalse(value.isNull());
+		assertFalse(value.isBoolean());
+		assertFalse(value.isNumber());
+		assertFalse(value.isString());
+		assertFalse(value.isObject());
+		assertFalse(value.isArray());
+
+		assertFalse(value.getBoolean());
+		assertEquals(Double.NaN, value.getNumber());
+		assertEquals("", value.getString());
+
+		assertEquals(
+			"Failed to parse value: No data.",
+			value.getObject().toString());
+
+		assertEquals(
+			"Failed to parse value: No data.",
+			value.getArray().toString());
+
+		assertEquals(JSONValue.read(""), value);
+
+		assertEquals(
+			JSONValue.read("").hashCode(),
+			value.hashCode());
+
+		assertNotEquals(0, value.hashCode());
+
+		assertEquals("Failed to parse value: No data.", value.validate());
+		assertEquals("Failed to parse value: No data.", value.toString());
+		assertNotEquals("", value);
+	}
+
+	@Test
 	public void testNoData()
 	{
 		JSONValue value = JSONValue.read("");
@@ -77,6 +114,7 @@ public class JSONValueTest
 		assertEquals(JSONValue.read("null").hashCode(), value.hashCode());
 		assertEquals("", value.validate());
 		assertEquals("null", value.toString());
+		assertNotEquals(value, "");
 	}
 
 	@Test
@@ -215,6 +253,54 @@ public class JSONValueTest
 	}
 
 	@Test
+	public void testEmptyStringValue()
+	{
+		JSONValue value = JSONValue.read("\"\"");
+
+		assertFalse(value.isNull());
+		assertFalse(value.isBoolean());
+		assertFalse(value.isNumber());
+		assertTrue(value.isString());
+		assertFalse(value.isObject());
+		assertFalse(value.isArray());
+
+		assertFalse(value.getBoolean());
+		assertEquals(Double.NaN, value.getNumber());
+		assertEquals("", value.getString());
+		assertFalse(value.getObject() instanceof JSONObject.Valid);
+		assertFalse(value.getArray() instanceof JSONArray.Valid);
+
+		assertEquals(JSONValue.read("\"\""), value);
+		assertEquals(JSONValue.read("\"\"").hashCode(), value.hashCode());
+		assertEquals("", value.validate());
+		assertEquals("\"\"", value.toString());
+	}
+
+	@Test
+	public void testDoubleQuote()
+	{
+		JSONValue value = JSONValue.read("\"");
+
+		assertFalse(value.isNull());
+		assertFalse(value.isBoolean());
+		assertFalse(value.isNumber());
+		assertFalse(value.isString());
+		assertFalse(value.isObject());
+		assertFalse(value.isArray());
+
+		assertFalse(value.getBoolean());
+		assertEquals(Double.NaN, value.getNumber());
+		assertEquals("", value.getString());
+		assertFalse(value.getObject() instanceof JSONObject.Valid);
+		assertFalse(value.getArray() instanceof JSONArray.Valid);
+
+		assertEquals(JSONValue.read("\""), value);
+		assertEquals(JSONValue.read("\"").hashCode(), value.hashCode());
+		assertEquals("Failed to parse value: \" is not a JSON value.", value.validate());
+		assertEquals("Failed to parse value: \" is not a JSON value.", value.toString());
+	}
+
+	@Test
 	public void testUnclosedStringValue()
 	{
 		JSONValue value = JSONValue.read("\"it's a string!");
@@ -266,6 +352,7 @@ public class JSONValueTest
 		assertEquals("{}", value.toString());
 		assertEquals(JSONValue.read("{}"), value);
 		assertEquals(JSONObject.read("{}"), value);
+		assertEquals(JSONObject.read("{}").hashCode(), value.hashCode());
 		assertNotEquals("{}", value);
 		assertEquals(JSONValue.read("{}").hashCode(), value.hashCode());
 		assertNotEquals(0, value.hashCode());
@@ -315,6 +402,7 @@ public class JSONValueTest
 		assertEquals("[]", value.toString());
 		assertEquals(JSONValue.read("[]"), value);
 		assertEquals(JSONArray.read("[]"), value);
+		assertEquals(JSONArray.read("[]").hashCode(), value.hashCode());
 		assertNotEquals("[]", value);
 		assertEquals(JSONValue.read("[]").hashCode(), value.hashCode());
 		assertNotEquals(0, value.hashCode());

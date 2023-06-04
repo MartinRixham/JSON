@@ -242,8 +242,7 @@ public abstract class JSONValue
 		{
 			CharSequence value = this.value;
 
-			if (value.length() > 1 &&
-				value.charAt(0) == '"' &&
+			if (value.charAt(0) == '"' &&
 				value.charAt(value.length() - 1) == '"')
 			{
 				return value.subSequence(1, value.length() - 1).toString();
