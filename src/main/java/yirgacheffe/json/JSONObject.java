@@ -329,6 +329,7 @@ public final class JSONObject
 		@Override
 		public String validate()
 		{
+			boolean hasError = false;
 			StringBuilder errors = new StringBuilder("{");
 
 			for (Map.Entry<String, ? extends CharSequence> pair: this.map.entrySet())
@@ -338,6 +339,8 @@ public final class JSONObject
 
 				if (error.length() > 0)
 				{
+					hasError = true;
+
 					String formattedError =
 						value.isObject() || value.isArray() ?
 							error :
@@ -353,16 +356,16 @@ public final class JSONObject
 				}
 			}
 
-			if (errors.length() < 2)
-			{
-				return "";
-			}
-			else
+			if (hasError)
 			{
 				errors.setLength(errors.length() - 2);
 				errors.append('}');
 
 				return errors.toString();
+			}
+			else
+			{
+				return "";
 			}
 		}
 
@@ -462,11 +465,7 @@ public final class JSONObject
 					.append(',');
 			}
 
-			if (this.map.size() > 0)
-			{
-				builder.setLength(builder.length() - 1);
-			}
-
+			builder.setLength(builder.length() - 1);
 			builder.append("\n}");
 
 			return builder.toString();

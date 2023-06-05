@@ -422,6 +422,7 @@ public final class JSONArray
 		@Override
 		public String validate()
 		{
+			boolean hasError = false;
 			StringBuilder errors = new StringBuilder("{");
 
 			for (int i = 0; i < this.list.size(); i++)
@@ -431,6 +432,8 @@ public final class JSONArray
 
 				if (error.length() > 0)
 				{
+					hasError = true;
+
 					String formattedError =
 						value.isObject() || value.isArray() ?
 							error :
@@ -445,16 +448,16 @@ public final class JSONArray
 				}
 			}
 
-			if (errors.length() < 2)
-			{
-				return "";
-			}
-			else
+			if (hasError)
 			{
 				errors.setLength(errors.length() - 2);
 				errors.append("}");
 
 				return errors.toString();
+			}
+			else
+			{
+				return "";
 			}
 		}
 
@@ -573,11 +576,7 @@ public final class JSONArray
 					.append(newLine ? "," : ", ");
 			}
 
-			if (this.list.size() > 0)
-			{
-				builder.setLength(builder.length() - (newLine ? 1 : 2));
-			}
-
+			builder.setLength(builder.length() - (newLine ? 1 : 2));
 			builder.append(newLine ? "\n" : "").append(']');
 
 			return builder.toString();

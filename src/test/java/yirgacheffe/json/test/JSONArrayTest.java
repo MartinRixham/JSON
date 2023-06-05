@@ -6,10 +6,11 @@ import yirgacheffe.json.JSONArray;
 import yirgacheffe.json.JSONObject;
 import yirgacheffe.json.JSONValue;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class JSONArrayTest
 {
@@ -241,6 +242,7 @@ public class JSONArrayTest
 
 		for (JSONValue value: json)
 		{
+			assertNotNull(value);
 			count++;
 		}
 
@@ -485,6 +487,7 @@ public class JSONArrayTest
 
 		for (JSONValue value: json)
 		{
+			assertNotNull(value);
 			count++;
 		}
 

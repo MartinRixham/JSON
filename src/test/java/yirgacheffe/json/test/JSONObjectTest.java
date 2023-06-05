@@ -348,9 +348,11 @@ public class JSONObjectTest
 		assertEquals(0, json.getKeys().size());
 		assertNotEquals(JSONObject.read("{}"), json);
 		assertNotEquals(JSONObject.read("{}").hashCode(), json.hashCode());
+		assertNotEquals(0, json.hashCode());
 		assertEquals(JSONObject.read("{ \"nul\": null"), json);
 		assertNotEquals(JSONValue.read("{ \"nul\": null"), json);
 		assertNotEquals("{ \"nul\": null", json);
+		assertNotEquals(json, "{ \"nul\": null");
 		assertNotEquals(JSONObject.read(""), json);
 		assertNotEquals(JSONObject.write().read(), json);
 	}
